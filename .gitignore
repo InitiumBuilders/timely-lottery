@@ -1,0 +1,43 @@
+# ─── Dependencies ─────────────────────────────────────────────────────────────
+node_modules/
+
+# ─── Next.js Build Output ─────────────────────────────────────────────────────
+.next/
+out/
+
+# ─── Environment Variables ─── CRITICAL: NEVER COMMIT THESE ──────────────────
+# .env.example is safe to commit — it has no real secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ─── Local Dev Data ───────────────────────────────────────────────────────────
+dev-data/
+
+# ─── Vercel ───────────────────────────────────────────────────────────────────
+.vercel
+
+# ─── Prisma ───────────────────────────────────────────────────────────────────
+/src/generated/prisma
+
+# ─── Misc ─────────────────────────────────────────────────────────────────────
+.DS_Store
+*.log
+npm-debug.log*
+
+# ─── Sensitive Scripts (Dash identity registration — contain private keys) ────
+avari-*.cjs
+register-*.cjs
+run-topup.cjs
+avari-register-state.json
+
+# ─── Public scripts with sensitive logic ────────────────────────────────────
+public/avari-v11.cjs
+public/run-topup.cjs
+scripts/run-payouts.mjs
+scripts/dpns-resolve.cjs
+scripts/find-registered.cjs
+scripts/resolve-username.cjs
+scripts/send_dollar.cjs

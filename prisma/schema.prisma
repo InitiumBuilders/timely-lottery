@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String    @id @default(cuid())
+  email               String    @unique
+  passwordHash        String    @default("")
+  emailVerified       Boolean   @default(false)
+  verifyToken         String?
+  resetToken          String?
+  resetExpires        DateTime?
+  // Email change flow
+  pendingEmail        String?
+  changeEmailToken    String?
+  // ── Dash Platform Identity ────────────────────────────────────────────────
+  dashIdentityId      String?   @unique  // Dash Platform identity ID (base58)
+  dashIdentityAddr    String?            // Primary Dash address from identity pubkey
+  dashLoginOnly       Boolean   @default(false) // true = no password, Dash auth only
+  // Profile
+  displayName         String?
+  bio                 String?
+  dashUsername        String?
+  xHandle             String?
+  avatarUrl           String?
+  timelyTruth         String?
+  // Stats (cached for dashboard)
+  totalDashContributed Float    @default(0)
+  totalDashWon         Float    @default(0)
+  totalTicketsEarned   Int      @default(0)
+  lotteriesEntered     Int      @default(0)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  sessions            UserSession[]
+  initiums            Initium[]
+}
+
+model DashChallenge {
+  id          String   @id @default(cuid())
+  nonce       String   @unique
+  dpnsName    String
+  identityId  String
+  dashAddress String
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+}
+
+model UserSession {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Initium {
+  id          String   @id @default(cuid())
+  userId      String
+  // Content
+  title       String
+  description String?
+  url         String?
+  mediaUrl    String?
+  mediaType   String?
+  // Public page
+  slug        String   @unique  // custom URL slug e.g. "my-ai-startup"
+  viewCount   Int      @default(0)
+  isPublic    Boolean  @default(true)
+  // Lottery usage
+  timesUsed        Int      @default(0)
+  lastUsedAt       DateTime?
+  // Lifetime stats — updated every time an entry using this initium earns DASH or Votus
+  totalDashEarned  Float    @default(0)
+  totalVotusEarned Int      @default(0)
+  dashAddress      String?
+  totalWins        Int       @default(0)
+  totalLotteries   Int       @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

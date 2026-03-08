@@ -1,0 +1,67 @@
+{
+  "protocolVersion": 1,
+  "label": "timelyLottery",
+  "documents": {
+    "lottery": {
+      "type": "object",
+      "properties": {
+        "lotteryId":        { "type": "string", "maxLength": 32 },
+        "title":            { "type": "string", "maxLength": 100 },
+        "description":      { "type": "string", "maxLength": 500 },
+        "status":           { "type": "string", "enum": ["active", "ended"] },
+        "startTime":        { "type": "integer" },
+        "endTime":          { "type": "integer" },
+        "durationMinutes":  { "type": "integer" },
+        "totalDash":        { "type": "number" },
+        "totalTickets":     { "type": "integer" },
+        "participantCount": { "type": "integer" },
+        "dashAddress":      { "type": "string", "maxLength": 64 },
+        "autoStarted":      { "type": "boolean" }
+      },
+      "required": ["lotteryId", "title", "status", "startTime", "endTime", "dashAddress"],
+      "additionalProperties": false,
+      "indices": [
+        { "properties": [{ "lotteryId": "asc" }], "unique": true },
+        { "properties": [{ "status": "asc" }] },
+        { "properties": [{ "startTime": "desc" }] }
+      ]
+    },
+    "result": {
+      "type": "object",
+      "properties": {
+        "lotteryId":    { "type": "string", "maxLength": 32 },
+        "winnerId":     { "type": "string", "maxLength": 128 },
+        "winnerName":   { "type": "string", "maxLength": 64 },
+        "winnerDash":   { "type": "number" },
+        "winnerTxId":   { "type": "string", "maxLength": 128 },
+        "reserveDash":  { "type": "number" },
+        "totalDash":    { "type": "number" },
+        "endTime":      { "type": "integer" },
+        "initiumTitle": { "type": "string", "maxLength": 200 }
+      },
+      "required": ["lotteryId", "winnerId", "winnerDash", "endTime"],
+      "additionalProperties": false,
+      "indices": [
+        { "properties": [{ "lotteryId": "asc" }], "unique": true },
+        { "properties": [{ "winnerName": "asc" }] }
+      ]
+    },
+    "entry": {
+      "type": "object",
+      "properties": {
+        "lotteryId":       { "type": "string", "maxLength": 32 },
+        "entryId":         { "type": "string", "maxLength": 32 },
+        "dpnsName":        { "type": "string", "maxLength": 64 },
+        "dashContributed": { "type": "number" },
+        "totalTickets":    { "type": "integer" },
+        "initiumTitle":    { "type": "string", "maxLength": 200 },
+        "timestamp":       { "type": "integer" }
+      },
+      "required": ["lotteryId", "entryId", "dashContributed", "timestamp"],
+      "additionalProperties": false,
+      "indices": [
+        { "properties": [{ "lotteryId": "asc" }, { "entryId": "asc" }], "unique": true }
+      ]
+    }
+  }
+}
