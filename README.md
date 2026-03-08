@@ -20,12 +20,8 @@ Timely.Works doesn't just *use* Dash for payments. It publishes lottery data —
 
 Every lottery is a document on-chain. Signed. Permanent. Verifiable by anyone, without trusting Timely.Works.
 
-```
-GET /api/platform/verify?lotteryId=YOUR_LOTTERY_ID
-→ { "onChain": true, "docs": { "lottery": {...}, "result": {...}, "entries": [...] } }
-```
-
-- **Data Contract** defines the schema (`platform/contracts/lottery-contract.json`)
+- **Identity:** `avara.dash` (`7jXLKaKELJzzHuX8HTfLqkSC5WHnYWaUxtW4DM6NrPnN`)
+- **Data Contract:** `AGdukF7hq4cLF5mkEJWCZYJtxEYEU9UTWkNya825Lmjq`
 - **Dual-write** — SQLite for speed, Dash Drive for truth
 - **Graceful degradation** — app works without `TIMELY_CONTRACT_ID` set
 - **No PII on-chain** — only public DPNS names, ticket counts, initium titles
@@ -258,10 +254,12 @@ Every split is a real blockchain transaction. Every TX ID is shown publicly. Eve
 - On-chain DASH payments (Core chain)
 - Data contract schemas designed
 - Auto Admin + AI naming live
+- Registered Dash Platform Identity: `avara.dash`
 
-### 🔲 Phase 2 (Coming)
-- Register data contracts on Dash Platform mainnet
-- Sync all lotteries + results to Platform Documents
+### ✅ Phase 2 (Current)
+- Registered data contracts on Dash Platform mainnet
+- Contract ID: `AGdukF7hq4cLF5mkEJWCZYJtxEYEU9UTWkNya825Lmjq`
+- Sync all lotteries + results to Platform Documents (Implementation active)
 - Contract IDs published — anyone can verify via DAPI
 
 ### 🔲 Phase 3 (Full Decentralization)

@@ -406,7 +406,7 @@ export default function LotteryPage() {
   const [txName, setTxName] = useState('');
   const [txVerifying, setTxVerifying] = useState(false);
   const [txResult, setTxResult] = useState<{ ok: boolean; message: string; tickets?: number } | null>(null);
-  const [txExpanded, setTxExpanded] = useState(false);
+  const [txExpanded, setTxExpanded] = useState(true);
 
   const countdown = useCountdown(lottery?.endTime || 0);
 
@@ -958,7 +958,7 @@ export default function LotteryPage() {
                   </button>
                 </div>
                 <p className="text-[11px] text-white/25 mt-3">
-                  Auto-detected every 2 minutes. Or paste your TX below to instantly confirm.
+                  Auto-detected every 5 seconds. Or paste your TX hash below to confirm instantly.
                 </p>
               </div>
             </div>
@@ -968,9 +968,9 @@ export default function LotteryPage() {
           <div className="border-t border-white/6">
             <button
               onClick={() => setTxExpanded(!txExpanded)}
-              className="w-full flex items-center justify-between px-6 py-3 text-sm text-white/40 hover:text-white/70 transition-colors">
-              <span>📋 Already sent? Verify your TX instantly</span>
-              <span className="text-xs text-white/20">{txExpanded ? '▲ close' : '▼ open'}</span>
+              className="w-full flex items-center justify-between px-6 py-3 text-sm text-white/70 hover:text-white transition-colors font-medium">
+              <span>📋 Already sent DASH? Paste your TX hash to confirm your tickets</span>
+              <span className="text-xs text-white/30">{txExpanded ? '▲' : '▼ open'}</span>
             </button>
             {txExpanded && (
               <form onSubmit={handleVerifyTx} className="px-6 pb-5 space-y-3">

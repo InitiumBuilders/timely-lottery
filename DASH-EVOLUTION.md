@@ -177,13 +177,15 @@ These are the milestones that will make Timely.Works **fully decentralized** on 
 - ✅ Data contract schemas designed (`platform/contracts/`)
 - ✅ DAPI connection via `lib/dpns-resolver.cjs`
 - ✅ Auto Admin — AI-named autonomous lottery rounds
+- ✅ **Registered Dash Platform Identity:** `7jXLKaKELJzzHuX8HTfLqkSC5WHnYWaUxtW4DM6NrPnN` (avara.dash)
+- ✅ **Registered Data Contract:** `AGdukF7hq4cLF5mkEJWCZYJtxEYEU9UTWkNya825Lmjq`
 
-### Phase 2 — On-Chain Data (Next)
-- 🔲 **Register data contracts on Dash Platform mainnet** (contract IDs needed)
-- 🔲 Fund a Platform identity for contract registration
+### Phase 2 — On-Chain Data (Current)
+- ✅ **Register data contracts on Dash Platform mainnet**
+- ✅ Fund a Platform identity for contract registration
 - 🔲 Sync all lottery documents to Platform on creation
 - 🔲 Sync result documents on lottery end
-- 🔲 Public contract ID published — anyone can verify any result via DAPI
+- ✅ Public contract ID published: `AGdukF7hq4cLF5mkEJWCZYJtxEYEU9UTWkNya825Lmjq`
 
 ### Phase 3 — Full Decentralization
 - 🔲 **Full DPNS-only login** — remove email auth entirely

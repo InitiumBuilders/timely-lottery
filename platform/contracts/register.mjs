@@ -83,7 +83,7 @@ const { default: Dash } = await import('dash').catch(() => {
 });
 
 // ─── Contract Documents Schema ────────────────────────────────────────────────
-import contractDef from './lottery-contract.json' assert { type: 'json' };
+import contractDef from './lottery-contract.json' with { type: 'json' };
 
 // ─── Connect & Register ───────────────────────────────────────────────────────
 console.log('\n⚡ Timely.Works — Dash Platform Contract Registration');
@@ -95,10 +95,13 @@ console.log('');
 
 const client = new Dash.Client({
   network: 'mainnet',
+  dapiAddresses: [
+    { host: '158.160.14.115', httpPort: 3000, grpcPort: 1443 },
+  ],
   wallet: {
     mnemonic: MNEMONIC,
     unsafeOptions: {
-      skipSynchronizationBeforeHeight: 1600000,
+      skipSynchronizationBeforeHeight: 2434750,
     },
   },
 });
@@ -125,6 +128,9 @@ try {
     contractDef.documents,
     identity
   );
+
+  const generatedId = contract.toJSON().id;
+  console.log('  Generated Contract ID:', generatedId);
 
   console.log('📡 Broadcasting dataContractCreate state transition...');
   console.log('   ⏳ Waiting for Platform consensus (3–15 seconds)...');

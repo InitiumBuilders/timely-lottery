@@ -103,9 +103,12 @@ async function getPlatformClient(): Promise<any | null> {
     const Dash = require('dash');
     const client = new Dash.Client({
       network:  process.env.DASH_NETWORK || 'mainnet',
+      dapiAddresses: [
+        { host: '158.160.14.115', httpPort: 3000, grpcPort: 1443 },
+      ],
       wallet: {
         mnemonic: process.env.DASH_MNEMONIC || undefined,
-        unsafeOptions: { skipSynchronizationBeforeHeight: 1000000 },
+        unsafeOptions: { skipSynchronizationBeforeHeight: 2434750 },
       },
       apps: {
         timelyLottery: {
