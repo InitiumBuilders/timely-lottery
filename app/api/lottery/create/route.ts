@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { nanoid } from 'nanoid';
 import { upsertLottery, getNextAddressIndex, getActiveLottery, getReserveStats } from '@/lib/store';
 import { deriveLotteryAddress, sweepNextLotteryFundsToLottery } from '@/lib/dash';
+import { publishLottery } from '@/lib/platform';
 
 export async function POST(req: NextRequest) {
   try {
@@ -45,6 +46,9 @@ export async function POST(req: NextRequest) {
 
     upsertLottery(lottery);
     console.log('[create] Lottery created:', lottery.id, lottery.address);
+
+    // ── Publish to Dash Drive (fire-and-forget, graceful degradation) ──────────
+    publishLottery(lottery).catch(e => console.error('[platform] publishLottery:', e));
 
     // ── Sweep accumulated 5% next-lottery funds into this new lottery ──────────
     // Non-blocking: lottery is already active, sweep runs async in background

@@ -14,6 +14,26 @@
 
 ---
 
+## Built on Dash Platform 🔵
+
+Timely.Works doesn't just *use* Dash for payments. It publishes lottery data — results, entries, outcomes — to **Dash Drive**, a decentralized data layer built into the Dash blockchain.
+
+Every lottery is a document on-chain. Signed. Permanent. Verifiable by anyone, without trusting Timely.Works.
+
+```
+GET /api/platform/verify?lotteryId=YOUR_LOTTERY_ID
+→ { "onChain": true, "docs": { "lottery": {...}, "result": {...}, "entries": [...] } }
+```
+
+- **Data Contract** defines the schema (`platform/contracts/lottery-contract.json`)
+- **Dual-write** — SQLite for speed, Dash Drive for truth
+- **Graceful degradation** — app works without `TIMELY_CONTRACT_ID` set
+- **No PII on-chain** — only public DPNS names, ticket counts, initium titles
+
+→ [Full Platform Integration Guide](./docs/DASH-PLATFORM-INTEGRATION.md)
+
+---
+
 ## What Is This?
 
 Timely.Works is a **DASH-powered community lottery** where:

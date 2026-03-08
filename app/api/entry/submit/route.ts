@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { nanoid } from 'nanoid';
 import { getActiveLottery, getEntryByAddress, getNextEntryAddressIndex, upsertEntry } from '@/lib/store';
 import { deriveEntryAddress, getContributions, isValidDashAddress } from '@/lib/dash';
+import { publishEntry } from '@/lib/platform';
 import { ticketsForDash, votusForTickets, totalTickets } from '@/lib/ticket-utils';
 import { COOKIE_NAME, getSessionUser } from '@/lib/auth';
 import prisma from '@/lib/db';
@@ -139,6 +140,11 @@ export async function POST(req: NextRequest) {
     };
 
     upsertEntry(entry);
+
+    // ── Publish anonymized entry to Dash Drive (fire-and-forget) ─────────────
+    // NO PII: only public DPNS username, contribution amount, ticket count, initium title
+    publishEntry(entry).catch(e => console.error('[platform] publishEntry:', e));
+
     return NextResponse.json({ entry });
   } catch (err) {
     console.error('[submit] Error:', err);

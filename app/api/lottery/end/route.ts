@@ -4,6 +4,7 @@ import {
   getLottery, upsertLottery, upsertEntry, getEntriesForLottery, addWinner,
   getReserveStats, setReserveAddress, addAllocationRecord, getNextLotteryFundAddressIndex,
 } from '@/lib/store';
+import { publishLottery as publishLotteryDrive, publishResult } from '@/lib/platform';
 import {
   directSweepAllToWinner, splitPayout, isValidDashAddress,
   deriveReserveAddress, deriveNextLotteryFundAddress, getTxSenderAddress,
@@ -177,6 +178,22 @@ export async function POST(req: NextRequest) {
     lottery.winnerDash    = winnerSent || lottery.totalDash;
     lottery.winnerTxId    = payoutTxId;
     upsertLottery(lottery);
+
+    // ── Publish ended lottery + result to Dash Drive (fire-and-forget) ─────────
+    publishLotteryDrive(lottery).catch(e => console.error('[platform] publishLottery(ended):', e));
+    if (payoutTxId) {
+      publishResult({
+        lotteryId:    lottery.id,
+        winnerId:     winner.id,
+        winnerName:   lottery.winnerName || '',
+        winnerDash:   winnerSent,
+        winnerTxId:   payoutTxId,
+        reserveDash:  reserveSent,
+        totalDash:    lottery.totalDash,
+        endTime:      Date.now(),
+        initiumTitle: (winner as any).initiumTitle || '',
+      }).catch(e => console.error('[platform] publishResult:', e));
+    }
 
     // Record in winners log
     const totalTickets = entries.reduce((s, e) => s + e.totalTickets, 0);

@@ -45,6 +45,66 @@ interface Entry {
   createdAt: number;
 }
 
+// ─── On-Chain Badge ───────────────────────────────────────────────────────────
+// Shows "⛓ On Dash Platform" when the lottery is published to Dash Drive.
+// Clicking opens an info panel explaining what that means.
+function OnChainBadge({ lotteryId }: { lotteryId: string }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="flex flex-col items-center mb-4">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] uppercase tracking-widest font-medium transition-all"
+        style={{
+          background:  'rgba(0,210,180,0.08)',
+          border:      '1px solid rgba(0,210,180,0.25)',
+          color:       'rgba(0,210,180,0.85)',
+          cursor:      'pointer',
+        }}
+        title="Click to learn what On Dash Platform means"
+      >
+        <span>⛓</span>
+        <span>On Dash Platform</span>
+        <span style={{ opacity: 0.5 }}>{open ? '▲' : '▼'}</span>
+      </button>
+
+      {open && (
+        <div
+          className="mt-3 max-w-sm text-left rounded-2xl px-5 py-4 text-xs leading-relaxed"
+          style={{
+            background:  'rgba(0,210,180,0.05)',
+            border:      '1px solid rgba(0,210,180,0.15)',
+            color:       'rgba(255,255,255,0.65)',
+          }}
+        >
+          <p className="font-semibold mb-2" style={{ color: 'rgba(0,210,180,0.9)' }}>
+            What does this mean?
+          </p>
+          <p className="mb-2">
+            This lottery is recorded on <strong style={{ color: 'rgba(0,210,180,0.85)' }}>Dash Platform</strong> — a decentralized data layer built on the Dash blockchain.
+          </p>
+          <p className="mb-2">
+            Every lottery, result, and entry is written to <strong>Dash Drive</strong> — a permanent, censorship-resistant data store. Anyone can independently verify the outcome without trusting Timely.Works.
+          </p>
+          <p className="mb-3">
+            The chain doesn&apos;t lie.
+          </p>
+          <a
+            href={`/api/platform/verify?lotteryId=${lotteryId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 font-medium underline underline-offset-2"
+            style={{ color: 'rgba(0,210,180,0.85)' }}
+          >
+            Verify on-chain →
+          </a>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function useCountdown(endTime: number) {
   const [remaining, setRemaining] = useState(0);
   useEffect(() => {
@@ -764,6 +824,11 @@ export default function LotteryPage() {
             <span className="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
             Live Lottery
           </div>
+
+          {/* ── On-Chain Badge (shown when TIMELY_CONTRACT_ID is set) ──────── */}
+          {process.env.NEXT_PUBLIC_ON_CHAIN === '1' && (
+            <OnChainBadge lotteryId={lottery.id} />
+          )}
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2 leading-tight">
             {lottery.title}
           </h1>
