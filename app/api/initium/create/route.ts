@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/db';
 import { COOKIE_NAME, getSessionUser } from '@/lib/auth';
+import { publishInitium } from '@/lib/platform';
 
 function toSlug(title: string, id: string): string {
   return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50)
@@ -38,5 +39,19 @@ export async function POST(req: NextRequest) {
       slug,
     },
   });
+
+  // ── Dash Drive publish (fire-and-forget — never blocks the response) ────────
+  publishInitium({
+    initiumId:       initium.id,
+    slug:            initium.slug,
+    title:           initium.title,
+    description:     initium.description || '',
+    url:             initium.url || '',
+    ownerDpns:       (user as any).dashUsername || '',
+    timesUsed:       0,
+    totalDashEarned: 0,
+    createdAt:       Date.now(),
+  }).catch(e => console.error('[platform:initium]', e));
+
   return NextResponse.json({ ok: true, initium });
 }

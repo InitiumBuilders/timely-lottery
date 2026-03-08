@@ -34,6 +34,63 @@ GET /api/platform/verify?lotteryId=YOUR_LOTTERY_ID
 
 ---
 
+## Your Initium, On-Chain 🌐
+
+When you register an Initium on Timely.Works, it doesn't just live in our database — it's published to **Dash Drive** the moment you create it. Your idea gets a permanent address on the Dash blockchain. No server can delete it. No company can lose it.
+
+### What's stored on-chain
+
+Every Initium document contains:
+```json
+{
+  "initiumId":       "uuid",
+  "slug":            "your-initium-slug",
+  "title":           "Your Initium Title",
+  "description":     "What it's about (up to 5000 chars)",
+  "url":             "https://your-site.com",
+  "ownerDpns":       "august.dash",
+  "timesUsed":       0,
+  "totalDashEarned": 0,
+  "createdAt":       1709900000
+}
+```
+
+### Query from anywhere — no server needed
+
+```bash
+# All Initiums (latest 20)
+GET https://timely.works/api/platform/initiums
+
+# Single Initium by slug
+GET https://timely.works/api/platform/initiums?slug=my-initium
+
+# Response
+{
+  "onChain": true,
+  "contractId": "YOUR_CONTRACT_ID",
+  "initiums": [...],
+  "count": 42
+}
+```
+
+Or query Dash Drive directly with the SDK:
+```javascript
+const docs = await client.platform.documents.get('timelyLottery.initium', {
+  orderBy: [{ createdAt: 'desc' }],
+  limit: 20,
+});
+```
+
+### Data Contract Schema
+
+The full schema lives at [`platform/contracts/lottery-contract.json`](./platform/contracts/lottery-contract.json).
+It includes 5 document types: `lottery`, `result`, `entry`, `word`, and `initium`.
+
+→ Register on testnet: `node platform/contracts/register-testnet.mjs`
+→ Register on mainnet: `node platform/contracts/register.mjs`
+
+---
+
 ## What Is This?
 
 Timely.Works is a **DASH-powered community lottery** where:

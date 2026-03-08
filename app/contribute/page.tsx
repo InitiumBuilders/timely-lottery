@@ -16,6 +16,7 @@ const SITE_URL      = 'https://AugustJames.Live';
 interface WordEntry { word: string; username: string; timestamp: number; target: string; }
 interface FreqItem  { word: string; count: number; }
 interface User      { id: string; displayName?: string; dashUsername?: string; email?: string; }
+interface GitCommit { sha: string; shaFull: string; message: string; date: string; author: string; url: string; repo: string; }
 
 // ── Copy block ────────────────────────────────────────────────────────────────
 function CopyBlock({ value, label, color = '#30BFFF' }: { value: string; label: string; color?: string }) {
@@ -153,6 +154,11 @@ export default function ContributePage() {
   const [wordTab,     setWordTab]     = useState<'current' | 'next' | 'cloud'>('cloud');
   const [reserveBal,  setReserveBal]  = useState<number | null>(null);
   const [mounted,     setMounted]     = useState(false);
+  const [commit,      setCommit]      = useState<GitCommit | null>(null);
+
+  const contractId = typeof window !== 'undefined'
+    ? (process.env.NEXT_PUBLIC_TIMELY_CONTRACT_ID || '')
+    : '';
 
   const loadWords = useCallback(() => {
     fetch('/api/words?target=all').then(r => r.json()).then(setWordData).catch(() => {});
@@ -163,6 +169,7 @@ export default function ContributePage() {
     fetch('/api/auth/me').then(r => r.json()).then(d => setUser(d.user || null)).catch(() => {});
     loadWords();
     fetch('/api/reserve/balance').then(r => r.json()).then(d => setReserveBal(d.liveBalance ?? null)).catch(() => {});
+    fetch('/api/github-commit').then(r => r.json()).then(setCommit).catch(() => {});
   }, [loadWords]);
 
   const onWordSubmit = useCallback(() => {
@@ -223,6 +230,211 @@ export default function ContributePage() {
       </section>
 
       <Divider color="rgba(167,139,250,0.12)" />
+
+      {/* ══════════════════ LATEST GITHUB COMMIT ══════════════════════════ */}
+      <section className="relative z-10 px-4 sm:px-6 py-8 sm:py-10">
+        <div className="max-w-3xl mx-auto">
+          <div className="relative rounded-2xl overflow-hidden"
+            style={{ background: 'linear-gradient(135deg, rgba(0,255,200,0.04), rgba(48,191,255,0.04))', border: '1px solid rgba(0,255,200,0.18)' }}>
+            {/* Top glow line */}
+            <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(0,255,200,0.6), rgba(48,191,255,0.4), transparent)' }} />
+            <div className="p-5 sm:p-6">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                {/* Icon + label */}
+                <div className="flex items-center gap-3 flex-shrink-0">
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
+                    style={{ background: 'rgba(0,255,200,0.08)', border: '1px solid rgba(0,255,200,0.2)' }}>
+                    ⬡
+                  </div>
+                  <div>
+                    <div className="text-[9px] font-mono font-bold tracking-[0.2em] mb-0.5" style={{ color: 'rgba(0,255,200,0.5)' }}>LATEST COMMIT</div>
+                    <div className="text-[11px] font-mono font-bold" style={{ color: '#00FFC8' }}>
+                      Open Source. Verifiable. Yours.
+                    </div>
+                  </div>
+                </div>
+
+                {/* Commit info */}
+                <div className="flex-1 min-w-0 sm:border-l sm:pl-4" style={{ borderColor: 'rgba(0,255,200,0.12)' }}>
+                  {commit ? (
+                    <>
+                      <div className="text-white/80 text-sm font-medium leading-snug truncate mb-1">
+                        {commit.message}
+                      </div>
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-mono">
+                        <a href={commit.url} target="_blank" rel="noopener noreferrer"
+                          className="hover:opacity-80 transition-opacity"
+                          style={{ color: '#30BFFF' }}>
+                          #{commit.sha}
+                        </a>
+                        <span className="text-white/25">·</span>
+                        <span className="text-white/35">
+                          {new Date(commit.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        </span>
+                        <span className="text-white/25">·</span>
+                        <a href={commit.repo} target="_blank" rel="noopener noreferrer"
+                          className="hover:opacity-80 transition-opacity text-white/40 hover:text-white/60">
+                          InitiumBuilders/timely-lottery ↗
+                        </a>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-white/30 text-sm font-mono animate-pulse">Loading latest commit…</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <Divider color="rgba(0,255,200,0.08)" />
+
+      {/* ══════════════════ YOUR INITIUM, ON-CHAIN ════════════════════════ */}
+      <section className="relative z-10 px-4 sm:px-6 py-14 sm:py-20 overflow-hidden">
+        {/* Ambient glow */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute rounded-full" style={{ width: 700, height: 400, top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: 'radial-gradient(ellipse, rgba(0,255,200,0.03) 0%, rgba(48,191,255,0.02) 40%, transparent 70%)' }} />
+        </div>
+
+        <div className="max-w-4xl mx-auto relative">
+          {/* Section header */}
+          <div className="text-center mb-10 sm:mb-14">
+            <div className="inline-flex items-center gap-2 mb-5 px-4 py-2 rounded-full text-[10px] font-mono font-bold tracking-[0.2em]"
+              style={{ background: 'rgba(48,191,255,0.08)', border: '1px solid rgba(48,191,255,0.25)', color: '#30BFFF' }}>
+              ⛓ DASH DRIVE · DECENTRALIZED STORAGE
+            </div>
+            <h2 className="font-black leading-tight mb-4" style={{ fontSize: 'clamp(1.8rem, 6vw, 3.5rem)' }}>
+              <span className="text-white">Your Initium,</span>{' '}
+              <span style={{ background: 'linear-gradient(135deg, #00FFC8, #30BFFF)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>On-Chain.</span>
+            </h2>
+            <p className="text-white/50 leading-relaxed max-w-2xl mx-auto" style={{ fontSize: 'clamp(0.95rem, 2.2vw, 1.1rem)' }}>
+              When you register an Initium here, it lives on{' '}
+              <span className="text-white/70 font-semibold">Dash Drive</span> — Dash&apos;s decentralized storage layer.{' '}
+              No server can delete it. No company can lose it.{' '}
+              <em className="text-white/80">Your idea, on-chain.</em>
+            </p>
+          </div>
+
+          {/* Flow diagram */}
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-12 text-sm font-mono">
+            {[
+              { label: 'Your Initium', icon: '💡', color: '#a78bfa' },
+              { label: '→', icon: null, color: 'rgba(255,255,255,0.2)' },
+              { label: 'Timely.Works', icon: '⚡', color: '#FFD700' },
+              { label: '→', icon: null, color: 'rgba(255,255,255,0.2)' },
+              { label: 'Dash Drive', icon: '🔵', color: '#30BFFF' },
+              { label: '→', icon: null, color: 'rgba(255,255,255,0.2)' },
+              { label: 'Forever', icon: '∞', color: '#00FFC8' },
+            ].map((step, i) => step.icon ? (
+              <div key={i} className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl"
+                style={{ background: `${step.color}08`, border: `1px solid ${step.color}25` }}>
+                <span>{step.icon}</span>
+                <span style={{ color: step.color }}>{step.label}</span>
+              </div>
+            ) : (
+              <span key={i} className="text-lg font-light" style={{ color: step.color }}>{step.label}</span>
+            ))}
+          </div>
+
+          {/* Three cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 mb-10">
+            {/* Card 1: Permanent */}
+            <div className="rounded-2xl p-5 sm:p-6 relative overflow-hidden"
+              style={{ background: 'linear-gradient(135deg, rgba(0,255,200,0.06), rgba(0,255,200,0.02))', border: '1px solid rgba(0,255,200,0.18)' }}>
+              <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(0,255,200,0.5), transparent)' }} />
+              <div className="text-3xl mb-3">∞</div>
+              <h3 className="text-white font-bold text-base mb-2">Permanent Address</h3>
+              <p className="text-white/45 text-sm leading-relaxed">
+                Every Initium gets a permanent address on the Dash blockchain. No domain. No hosting. No expiry. It simply exists.
+              </p>
+            </div>
+
+            {/* Card 2: No Server */}
+            <div className="rounded-2xl p-5 sm:p-6 relative overflow-hidden"
+              style={{ background: 'linear-gradient(135deg, rgba(48,191,255,0.06), rgba(48,191,255,0.02))', border: '1px solid rgba(48,191,255,0.18)' }}>
+              <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(48,191,255,0.5), transparent)' }} />
+              <div className="text-3xl mb-3">🔓</div>
+              <h3 className="text-white font-bold text-base mb-2">No Server Required</h3>
+              <p className="text-white/45 text-sm leading-relaxed">
+                Anyone can query your Initium directly from Dash Drive via DAPI — without going through our servers. The data is yours.
+              </p>
+            </div>
+
+            {/* Card 3: Open Protocol */}
+            <div className="rounded-2xl p-5 sm:p-6 relative overflow-hidden"
+              style={{ background: 'linear-gradient(135deg, rgba(167,139,250,0.06), rgba(167,139,250,0.02))', border: '1px solid rgba(167,139,250,0.18)' }}>
+              <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(167,139,250,0.5), transparent)' }} />
+              <div className="text-3xl mb-3">📄</div>
+              <h3 className="text-white font-bold text-base mb-2">Open Data Contract</h3>
+              <p className="text-white/45 text-sm leading-relaxed">
+                A Data Contract is like a public schema — it defines the exact shape of the data stored on-chain. The network enforces it. No one can change it.
+              </p>
+            </div>
+          </div>
+
+          {/* Contract ID card */}
+          <div className="rounded-2xl p-5 sm:p-6 mb-6 relative overflow-hidden"
+            style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)' }}>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              <div className="flex-1 min-w-0">
+                <div className="text-[9px] font-mono font-bold tracking-[0.2em] mb-2" style={{ color: 'rgba(48,191,255,0.5)' }}>
+                  ⛓ DATA CONTRACT
+                </div>
+                <div className="font-mono text-sm break-all mb-1"
+                  style={{ color: contractId ? '#30BFFF' : 'rgba(255,255,255,0.2)' }}>
+                  {contractId || 'Coming soon — testnet active'}
+                </div>
+                <div className="text-[11px] text-white/30 font-mono">
+                  {contractId
+                    ? 'Live on Dash Platform — fully verifiable'
+                    : 'Run platform/contracts/register.mjs to activate'}
+                </div>
+              </div>
+              {contractId && (
+                <a href={`https://platform-explorer.pshenmic.dev/dataContract/${contractId}`}
+                  target="_blank" rel="noopener noreferrer"
+                  className="flex-shrink-0 px-4 py-2.5 rounded-xl text-xs font-bold transition-all hover:opacity-80"
+                  style={{ background: 'rgba(48,191,255,0.1)', border: '1px solid rgba(48,191,255,0.25)', color: '#30BFFF' }}>
+                  View on Explorer ↗
+                </a>
+              )}
+            </div>
+          </div>
+
+          {/* Query section */}
+          <div className="rounded-2xl p-5 sm:p-6 relative overflow-hidden"
+            style={{ background: 'rgba(0,255,200,0.03)', border: '1px solid rgba(0,255,200,0.1)' }}>
+            <div className="text-[9px] font-mono font-bold tracking-[0.2em] mb-3" style={{ color: 'rgba(0,255,200,0.5)' }}>
+              QUERY FROM ANYWHERE
+            </div>
+            <div className="font-mono text-xs sm:text-sm text-white/60 bg-black/30 rounded-xl p-4 mb-3 overflow-x-auto">
+              <span className="text-white/30">GET</span>{' '}
+              <span style={{ color: '#00FFC8' }}>https://timely.works/api/platform/initiums</span>
+              <br />
+              <span className="text-white/30">GET</span>{' '}
+              <span style={{ color: '#00FFC8' }}>https://timely.works/api/platform/initiums?slug=your-initium</span>
+            </div>
+            <p className="text-white/35 text-xs font-mono">
+              No API key. No auth. The data is public on Dash Drive — we just make it easy to reach.
+            </p>
+          </div>
+
+          {/* Bottom tagline */}
+          <div className="text-center mt-10">
+            <p className="text-white/30 text-sm font-mono italic">
+              &ldquo;This is what decentralized infrastructure looks like.&rdquo;
+            </p>
+            <a href="https://platform-explorer.pshenmic.dev" target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 mt-3 text-xs font-mono hover:opacity-80 transition-opacity"
+              style={{ color: 'rgba(48,191,255,0.5)' }}>
+              Explore Dash Platform → platform-explorer.pshenmic.dev ↗
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <Divider color="rgba(48,191,255,0.08)" />
 
       {/* ═══════════════════════════ TICKET + VOTUS ════════════════════════ */}
       <section className="relative z-10 px-4 sm:px-6 py-14 sm:py-20">

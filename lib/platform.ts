@@ -353,6 +353,142 @@ export async function getResultFromChain(lotteryId: string): Promise<any | null>
   }
 }
 
+// ─── Initium Types & Functions ────────────────────────────────────────────────
+
+export interface PlatformInitium {
+  initiumId: string;       // Prisma UUID (max 36 chars)
+  slug: string;            // URL slug (max 100 chars)
+  title: string;           // Initium title (max 200 chars)
+  description: string;     // Initium description (max 5000 chars)
+  url: string;             // External URL (max 1024 chars)
+  ownerDpns: string;       // DPNS username of owner, or "" if no Platform login
+  timesUsed: number;       // How many lotteries have used this Initium
+  totalDashEarned: number; // Cumulative DASH earned via this Initium
+  createdAt: number;       // epoch ms
+}
+
+/**
+ * Publish an Initium to Dash Drive.
+ * Called fire-and-forget after prisma.initium.create() in /api/initium/create.
+ * Zero PII — no email, no IP.
+ */
+export async function publishInitium(data: PlatformInitium): Promise<void> {
+  if (!isPlatformConfigured()) return;
+  const client = await getPlatformClient();
+  if (!client) return;
+
+  try {
+    const doc = {
+      initiumId:       data.initiumId.slice(0, 36),
+      slug:            data.slug.slice(0, 100),
+      title:           data.title.slice(0, 200),
+      description:     (data.description || '').slice(0, 5000),
+      url:             (data.url || '').slice(0, 1024),
+      ownerDpns:       (data.ownerDpns || '').slice(0, 64),
+      timesUsed:       data.timesUsed || 0,
+      totalDashEarned: data.totalDashEarned || 0,
+      createdAt:       Math.floor(data.createdAt / 1000), // store as epoch seconds
+    };
+
+    // Remove empty optional strings to keep documents lean
+    if (!doc.description) delete (doc as Partial<typeof doc>).description;
+    if (!doc.url)         delete (doc as Partial<typeof doc>).url;
+    if (!doc.ownerDpns)   delete (doc as Partial<typeof doc>).ownerDpns;
+
+    await submitDocument(client, 'initium', doc);
+  } catch (e: unknown) {
+    console.error('[platform] publishInitium error:', e instanceof Error ? e.message : String(e));
+  }
+}
+
+/**
+ * Query all Initiums from Dash Drive.
+ * Returns empty array if Platform not configured or query fails.
+ */
+export async function getInitiumsFromChain(limit = 20): Promise<any[]> {
+  if (!isPlatformConfigured()) return [];
+  const client = await getPlatformClient();
+  if (!client) return [];
+
+  try {
+    const docs = await client.platform.documents.get('timelyLottery.initium', {
+      limit: Math.min(limit, 100),
+      orderBy: [{ createdAt: 'desc' }],
+    });
+    return docs || [];
+  } catch (e: unknown) {
+    console.error('[platform] getInitiumsFromChain error:', e instanceof Error ? e.message : String(e));
+    return [];
+  }
+}
+
+/**
+ * Query a single Initium from Dash Drive by slug.
+ * Returns null if not found or Platform not configured.
+ */
+export async function getInitiumFromChain(slug: string): Promise<any | null> {
+  if (!isPlatformConfigured()) return null;
+  const client = await getPlatformClient();
+  if (!client) return null;
+
+  try {
+    const docs = await client.platform.documents.get('timelyLottery.initium', {
+      where: [['slug', '==', slug.slice(0, 100)]],
+      limit: 1,
+    });
+    return docs?.[0] || null;
+  } catch (e: unknown) {
+    console.error('[platform] getInitiumFromChain error:', e instanceof Error ? e.message : String(e));
+    return null;
+  }
+}
+
+/**
+ * Update an existing Initium document on Dash Drive.
+ * Uses replace in the document batch. Fire-and-forget.
+ */
+export async function updateInitiumOnChain(
+  slug: string,
+  updates: Partial<PlatformInitium>,
+): Promise<void> {
+  if (!isPlatformConfigured()) return;
+  const client = await getPlatformClient();
+  if (!client) return;
+
+  try {
+    const identity = await getIdentity(client);
+    if (!identity) return;
+
+    // Fetch existing doc first
+    const existing = await client.platform.documents.get('timelyLottery.initium', {
+      where: [['slug', '==', slug.slice(0, 100)]],
+      limit: 1,
+    });
+
+    if (!existing?.[0]) {
+      console.warn('[platform] updateInitiumOnChain: document not found for slug', slug);
+      return;
+    }
+
+    const doc = existing[0];
+
+    // Apply updates
+    if (updates.timesUsed       !== undefined) doc.set('timesUsed',       updates.timesUsed);
+    if (updates.totalDashEarned !== undefined) doc.set('totalDashEarned', updates.totalDashEarned);
+    if (updates.title           !== undefined) doc.set('title',           updates.title.slice(0, 200));
+    if (updates.description     !== undefined) doc.set('description',     updates.description.slice(0, 5000));
+    if (updates.url             !== undefined) doc.set('url',             updates.url.slice(0, 1024));
+
+    await client.platform.documents.broadcast(
+      { create: [], replace: [doc], delete: [] },
+      identity,
+    );
+    console.log('[platform] ✅ Updated initium on-chain:', slug);
+  } catch (e: unknown) {
+    console.error('[platform] updateInitiumOnChain error:', e instanceof Error ? e.message : String(e));
+  }
+}
+
 /**
  * Verify a lottery is recorded on Dash Drive.
  * Returns a structured verification object.

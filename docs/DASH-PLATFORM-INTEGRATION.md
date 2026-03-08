@@ -178,6 +178,97 @@ We're building toward that. Dual-write today. Full on-chain tomorrow.
 
 ---
 
+## Initium On-Chain Storage 🌐
+
+> *"The most radical thing we can do for an idea is make it permanent. Not just written down — anchored. On a chain that nobody owns."*
+
+### The Fifth Document Type
+
+When Timely.Works launched Dash Platform integration, the data contract covered four document types: `lottery`, `result`, `entry`, and `word`. With v1.2, we added a fifth: **`initium`**.
+
+An Initium is the core unit of value in Timely.Works — the project, idea, or venture that a lottery is built around. Now, when you register one, it doesn't just exist in our database. It's published to Dash Drive. Immediately. Automatically. Permanently.
+
+### The Initium Document Schema
+
+```json
+{
+  "initiumId":       "uuid (max 36 chars)",
+  "slug":            "url-slug (max 100 chars)",
+  "title":           "Initium title (max 200 chars)",
+  "description":     "What this is about (max 5000 chars)",
+  "url":             "Link to learn more (max 1024 chars)",
+  "ownerDpns":       ".dash username of the owner (max 64 chars)",
+  "timesUsed":       0,
+  "totalDashEarned": 0.0,
+  "createdAt":       1709900000
+}
+```
+
+**Required:** `initiumId`, `slug`, `title`, `createdAt`.
+
+**Indices:**
+- `bySlug` — unique, for direct lookup by URL slug
+- `byOwner` — all Initiums by a given DPNS identity
+- `byCreatedAt` — chronological feed, newest first
+
+### How to Query Initiums from Dash Drive
+
+No server. No API key. Just the Dash SDK and the contract ID.
+
+```javascript
+import Dash from 'dash';
+
+const client = new Dash.Client({
+  network: 'mainnet', // or 'testnet'
+  apps: {
+    timelyLottery: {
+      contractId: process.env.TIMELY_CONTRACT_ID,
+    },
+  },
+});
+
+// ── Get all Initiums (newest first) ──────────────────────────────────────────
+const all = await client.platform.documents.get('timelyLottery.initium', {
+  orderBy: [{ createdAt: 'desc' }],
+  limit: 20,
+});
+
+// ── Find a specific Initium by slug ──────────────────────────────────────────
+const [initium] = await client.platform.documents.get('timelyLottery.initium', {
+  where: [['slug', '==', 'open-source-tools-for-builders']],
+  limit: 1,
+});
+
+console.log(initium.get('title'));           // "Open Source Tools for Builders"
+console.log(initium.get('ownerDpns'));       // "august.dash"
+console.log(initium.get('timesUsed'));       // 3
+console.log(initium.get('totalDashEarned')); // 28.7
+```
+
+Or use our REST proxy (no SDK required):
+```bash
+curl https://timely.works/api/platform/initiums
+curl "https://timely.works/api/platform/initiums?slug=my-initium"
+```
+
+### Why Your Idea Outlives Any Company
+
+Every company eventually closes. Every server eventually goes dark. Storage bills go unpaid. Databases get migrated, corrupted, deleted.
+
+Dash Drive is different. Documents published to Drive are maintained by the EvoNode network — hundreds of masternodes running the Platform layer. No single entity controls them. No single entity can shut them down.
+
+When you publish an Initium to Dash Drive:
+- It gets a permanent document ID on the blockchain
+- It's replicated across every EvoNode on the network
+- It's queryable via DAPI — the Dash API layer — without a centralized server
+- It exists independently of Timely.Works
+
+This is what it means to build on decentralized infrastructure. Not "we promise to keep your data safe." But: *the network keeps it. You can verify it yourself. Always.*
+
+Your idea, on-chain. Forever.
+
+---
+
 ## Join the Build
 
 Timely.Works is open source.
