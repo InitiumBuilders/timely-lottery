@@ -1,51 +1,72 @@
 export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
-import { getReserveStats, setReserveAddress, getSplitHistory } from '@/lib/store';
-import { deriveReserveAddress, getAddressInfo } from '@/lib/dash';
 
-// Known reserve address — used as fallback when DASH_MNEMONIC is unavailable.
-// Balance lookups only need the public address, not the private key.
-const KNOWN_RESERVE_ADDRESS = 'XpkRk1Sx2Kq4vMFt9KurpHbj6Yh78sw8uZ';
+// The reserve address is fixed — derived from the lottery mnemonic at m/44'/5'/5'/0/0.
+// We use it directly here so this route works on Vercel (no mnemonic/VPS needed).
+const RESERVE_ADDRESS = process.env.RESERVE_ADDRESS || 'XpkRk1Sx2Kq4vMFt9KurpHbj6Yh78sw8uZ';
+
+const INSIGHT_BASE = 'https://insight.dash.org/insight-api';
+const INSIGHT_HEADERS = {
+  'User-Agent': 'Mozilla/5.0 (compatible; TimelyLottery/1.0)',
+  'Accept': 'application/json',
+};
+
+async function fetchReserveBalance(): Promise<{ liveBalance: number; txCount: number }> {
+  try {
+    const res = await fetch(`${INSIGHT_BASE}/addr/${RESERVE_ADDRESS}`, {
+      headers: INSIGHT_HEADERS,
+      cache: 'no-store',
+    });
+    if (!res.ok) return { liveBalance: 0, txCount: 0 };
+    const info = await res.json();
+    return {
+      liveBalance: (info.balanceSat || 0) / 1e8,
+      txCount: info.txApperances || info.txApearances || info.transactions?.length || 0,
+    };
+  } catch {
+    return { liveBalance: 0, txCount: 0 };
+  }
+}
+
+// Try to load store stats — gracefully fails on Vercel (no persistent filesystem)
+async function tryGetStoreStats() {
+  try {
+    const { getReserveStats, getSplitHistory, setReserveAddress } = await import('@/lib/store');
+    setReserveAddress(RESERVE_ADDRESS);
+    return {
+      stats: getReserveStats(),
+      splitHistory: getSplitHistory(),
+    };
+  } catch {
+    // Running on Vercel or store unavailable — return empty stats
+    return {
+      stats: {
+        reserveTotalAllocated: 0,
+        nextLotteryFundHeld: 0,
+        totalDashProcessed: 0,
+        allocationHistory: [],
+      },
+      splitHistory: [],
+    };
+  }
+}
 
 export async function GET() {
   try {
-    // Derive reserve address from mnemonic if available; fall back to known address
-    // or RESERVE_ADDRESS env var for balance-only queries (no signing needed).
-    let reserveAddr: string;
-    try {
-      const derived = deriveReserveAddress();
-      reserveAddr = derived.address;
-    } catch {
-      reserveAddr = process.env.RESERVE_ADDRESS || KNOWN_RESERVE_ADDRESS;
-    }
-    setReserveAddress(reserveAddr);
-
-    // Fetch live confirmed on-chain balance from Insight API
-    let liveBalance = 0;
-    let txCount = 0;
-    try {
-      const info = await getAddressInfo(reserveAddr);
-      if (info) {
-        liveBalance = (info.balanceSat || 0) / 1e8;
-        txCount     = info.txApperances || info.txApearances || info.transactions?.length || 0;
-      }
-    } catch { /* network error — return 0 */ }
-
-    const stats       = getReserveStats();
-    const splitHistory = getSplitHistory();
+    const [{ liveBalance, txCount }, { stats, splitHistory }] = await Promise.all([
+      fetchReserveBalance(),
+      tryGetStoreStats(),
+    ]);
 
     return NextResponse.json({
-      reserveAddress:        reserveAddr,
-      // On-chain confirmed balance — this is the ONLY balance shown (no pending)
+      reserveAddress:        RESERVE_ADDRESS,
       liveBalance,
       txCount,
-      // Cumulative store stats (includes all immediate splits + any lottery-end allocations)
       reserveTotalAllocated: stats.reserveTotalAllocated,
       nextLotteryFundHeld:   stats.nextLotteryFundHeld,
       totalDashProcessed:    stats.totalDashProcessed,
-      // Historical records
-      allocationHistory:     stats.allocationHistory,  // per-lottery (at payout)
-      splitHistory,                                     // per-TX immediate splits
+      allocationHistory:     stats.allocationHistory,
+      splitHistory,
     });
   } catch (err: unknown) {
     return NextResponse.json(

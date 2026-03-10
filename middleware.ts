@@ -32,6 +32,14 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function middleware(request: NextRequest) {
   if (process.env.VERCEL !== '1') return NextResponse.next();
 
+  // ── Reserve balance is served directly by Vercel (no VPS needed) ──────────
+  // The live balance only requires a public Insight API call — no persistent
+  // store or wallet needed. Bypassing VPS proxy so it always works even when
+  // VPS env vars (DASH_MNEMONIC) are not configured.
+  if (request.nextUrl.pathname === '/api/reserve/balance') {
+    return NextResponse.next();
+  }
+
   const VPS = process.env.VPS_URL || 'http://187.77.3.35.sslip.io:3000';
   const url = `${VPS}${request.nextUrl.pathname}${request.nextUrl.search}`;
 
