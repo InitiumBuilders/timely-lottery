@@ -3,10 +3,21 @@ import { NextResponse } from 'next/server';
 import { getReserveStats, setReserveAddress, getSplitHistory } from '@/lib/store';
 import { deriveReserveAddress, getAddressInfo } from '@/lib/dash';
 
+// Known reserve address — used as fallback when DASH_MNEMONIC is unavailable.
+// Balance lookups only need the public address, not the private key.
+const KNOWN_RESERVE_ADDRESS = 'XpkRk1Sx2Kq4vMFt9KurpHbj6Yh78sw8uZ';
+
 export async function GET() {
   try {
-    // Ensure reserve address is initialised in store
-    const { address: reserveAddr } = deriveReserveAddress();
+    // Derive reserve address from mnemonic if available; fall back to known address
+    // or RESERVE_ADDRESS env var for balance-only queries (no signing needed).
+    let reserveAddr: string;
+    try {
+      const derived = deriveReserveAddress();
+      reserveAddr = derived.address;
+    } catch {
+      reserveAddr = process.env.RESERVE_ADDRESS || KNOWN_RESERVE_ADDRESS;
+    }
     setReserveAddress(reserveAddr);
 
     // Fetch live confirmed on-chain balance from Insight API
