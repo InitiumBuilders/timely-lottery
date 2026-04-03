@@ -1,0 +1,9 @@
+{
+  "cleanUrls": true,
+  "outputDirectory": ".",
+  "functions": {
+    "api/**/*.js": {
+      "maxDuration": 30
+    }
+  }
+}
