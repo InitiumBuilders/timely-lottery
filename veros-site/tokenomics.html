@@ -921,8 +921,15 @@ nav::after {
                 <div class="score-detail"><div class="score-detail-val" style="color:var(--emerald)" id="sdUsers">—</div><div class="score-detail-label">Peak Users</div></div>
                 <div class="score-detail"><div class="score-detail-val" style="color:var(--amber)" id="sdTreasury">—</div><div class="score-detail-label">Treasury</div></div>
                 <div class="score-detail"><div class="score-detail-val" style="color:var(--violet)" id="sdVelocity">—</div><div class="score-detail-label">Velocity</div></div>
+                <div class="score-detail"><div class="score-detail-val" style="color:var(--emerald)" id="sdYear1Velocity">—</div><div class="score-detail-label">Year 1 Velocity</div></div>
+                <div class="score-detail"><div class="score-detail-val" style="color:var(--dash)" id="sdHealthScore">—</div><div class="score-detail-label">Health Score</div></div>
               </div>
             </div>
+          </div>
+          <!-- Supply Curve Sparkline -->
+          <div id="simSparklineWrap" style="display:none;margin-top:16px;text-align:center;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;margin-bottom:6px;">36-Month Supply Curve</div>
+            <canvas id="simSparkline" width="200" height="60" style="border-radius:8px;background:rgba(16,185,129,0.04);border:1px solid rgba(16,185,129,0.15);"></canvas>
           </div>
           <!-- Sim Narrative Panel -->
           <div class="sim-narrative" id="simNarrative">
@@ -1394,6 +1401,38 @@ function generateSimNarrative(){
   panel.classList.add('visible');
 }
 
+function drawSupplySparkline(data){
+  // Show only first 36 months (3 years)
+  const months=Math.min(36,data.supply.length);
+  const supply=data.supply.slice(0,months);
+  const wrap=document.getElementById('simSparklineWrap');
+  wrap.style.display='block';
+  const canvas=document.getElementById('simSparkline');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  ctx.clearRect(0,0,W,H);
+  const maxS=Math.max(...supply)||1;
+  const pts=supply.map((v,i)=>({x:i/(months-1||1)*(W-20)+10,y:H-10-(v/maxS)*(H-20)}));
+  const grad=ctx.createLinearGradient(0,0,W,0);
+  grad.addColorStop(0,'rgba(16,185,129,0.8)');
+  grad.addColorStop(1,'rgba(6,182,212,0.8)');
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x,pts[0].y);
+  for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i].x,pts[i].y);
+  ctx.strokeStyle=grad;
+  ctx.lineWidth=2;
+  ctx.stroke();
+  // Fill area under curve
+  ctx.lineTo(pts[pts.length-1].x,H);
+  ctx.lineTo(pts[0].x,H);
+  ctx.closePath();
+  const fillGrad=ctx.createLinearGradient(0,0,0,H);
+  fillGrad.addColorStop(0,'rgba(16,185,129,0.15)');
+  fillGrad.addColorStop(1,'rgba(16,185,129,0)');
+  ctx.fillStyle=fillGrad;
+  ctx.fill();
+}
+
 function runSimulation(){
   const btn=document.getElementById('runSimBtn');
   btn.disabled=true;btn.textContent='⏳ Simulating...';
@@ -1417,6 +1456,14 @@ function runSimulation(){
       document.getElementById('sdUsers').textContent=fmt(Math.max(...d.users));
       document.getElementById('sdTreasury').textContent=fmt(d.treasury[n]);
       document.getElementById('sdVelocity').textContent=d.velocity[n].toFixed(1)+'%';
+      // Year 1 Velocity metric
+      const year1Velocity=simState.earn*simState.activity*simState.community*365*(1-simState.burn/100);
+      document.getElementById('sdYear1Velocity').textContent=fmt(Math.round(year1Velocity));
+      // Circulation Health Score (0-100)
+      const healthScore=Math.min(100,Math.round(50+simState.burn*5-simState.earn*0.5+simState.community*0.05));
+      document.getElementById('sdHealthScore').textContent=healthScore+'/100';
+      // Supply sparkline
+      drawSupplySparkline(d);
       const score=computeMotusScore();
       drawScoreCircle(score);
       generateSimNarrative();
