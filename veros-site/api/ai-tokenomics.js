@@ -1,31 +1,37 @@
 const https = require('https');
 
+// Sanitize API keys — strip any invisible/non-ASCII characters from env vars
+function sanitizeKey(key) {
+  if (!key) return '';
+  return key.replace(/[^ -~]/g, '').trim();
+}
+
 // Model chain: Try Anthropic Opus first (if credits available), then OpenRouter Gemma free
 const MODEL_CHAIN = [
   {
     provider: 'anthropic',
     model: 'claude-opus-4-6',
-    getKey: () => process.env.ANTHROPIC_API_KEY
+    getKey: () => sanitizeKey(process.env.ANTHROPIC_API_KEY)
   },
   {
     provider: 'openrouter',
     model: 'nvidia/nemotron-3-super-120b-a12b:free',
-    getKey: () => process.env.OPENROUTER_API_KEY
+    getKey: () => sanitizeKey(process.env.OPENROUTER_API_KEY)
   },
   {
     provider: 'openrouter',
     model: 'openai/gpt-oss-20b:free',
-    getKey: () => process.env.OPENROUTER_API_KEY
+    getKey: () => sanitizeKey(process.env.OPENROUTER_API_KEY)
   },
   {
     provider: 'openrouter',
     model: 'google/gemma-3-12b-it:free',
-    getKey: () => process.env.OPENROUTER_API_KEY
+    getKey: () => sanitizeKey(process.env.OPENROUTER_API_KEY)
   },
   {
     provider: 'openrouter',
     model: 'qwen/qwen3.6-plus:free',
-    getKey: () => process.env.OPENROUTER_API_KEY
+    getKey: () => sanitizeKey(process.env.OPENROUTER_API_KEY)
   }
 ];
 
