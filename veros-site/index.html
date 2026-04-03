@@ -162,6 +162,8 @@
   .site-wrap {
     position: relative;
     z-index: 1;
+    overflow-x: clip; /* prevents horizontal overflow without blocking vertical scroll */
+    max-width: 100%;
   }
 
   .container {
@@ -1198,8 +1200,7 @@
     .organic-divider { margin: 2rem auto; }
   }
 
-  /* No horizontal scroll — clip on site-wrap only, not sections (avoids iOS scroll blocks) */
-  .site-wrap { overflow-x: clip; max-width: 100%; }
+  /* overflow-x:clip is set on .site-wrap above */
 </style>
 </head>
 <body>
