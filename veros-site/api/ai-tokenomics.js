@@ -87,18 +87,19 @@ async function callOpenRouter(key, model, prompt, maxTokens) {
 }
 
 async function runWithFallback(prompt, maxTokens) {
+  const errors = [];
   for (const { provider, model, getKey } of MODEL_CHAIN) {
     const key = getKey();
-    if (!key) continue;
+    if (!key) { errors.push(model + ': no key'); continue; }
     try {
       if (provider === 'anthropic') return await callAnthropic(key, model, prompt, maxTokens);
       if (provider === 'openrouter') return await callOpenRouter(key, model, prompt, maxTokens);
     } catch (e) {
-      // silently try next model
+      errors.push(model + ': ' + e.message.slice(0, 80));
       continue;
     }
   }
-  throw new Error('All AI models currently unavailable. Please try again shortly.');
+  throw new Error('Errors: ' + errors.join(' | '));
 }
 
 function extractJSON(text) {
