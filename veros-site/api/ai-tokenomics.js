@@ -9,7 +9,12 @@ const MODEL_CHAIN = [
   },
   {
     provider: 'openrouter',
-    model: 'google/gemma-3-27b-it:free',
+    model: 'nvidia/nemotron-3-super-120b-a12b:free',
+    getKey: () => process.env.OPENROUTER_API_KEY
+  },
+  {
+    provider: 'openrouter',
+    model: 'openai/gpt-oss-20b:free',
     getKey: () => process.env.OPENROUTER_API_KEY
   },
   {
@@ -19,7 +24,7 @@ const MODEL_CHAIN = [
   },
   {
     provider: 'openrouter',
-    model: 'google/gemini-flash-1.5-8b:free',
+    model: 'qwen/qwen3.6-plus:free',
     getKey: () => process.env.OPENROUTER_API_KEY
   }
 ];
