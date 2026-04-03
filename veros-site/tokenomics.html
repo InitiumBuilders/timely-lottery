@@ -1,0 +1,2119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>$MOTUS Tokenomics — The Definitive Experience</title>
+  <meta name="description" content="Deep tokenomics for $MOTUS — the earned currency of values in motion, built on Dash Platform. 7 models, simulations, flywheels, and Davara AI Oracle." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --void: #020806; --void-1: #061210; --void-2: #0a1a18;
+      --dash: #008DE4; --dash-dim: rgba(0,141,228,0.15); --dash-glow: rgba(0,141,228,0.4);
+      --emerald: #10b981; --emerald-dim: rgba(16,185,129,0.12); --emerald-glow: rgba(16,185,129,0.35);
+      --amber: #f59e0b; --amber-dim: rgba(245,158,11,0.12); --amber-glow: rgba(245,158,11,0.35);
+      --violet: #8b5cf6; --violet-dim: rgba(139,92,246,0.12); --violet-glow: rgba(139,92,246,0.35);
+      --cyan: #06b6d4; --orange: #f97316; --pink: #ec4899;
+      --white: #f0f4f8; --muted: #6b8a8a;
+      --glass: rgba(255,255,255,0.04); --glass-border: rgba(255,255,255,0.08); --glass-hover: rgba(255,255,255,0.07);
+      --radius: 16px; --radius-sm: 10px;
+    }
+    html { scroll-behavior: smooth; }
+    body { background-color: var(--void); color: var(--white); font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.6; min-height: 100vh; overflow-x: hidden; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: 0.4; }
+    .ambient-dash { position: fixed; top: -200px; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(0,141,228,0.06) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+    .ambient-emerald { position: fixed; bottom: -100px; right: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+    .ambient-violet { position: fixed; top: 40%; left: -150px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(139,92,246,0.04) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+
+    /* Swipe Indicator */
+    .swipe-indicator { position: fixed; left: 0; top: 50%; transform: translateY(-50%); z-index: 200; display: flex; align-items: center; gap: 8px; padding: 12px 10px 12px 6px; background: rgba(2,8,6,0.7); border: 1px solid var(--glass-border); border-left: none; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; backdrop-filter: blur(12px); cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
+    .swipe-indicator:hover { background: rgba(2,8,6,0.9); border-color: rgba(0,141,228,0.3); padding-right: 14px; }
+    .swipe-indicator-arrow { font-size: 14px; color: var(--dash); animation: swipe-pulse-left 2s ease-in-out infinite; }
+    .swipe-indicator-text { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; writing-mode: vertical-lr; transform: rotate(180deg); }
+    @keyframes swipe-pulse-left { 0%, 100% { transform: translateX(0); opacity: 0.6; } 50% { transform: translateX(-3px); opacity: 1; } }
+
+    .container { max-width: 960px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+    /* Nav */
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(2,8,6,0.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass-border); }
+    .nav-inner { max-width: 960px; margin: 0 auto; padding: 0 24px; height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .nav-brand { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--dash); letter-spacing: 0.08em; text-decoration: none; white-space: nowrap; }
+    .nav-links { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+    .nav-link { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500; color: var(--muted); text-decoration: none; padding: 5px 10px; border-radius: 8px; transition: color 0.2s, background 0.2s; white-space: nowrap; }
+    .nav-link:hover { color: var(--white); background: var(--glass); }
+    .nav-link.active { color: var(--dash); }
+    .nav-link.external { color: var(--dash); border: 1px solid rgba(0,141,228,0.3); }
+    .nav-link.external:hover { background: var(--dash-dim); color: var(--white); border-color: var(--dash); }
+
+    /* Hero */
+    .hero { padding: 100px 0 60px; text-align: center; }
+    .hero-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: var(--dash); text-transform: uppercase; margin-bottom: 24px; opacity: 0.8; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(72px,16vw,140px); font-weight: 300; line-height: 0.9; letter-spacing: -0.02em; color: var(--white); margin-bottom: 20px; position: relative; display: inline-block; cursor: default; user-select: none; }
+    .hero-title .dollar { color: var(--dash); }
+    .hero-title::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 60%; height: 1px; background: linear-gradient(90deg, transparent, var(--dash), transparent); }
+    .hero-subtitle { font-family: 'Inter', sans-serif; font-size: clamp(13px,2.5vw,16px); font-weight: 400; color: var(--muted); margin-top: 28px; margin-bottom: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
+    .hero-tagline { font-family: 'Cormorant Garamond', serif; font-size: clamp(22px,5vw,36px); font-weight: 300; font-style: italic; color: var(--emerald); letter-spacing: 0.02em; }
+    .motus-score-hero { display: inline-flex; align-items: center; gap: 12px; margin-top: 32px; padding: 12px 24px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 40px; backdrop-filter: blur(12px); }
+    .motus-score-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; }
+    .motus-score-value { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 700; color: var(--emerald); line-height: 1; transition: color 0.3s; }
+
+    /* Sections */
+    section { padding: 64px 0; }
+    .section-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.25em; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px,6vw,48px); font-weight: 300; color: var(--white); line-height: 1.1; margin-bottom: 36px; }
+    .section-title em { color: var(--dash); font-style: italic; }
+    .section-title em.emerald { color: var(--emerald); }
+    .section-title em.amber { color: var(--amber); }
+    .section-title em.violet { color: var(--violet); }
+    .section-intro { font-family: 'Inter', sans-serif; font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 32px; max-width: 680px; }
+
+    /* Glass */
+    .glass { background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); transition: border-color 0.3s, background 0.3s; }
+    .glass:hover { background: var(--glass-hover); }
+    .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--glass-border), transparent); margin: 8px 0; }
+
+    /* Specs */
+    .specs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+    .spec-card { padding: 24px 20px; border-radius: var(--radius); background: var(--glass); border: 1px solid var(--glass-border); text-align: center; transition: border-color 0.3s, transform 0.2s; }
+    .spec-card:hover { transform: translateY(-2px); border-color: rgba(0,141,228,0.3); }
+    .spec-value { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 600; color: var(--dash); line-height: 1; margin-bottom: 6px; }
+    .spec-value.emerald { color: var(--emerald); }
+    .spec-value.amber { color: var(--amber); }
+    .spec-label { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .spec-sub { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 4px; opacity: 0.7; }
+    .specs-quote { padding: 20px 24px; border-left: 2px solid var(--emerald); background: var(--emerald-dim); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-family: 'Cormorant Garamond', serif; font-size: clamp(16px,3.5vw,22px); font-style: italic; color: var(--emerald); line-height: 1.4; }
+
+    /* Simulation */
+    .sim-engine { background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius); overflow: hidden; }
+    .sim-header { padding: 20px 24px; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .sim-title { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--dash); letter-spacing: 0.1em; text-transform: uppercase; }
+    .sim-controls { padding: 20px 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; border-bottom: 1px solid var(--glass-border); }
+    .sim-control-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+    .sim-control-val { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; color: var(--dash); }
+    .sim-slider { width: 100%; -webkit-appearance: none; appearance: none; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.08); outline: none; cursor: pointer; }
+    .sim-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--dash); box-shadow: 0 0 10px rgba(0,141,228,0.5); cursor: pointer; }
+    .sim-slider::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: var(--dash); border: none; cursor: pointer; }
+    .scenario-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+    .scenario-btn { padding: 6px 14px; border-radius: 20px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.08em; cursor: pointer; border: 1px solid var(--glass-border); background: transparent; color: var(--muted); transition: all 0.2s; text-transform: uppercase; }
+    .scenario-btn:hover { color: var(--white); border-color: rgba(255,255,255,0.2); }
+    .scenario-btn.active { background: var(--dash-dim); color: var(--dash); border-color: rgba(0,141,228,0.4); }
+    .run-btn { padding: 10px 24px; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: var(--dash); color: #000; transition: all 0.25s; letter-spacing: 0.02em; }
+    .run-btn:hover { background: #1aa8ff; box-shadow: 0 6px 24px rgba(0,141,228,0.35); transform: translateY(-1px); }
+    .run-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    #sim-canvas { display: block; width: 100%; height: 360px; cursor: crosshair; }
+    .sim-legend { padding: 16px 24px; display: flex; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--glass-border); }
+    .legend-item { display: flex; align-items: center; gap: 8px; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .legend-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 0.08em; }
+    .sim-score-bar { padding: 20px 24px; border-top: 1px solid var(--glass-border); display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+    .score-circle { width: 72px; height: 72px; position: relative; flex-shrink: 0; }
+    .score-circle canvas { width: 72px; height: 72px; }
+    .score-num { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 700; color: var(--emerald); }
+    .score-details { display: flex; flex-wrap: wrap; gap: 16px; flex: 1; }
+    .score-detail { text-align: center; min-width: 80px; }
+    .score-detail-val { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; line-height: 1; }
+    .score-detail-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; margin-top: 4px; }
+
+    /* Sim Narrative */
+    .sim-narrative { padding: 20px 24px; border-top: 1px solid var(--glass-border); display: none; }
+    .sim-narrative.visible { display: block; animation: fadeSlideIn 0.5s ease; }
+    .sim-narrative-title { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--amber); text-transform: uppercase; margin-bottom: 12px; }
+    .sim-narrative-text { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; color: var(--white); line-height: 1.5; margin-bottom: 16px; }
+    .sim-insight-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    .sim-insight-card { padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--glass-border); background: var(--glass); }
+    .sim-insight-card .sic-signal { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+    .sim-insight-card .sic-title { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+    .sim-insight-card .sic-detail { font-family: 'Inter', sans-serif; font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+    /* Flywheel */
+    .flywheel-wrap { display: flex; justify-content: center; align-items: center; padding: 20px 0; position: relative; }
+    #flywheel-svg { width: 100%; max-width: 560px; height: auto; cursor: pointer; }
+    .flywheel-tooltip { position: fixed; padding: 12px 16px; background: rgba(2,8,6,0.95); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); backdrop-filter: blur(16px); font-family: 'Inter', sans-serif; font-size: 12px; color: var(--white); max-width: 220px; pointer-events: none; z-index: 300; opacity: 0; transition: opacity 0.2s; line-height: 1.5; }
+    .flywheel-tooltip.visible { opacity: 1; }
+    #flywheel-detail { display: none; margin-top: 24px; padding: 32px; border-radius: var(--radius); border: 1px solid var(--glass-border); background: rgba(2,8,6,0.9); backdrop-filter: blur(20px); animation: fadeSlideIn 0.4s ease; position: relative; }
+    #flywheel-detail.visible { display: block; }
+    #flywheel-detail .fd-close { position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--glass-border); background: transparent; color: var(--muted); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    #flywheel-detail .fd-close:hover { color: var(--white); border-color: rgba(255,255,255,0.3); }
+    #flywheel-detail .fd-name { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 600; margin-bottom: 12px; }
+    #flywheel-detail .fd-desc { font-family: 'Inter', sans-serif; font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 16px; }
+    #flywheel-detail .fd-why { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; padding: 16px 20px; border-left: 2px solid; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+
+    /* ═══ 7 MODELS ═══ */
+    .model-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 32px; }
+    .model-tab { padding: 8px 16px; border-radius: 24px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.06em; cursor: pointer; border: 1px solid var(--glass-border); background: transparent; color: var(--muted); transition: all 0.25s; white-space: nowrap; }
+    .model-tab:hover { color: var(--white); border-color: rgba(255,255,255,0.2); }
+    .model-tab.active { color: #000; font-weight: 600; }
+    .model-panel { display: none; animation: fadeSlideIn 0.5s ease; }
+    .model-panel.active { display: block; }
+    .model-header { margin-bottom: 28px; }
+    .model-header h3 { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 600; line-height: 1.1; margin-bottom: 8px; }
+    .model-header .model-tagline { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-style: italic; color: var(--muted); }
+    .model-specs { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .model-spec { padding: 18px 16px; border-radius: var(--radius-sm); background: var(--glass); border: 1px solid var(--glass-border); text-align: center; }
+    .model-spec-val { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; line-height: 1; margin-bottom: 4px; }
+    .model-spec-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; }
+    .model-body { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; margin-bottom: 24px; }
+    @media (max-width: 640px) { .model-body { grid-template-columns: 1fr; } }
+    .model-donut-wrap { display: flex; justify-content: center; }
+    .model-donut-wrap canvas { max-width: 260px; width: 100%; }
+    .model-desc { font-family: 'Inter', sans-serif; font-size: 14px; color: var(--muted); line-height: 1.7; }
+    .model-research { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; padding: 6px 14px; border-radius: 20px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.06em; border: 1px solid; }
+    .model-insight { margin-top: 20px; padding: 20px 24px; border-left: 2px solid var(--violet); background: var(--violet-dim); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+    .model-insight .mi-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--violet); text-transform: uppercase; margin-bottom: 8px; }
+    .model-insight .mi-text { font-family: 'Inter', sans-serif; font-size: 13px; color: #c4b5fd; line-height: 1.7; }
+    .model-insight .mi-sig { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(139,92,246,0.5); margin-top: 8px; }
+
+    /* Model Flywheel Loop */
+    .model-flywheel { margin-top: 24px; padding: 20px 24px; border-radius: var(--radius); background: var(--glass); border: 1px solid var(--glass-border); }
+    .model-flywheel .mf-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; margin-bottom: 12px; }
+    .model-flywheel .mf-loop { display: flex; align-items: center; gap: 0; flex-wrap: wrap; justify-content: center; }
+    .mf-step { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; padding: 6px 12px; border-radius: 6px; white-space: nowrap; }
+    .mf-arrow { font-size: 16px; color: var(--muted); margin: 0 4px; }
+
+    /* Dash Config Collapsible */
+    .dash-config { margin-top: 20px; border-radius: var(--radius); border: 1px solid rgba(0,141,228,0.2); overflow: hidden; }
+    .dash-config-header { padding: 14px 20px; background: rgba(0,141,228,0.06); cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; transition: background 0.2s; }
+    .dash-config-header:hover { background: rgba(0,141,228,0.1); }
+    .dash-config-header span { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--dash); letter-spacing: 0.1em; }
+    .dash-config-header .dc-arrow { transition: transform 0.3s; font-size: 12px; color: var(--muted); }
+    .dash-config-header.open .dc-arrow { transform: rotate(180deg); }
+    .dash-config-body { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.16,1,0.3,1); }
+    .dash-config-body-inner { padding: 20px; background: rgba(0,0,0,0.4); }
+    .dash-config-body-inner pre { font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 2; color: #c9e1e1; white-space: pre-wrap; word-break: break-word; }
+    .dc-key { color: #64b5f6; } .dc-str { color: #a5d6a7; } .dc-num { color: #ffcc80; } .dc-bool { color: #ef9a9a; } .dc-comment { color: #6b8a8a; font-style: italic; }
+
+    /* Insight Cards */
+    .insight-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .insight-card { padding: 32px 26px; border-radius: var(--radius); background: var(--glass); border: 1px solid var(--glass-border); transition: all 0.35s cubic-bezier(0.16,1,0.3,1); position: relative; overflow: hidden; }
+    .insight-card::before { content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.35s; }
+    .insight-card:hover { transform: translateY(-4px); }
+    .insight-card:hover::before { opacity: 1; }
+    .insight-card.i-dash { border-top: 2px solid rgba(0,141,228,0.4); }
+    .insight-card.i-dash::before { background: radial-gradient(ellipse at 50% 0%, rgba(0,141,228,0.08), transparent 70%); }
+    .insight-card.i-dash:hover { border-color: rgba(0,141,228,0.5); box-shadow: 0 16px 48px rgba(0,141,228,0.08); }
+    .insight-card.i-emerald { border-top: 2px solid rgba(16,185,129,0.4); }
+    .insight-card.i-emerald::before { background: radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.08), transparent 70%); }
+    .insight-card.i-emerald:hover { border-color: rgba(16,185,129,0.5); box-shadow: 0 16px 48px rgba(16,185,129,0.08); }
+    .insight-card.i-amber { border-top: 2px solid rgba(245,158,11,0.4); }
+    .insight-card.i-amber::before { background: radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.08), transparent 70%); }
+    .insight-card.i-amber:hover { border-color: rgba(245,158,11,0.5); box-shadow: 0 16px 48px rgba(245,158,11,0.08); }
+    .insight-card.i-violet { border-top: 2px solid rgba(139,92,246,0.4); }
+    .insight-card.i-violet::before { background: radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.08), transparent 70%); }
+    .insight-card.i-violet:hover { border-color: rgba(139,92,246,0.5); box-shadow: 0 16px 48px rgba(139,92,246,0.08); }
+    .insight-num { font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 700; line-height: 1; margin-bottom: 8px; opacity: 0.15; }
+    .insight-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; margin-bottom: 10px; line-height: 1.2; }
+    .insight-desc { font-family: 'Inter', sans-serif; font-size: 13px; color: var(--muted); line-height: 1.7; }
+    .insight-tag { display: inline-block; margin-top: 14px; padding: 3px 10px; border-radius: 20px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.06em; }
+
+    /* Principles */
+    .principles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .principle-card { padding: 32px 26px; border-radius: var(--radius); background: var(--glass); border: 1px solid var(--glass-border); transition: all 0.35s cubic-bezier(0.16,1,0.3,1); position: relative; overflow: hidden; }
+    .principle-card::before { content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.35s; }
+    .principle-card:hover { transform: translateY(-4px); }
+    .principle-card:hover::before { opacity: 1; }
+    .principle-card.p-dash { border-top: 2px solid rgba(0,141,228,0.4); }
+    .principle-card.p-dash::before { background: radial-gradient(ellipse at 50% 0%, rgba(0,141,228,0.08), transparent 70%); }
+    .principle-card.p-emerald { border-top: 2px solid rgba(16,185,129,0.4); }
+    .principle-card.p-emerald::before { background: radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.08), transparent 70%); }
+    .principle-card.p-amber { border-top: 2px solid rgba(245,158,11,0.4); }
+    .principle-card.p-amber::before { background: radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.08), transparent 70%); }
+    .principle-icon { font-size: 32px; margin-bottom: 16px; display: block; }
+    .principle-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; margin-bottom: 10px; line-height: 1.2; }
+    .principle-desc { font-family: 'Inter', sans-serif; font-size: 13px; color: var(--muted); line-height: 1.7; }
+    .principle-tag { display: inline-block; margin-top: 14px; padding: 3px 10px; border-radius: 20px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.06em; }
+    .principle-tag.dash { background: var(--dash-dim); color: var(--dash); border: 1px solid rgba(0,141,228,0.2); }
+    .principle-tag.emerald { background: var(--emerald-dim); color: var(--emerald); border: 1px solid rgba(16,185,129,0.2); }
+    .principle-tag.amber { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
+
+    /* Donut */
+    .donut-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+    @media (max-width: 640px) { .donut-wrap { grid-template-columns: 1fr; } }
+    .donut-svg-wrap { position: relative; display: flex; align-items: center; justify-content: center; }
+    #donut-svg { width: 100%; max-width: 280px; height: auto; display: block; margin: 0 auto; }
+    .donut-center { position: absolute; text-align: center; pointer-events: none; }
+    .donut-center-pct { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 600; color: var(--white); line-height: 1; display: block; transition: all 0.3s; }
+    .donut-center-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; display: block; margin-top: 4px; transition: all 0.3s; }
+    .donut-legend { display: flex; flex-direction: column; gap: 14px; }
+    .donut-legend-item { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid transparent; transition: all 0.25s; }
+    .donut-legend-item:hover, .donut-legend-item.active { background: var(--glass); border-color: var(--glass-border); }
+    .donut-swatch { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; margin-top: 2px; }
+    .donut-item-name { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; color: var(--white); }
+    .donut-item-pct { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; line-height: 1; }
+    .donut-item-desc { font-family: 'Inter', sans-serif; font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    /* Governance Sim */
+    .gov-sim-wrap { background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius); overflow: hidden; }
+    .gov-sim-controls { padding: 24px; border-bottom: 1px solid var(--glass-border); display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 560px) { .gov-sim-controls { grid-template-columns: 1fr; } }
+    .gov-dot-grid { padding: 24px; min-height: 180px; }
+    .dot-grid-inner { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+    .gov-dot { width: 14px; height: 14px; border-radius: 50%; transition: all 0.3s cubic-bezier(0.16,1,0.3,1); flex-shrink: 0; }
+    .gov-dot.inactive { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); }
+    .gov-dot.active { background: var(--emerald); box-shadow: 0 0 8px rgba(16,185,129,0.6); border: 1px solid rgba(16,185,129,0.6); }
+    .gov-dot.quorum { background: var(--amber); box-shadow: 0 0 8px rgba(245,158,11,0.6); border: 1px solid rgba(245,158,11,0.5); }
+    .gov-result { padding: 16px 20px; background: rgba(0,0,0,0.2); border-radius: var(--radius-sm); display: flex; gap: 20px; flex-wrap: wrap; }
+    .gov-stat { text-align: center; flex: 1; min-width: 80px; }
+    .gov-stat-val { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; line-height: 1; margin-bottom: 4px; }
+    .gov-stat-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; }
+
+    /* Token Economics */
+    .econ-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+    .econ-card { padding: 30px 24px; border-radius: var(--radius); background: var(--glass); border: 1px solid var(--glass-border); transition: all 0.3s; }
+    .econ-card:hover { transform: translateY(-3px); background: var(--glass-hover); }
+    .econ-icon { font-size: 30px; margin-bottom: 14px; display: block; }
+    .econ-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; margin-bottom: 10px; line-height: 1.2; }
+    .econ-desc { font-family: 'Inter', sans-serif; font-size: 13px; color: var(--muted); line-height: 1.7; }
+    .econ-stat { display: inline-block; margin-top: 14px; padding: 6px 14px; border-radius: var(--radius-sm); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.06em; }
+
+    /* Builder */
+    .builder-wrap { display: grid; grid-template-columns: 1fr; gap: 24px; }
+    @media (min-width: 700px) { .builder-wrap { grid-template-columns: 1fr 1fr; align-items: start; } }
+    .builder-form { padding: 28px; border-radius: var(--radius); background: var(--glass); border: 1px solid var(--glass-border); }
+    .form-group { margin-bottom: 20px; }
+    .form-group:last-child { margin-bottom: 0; }
+    .form-label { display: block; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+    .form-input { width: 100%; padding: 10px 14px; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); color: var(--white); font-family: 'JetBrains Mono', monospace; font-size: 14px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+    .form-input:focus { border-color: var(--dash); box-shadow: 0 0 0 2px rgba(0,141,228,0.15); }
+    .form-input::placeholder { color: var(--muted); opacity: 0.5; }
+    .form-select { width: 100%; padding: 10px 14px; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); color: var(--white); font-family: 'JetBrains Mono', monospace; font-size: 14px; outline: none; cursor: pointer; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b8a8a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+    .form-select:focus { border-color: var(--dash); }
+    .form-select option { background: #0a1a18; color: var(--white); }
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .toggle-text { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--muted); }
+    .toggle-wrap { position: relative; flex-shrink: 0; }
+    .toggle-input { position: absolute; opacity: 0; width: 0; height: 0; }
+    .toggle-track { display: block; width: 44px; height: 24px; background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); border-radius: 12px; cursor: pointer; transition: background 0.25s, border-color 0.25s; position: relative; }
+    .toggle-track::after { content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; background: var(--muted); border-radius: 50%; transition: transform 0.25s, background 0.25s; }
+    .toggle-input:checked + .toggle-track { background: rgba(16,185,129,0.25); border-color: var(--emerald); }
+    .toggle-input:checked + .toggle-track::after { transform: translateX(20px); background: var(--emerald); }
+    .json-preview-wrap { border-radius: var(--radius); background: rgba(0,0,0,0.5); border: 1px solid rgba(0,141,228,0.2); overflow: hidden; }
+    .json-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); background: rgba(0,141,228,0.05); }
+    .json-header-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--dash); letter-spacing: 0.1em; text-transform: uppercase; }
+    .json-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--emerald); animation: pulse-dot 2s ease-in-out infinite; }
+    @keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.85); } }
+    .json-body { padding: 20px 18px; overflow-x: auto; }
+    pre#json-output { font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.7; color: #c9e1e1; white-space: pre; margin: 0; }
+    .json-key { color: #64b5f6; } .json-str { color: #a5d6a7; } .json-num { color: #ffcc80; } .json-bool { color: #ef9a9a; } .json-null { color: var(--muted); }
+    .copy-btn { margin: 0 18px 16px; padding: 8px 16px; background: var(--dash-dim); border: 1px solid rgba(0,141,228,0.3); border-radius: 8px; color: var(--dash); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; cursor: pointer; transition: background 0.2s, border-color 0.2s; text-transform: uppercase; }
+    .copy-btn:hover { background: rgba(0,141,228,0.25); border-color: var(--dash); }
+
+    /* Features */
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+    .feature-card { padding: 28px 22px; border-radius: var(--radius); background: var(--glass); border: 1px solid var(--glass-border); transition: border-color 0.3s, transform 0.2s, background 0.3s; }
+    .feature-card:hover { transform: translateY(-3px); background: var(--glass-hover); }
+    .feature-icon { font-size: 28px; margin-bottom: 14px; display: block; }
+    .feature-name { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--white); margin-bottom: 8px; line-height: 1.2; }
+    .feature-desc { font-family: 'Inter', sans-serif; font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .feature-badge { display: inline-block; margin-top: 12px; padding: 3px 10px; border-radius: 20px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.06em; }
+
+    /* Progression */
+    .progression-track { position: relative; padding-left: 40px; }
+    .progression-line { position: absolute; left: 16px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(0,141,228,0.4), rgba(16,185,129,0.4), rgba(139,92,246,0.4)); border-radius: 1px; }
+    .prog-item { position: relative; margin-bottom: 24px; opacity: 0.35; transition: all 0.6s cubic-bezier(0.16,1,0.3,1); filter: grayscale(0.8); }
+    .prog-item.unlocked { opacity: 1; filter: grayscale(0); }
+    .prog-item:last-child { margin-bottom: 0; }
+    .prog-dot { position: absolute; left: -32px; top: 20px; width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--glass-border); background: var(--void); transition: all 0.6s; z-index: 1; }
+    .prog-item.unlocked .prog-dot { background: var(--dash); border-color: var(--dash); box-shadow: 0 0 12px rgba(0,141,228,0.6), 0 0 24px rgba(0,141,228,0.3); }
+    .prog-card { padding: 24px 28px; border-radius: var(--radius); background: var(--glass); border: 1px solid var(--glass-border); transition: all 0.3s; }
+    .prog-item.unlocked .prog-card { border-color: rgba(0,141,228,0.3); background: rgba(0,141,228,0.04); }
+    .prog-level { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+    .prog-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--white); margin-bottom: 8px; line-height: 1.2; }
+    .prog-desc { font-family: 'Inter', sans-serif; font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .prog-badge { display: inline-block; margin-top: 10px; padding: 3px 10px; border-radius: 20px; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+    /* Accordion */
+    .accordion { display: flex; flex-direction: column; gap: 8px; }
+    .accordion-item { border-radius: var(--radius-sm); background: var(--glass); border: 1px solid var(--glass-border); overflow: hidden; transition: border-color 0.3s; }
+    .accordion-item:hover { border-color: rgba(0,141,228,0.2); }
+    .accordion-header { padding: 18px 22px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; user-select: none; }
+    .accordion-header:hover { background: var(--glass-hover); }
+    .accordion-header-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: var(--white); }
+    .accordion-arrow { font-size: 12px; color: var(--muted); transition: transform 0.3s; }
+    .accordion-item.open .accordion-arrow { transform: rotate(180deg); }
+    .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.16,1,0.3,1); }
+    .accordion-body-inner { padding: 0 22px 20px; font-family: 'Inter', sans-serif; font-size: 13px; color: var(--muted); line-height: 1.7; }
+    .accordion-body-inner code { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--dash); background: rgba(0,141,228,0.1); padding: 2px 6px; border-radius: 4px; }
+
+    /* CTA */
+    .cta-block { padding: 48px 36px; border-radius: var(--radius); background: linear-gradient(135deg, rgba(0,141,228,0.08) 0%, rgba(16,185,129,0.05) 100%); border: 1px solid rgba(0,141,228,0.2); text-align: center; }
+    .cta-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px,6vw,44px); font-weight: 300; color: var(--white); margin-bottom: 12px; }
+    .cta-sub { font-family: 'Inter', sans-serif; font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+    .cta-cost { font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 600; color: var(--dash); margin-bottom: 4px; line-height: 1; }
+    .cta-cost-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 28px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 28px; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; text-decoration: none; transition: all 0.25s; letter-spacing: 0.02em; }
+    .btn-primary { background: var(--dash); color: #000; border: none; }
+    .btn-primary:hover { background: #1aa8ff; box-shadow: 0 6px 24px rgba(0,141,228,0.35); transform: translateY(-1px); }
+    .btn-secondary { background: transparent; color: var(--muted); border: 1px solid var(--glass-border); margin-left: 12px; }
+    .btn-secondary:hover { color: var(--white); border-color: rgba(255,255,255,0.2); background: var(--glass); }
+
+    /* Davara Oracle */
+    .oracle-wrap { padding: 32px; border-radius: var(--radius); background: linear-gradient(135deg, rgba(139,92,246,0.06), rgba(0,141,228,0.04)); border: 1px solid rgba(139,92,246,0.25); }
+    .oracle-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; color: var(--violet); margin-bottom: 8px; }
+    .oracle-sub { font-family: 'Inter', sans-serif; font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+    .oracle-btns { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+    .oracle-btn { padding: 12px 24px; border-radius: var(--radius-sm); font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid; transition: all 0.3s; }
+    .oracle-btn.analyze { background: rgba(139,92,246,0.15); border-color: rgba(139,92,246,0.4); color: var(--violet); }
+    .oracle-btn.analyze:hover { background: rgba(139,92,246,0.25); border-color: var(--violet); transform: translateY(-1px); }
+    .oracle-btn.generate { background: rgba(0,141,228,0.15); border-color: rgba(0,141,228,0.4); color: var(--dash); }
+    .oracle-btn.generate:hover { background: rgba(0,141,228,0.25); border-color: var(--dash); transform: translateY(-1px); }
+    .oracle-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+    .oracle-output { padding: 24px; border-radius: var(--radius-sm); background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); min-height: 80px; display: none; }
+    .oracle-output.visible { display: block; animation: fadeSlideIn 0.4s ease; }
+    .oracle-output .oo-typing { font-family: 'Inter', sans-serif; font-size: 13px; color: var(--white); line-height: 1.7; }
+    .oracle-output .oo-sig { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(139,92,246,0.5); margin-top: 16px; letter-spacing: 0.1em; }
+    .oracle-output .oo-meta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--glass-border); }
+    .oracle-output .oo-meta-card { padding: 10px 14px; border-radius: var(--radius-sm); background: var(--glass); border: 1px solid var(--glass-border); text-align: center; min-width: 100px; }
+    .oracle-output .oo-meta-val { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; }
+    .oracle-output .oo-meta-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 2px; }
+    .oracle-counter { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 0.1em; margin-top: 16px; }
+
+    /* Generated Model Cards */
+    .gen-models-area { margin-top: 24px; }
+    .gen-model-card { padding: 24px; border-radius: var(--radius); background: var(--glass); border: 1px solid var(--glass-border); margin-bottom: 16px; animation: fadeSlideIn 0.5s ease; position: relative; }
+    .gen-model-card .gmc-close { position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--glass-border); background: transparent; color: var(--muted); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .gen-model-card .gmc-close:hover { color: #ef4444; border-color: rgba(239,68,68,0.4); }
+    .gen-model-card .gmc-name-input { background: transparent; border: none; border-bottom: 1px solid var(--glass-border); font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; color: var(--white); outline: none; width: 80%; padding: 4px 0; margin-bottom: 8px; }
+    .gen-model-card .gmc-name-input:focus { border-color: var(--dash); }
+    .gen-model-card .gmc-tagline { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-style: italic; color: var(--muted); margin-bottom: 12px; }
+    .gen-model-card .gmc-detail { font-family: 'Inter', sans-serif; font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 8px; }
+    .gen-model-card .gmc-save { padding: 6px 16px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; cursor: pointer; border: 1px solid rgba(16,185,129,0.4); background: rgba(16,185,129,0.12); color: var(--emerald); transition: all 0.2s; margin-top: 12px; }
+    .gen-model-card .gmc-save:hover { background: rgba(16,185,129,0.25); }
+    .gen-model-card .gmc-save.saved { border-color: var(--emerald); color: var(--emerald); }
+
+    /* Saved Models */
+    .saved-models-section { margin-top: 24px; padding: 24px; border-radius: var(--radius); border: 1px solid rgba(16,185,129,0.2); background: rgba(16,185,129,0.04); display: none; }
+    .saved-models-section.visible { display: block; }
+    .saved-models-section h4 { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.15em; color: var(--emerald); text-transform: uppercase; margin-bottom: 16px; }
+    .saved-model-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: var(--radius-sm); background: var(--glass); border: 1px solid var(--glass-border); margin-bottom: 8px; }
+    .saved-model-item .smi-name { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: var(--white); }
+    .saved-model-item .smi-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); }
+    .saved-model-item .smi-remove { padding: 4px 10px; border-radius: 6px; font-size: 10px; cursor: pointer; border: 1px solid rgba(239,68,68,0.3); background: transparent; color: #ef4444; font-family: 'JetBrains Mono', monospace; }
+    .export-btn { margin-top: 12px; padding: 8px 16px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; cursor: pointer; border: 1px solid rgba(0,141,228,0.3); background: var(--dash-dim); color: var(--dash); letter-spacing: 0.08em; text-transform: uppercase; }
+    .export-btn:hover { border-color: var(--dash); }
+
+    /* Footer */
+    footer { border-top: 1px solid var(--glass-border); padding: 48px 0 32px; text-align: center; }
+    .footer-phrase { font-family: 'Cormorant Garamond', serif; font-size: clamp(20px,4.5vw,32px); font-style: italic; font-weight: 300; color: var(--muted); margin-bottom: 28px; letter-spacing: 0.04em; }
+    .footer-phrase span { color: var(--dash); }
+    .footer-links { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+    .footer-link { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: var(--muted); text-decoration: none; padding: 6px 14px; border: 1px solid var(--glass-border); border-radius: 20px; transition: color 0.2s, border-color 0.2s; }
+    .footer-link:hover { color: var(--dash); border-color: rgba(0,141,228,0.3); }
+    .footer-copy { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); opacity: 0.4; letter-spacing: 0.08em; }
+    .footer-sig { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: rgba(139,92,246,0.3); letter-spacing: 0.15em; margin-top: 16px; }
+
+    /* Animations */
+    .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.5; }
+    .veros-flash { position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0; transition: opacity 0.15s; }
+    .veros-flash.active { opacity: 1; background: rgba(245,158,11,0.15); }
+    .veros-flash-msg { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); z-index: 10000; font-family: 'Cormorant Garamond', serif; font-size: clamp(20px,5vw,36px); font-style: italic; color: var(--amber); opacity: 0; transition: opacity 0.3s; pointer-events: none; text-align: center; }
+    .veros-flash-msg.show { opacity: 1; }
+    .davara-note { display: none; margin-top: 24px; padding: 20px 24px; border-left: 2px solid var(--violet); background: var(--violet-dim); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-family: 'Inter', sans-serif; font-size: 13px; color: #a78bfa; line-height: 1.7; }
+    .davara-note.revealed { display: block; animation: fadeSlideIn 0.6s ease; }
+    .konami-toast { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 10000; padding: 16px 28px; background: rgba(2,8,6,0.95); border: 1px solid var(--emerald); border-radius: var(--radius); backdrop-filter: blur(16px); font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; color: var(--emerald); opacity: 0; transition: opacity 0.4s, transform 0.4s; pointer-events: none; text-align: center; max-width: 90vw; }
+    .konami-toast.show { opacity: 1; transform: translateX(-50%) translateY(-10px); }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .hero { padding: 80px 0 50px; }
+      section { padding: 48px 0; }
+      .builder-form { padding: 20px 16px; }
+      .cta-block { padding: 36px 20px; }
+      .btn-secondary { margin-left: 0; margin-top: 12px; }
+      .progression-track { padding-left: 28px; }
+      .prog-dot { left: -22px; }
+      .gov-sim-controls { grid-template-columns: 1fr; }
+      .sim-controls { grid-template-columns: 1fr; }
+      .model-body { grid-template-columns: 1fr; }
+      .oracle-wrap { padding: 20px; }
+    }
+
+/* ═══ BIOLUMINESCENT LIVING SYSTEMS ═══ */
+:root {
+  --bio-cyan: #00f5d4;
+  --bio-cyan-dim: rgba(0,245,212,0.08);
+  --bio-cyan-glow: rgba(0,245,212,0.4);
+  --bio-rose: #ff006e;
+  --bio-rose-dim: rgba(255,0,110,0.06);
+  --bio-lime: #b5ff00;
+  --bio-lime-dim: rgba(181,255,0,0.06);
+  --bio-amber: #ffbe0b;
+}
+
+/* Living membrane breathing effect on glass cards */
+@keyframes bio-breathe {
+  0%, 100% { box-shadow: 0 0 0 0 transparent, inset 0 1px 0 rgba(0,245,212,0.05); }
+  50% { box-shadow: 0 0 20px rgba(0,245,212,0.06), 0 0 60px rgba(0,141,228,0.04), inset 0 1px 0 rgba(0,245,212,0.12); }
+}
+
+/* Mycelium pulse on section labels */
+@keyframes mycelium-pulse {
+  0%, 100% { opacity: 0.6; letter-spacing: 0.25em; }
+  50% { opacity: 1; letter-spacing: 0.3em; text-shadow: 0 0 12px rgba(0,245,212,0.6); }
+}
+
+/* Bio-luminescent data flow animation */
+@keyframes dataflow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Organism heartbeat */
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  14% { transform: scale(1.02); opacity: 1; }
+  28% { transform: scale(1); opacity: 0.8; }
+  42% { transform: scale(1.01); opacity: 0.9; }
+  70% { transform: scale(1); opacity: 0.8; }
+}
+
+/* Living node pulse */
+@keyframes node-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0,245,212,0); }
+  50% { box-shadow: 0 0 0 8px rgba(0,245,212,0.08), 0 0 30px rgba(0,245,212,0.12); }
+}
+
+/* Neural firing */
+@keyframes neural-fire {
+  0% { opacity: 0; transform: scaleX(0); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: scaleX(1); }
+}
+
+/* Spore float */
+@keyframes spore-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
+  33% { transform: translateY(-12px) rotate(120deg); opacity: 0.8; }
+  66% { transform: translateY(6px) rotate(240deg); opacity: 0.5; }
+}
+
+/* Bio glow text */
+.bio-glow {
+  text-shadow: 0 0 20px var(--bio-cyan-glow), 0 0 40px rgba(0,245,212,0.2);
+  color: var(--bio-cyan) !important;
+}
+
+/* Living gradient background for hero */
+.hero-bio-layer {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 120% 60% at 50% 0%, rgba(0,245,212,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 80% at 20% 80%, rgba(0,141,228,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 100% at 80% 50%, rgba(139,92,246,0.04) 0%, transparent 60%);
+  pointer-events: none;
+  animation: dataflow 15s ease infinite;
+  background-size: 200% 200%;
+}
+
+/* Organism card treatment */
+.glass {
+  animation: bio-breathe 6s ease-in-out infinite;
+}
+.glass:nth-child(2) { animation-delay: 1s; }
+.glass:nth-child(3) { animation-delay: 2s; }
+.glass:nth-child(4) { animation-delay: 3s; }
+
+/* Section labels pulse like mycelium */
+.section-label {
+  animation: mycelium-pulse 4s ease-in-out infinite;
+  color: var(--bio-cyan) !important;
+}
+
+/* Model tab active = living organism */
+.model-tab.active {
+  animation: heartbeat 2.4s ease-in-out infinite;
+}
+
+/* Living progress dots on progression track */
+.prog-item.unlocked .prog-dot {
+  animation: node-pulse 2s ease-in-out infinite;
+}
+
+/* Bio circuit lines — decorative separator */
+.bio-divider {
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(0,245,212,0.15) 20%, 
+    rgba(0,141,228,0.3) 50%, 
+    rgba(0,245,212,0.15) 80%, 
+    transparent 100%
+  );
+  position: relative;
+  margin: 8px 0;
+  overflow: visible;
+}
+.bio-divider::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -2px;
+  width: 5px;
+  height: 5px;
+  background: var(--bio-cyan);
+  border-radius: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 8px var(--bio-cyan-glow);
+  animation: node-pulse 3s ease-in-out infinite;
+}
+.bio-divider::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 1px;
+  width: 0%;
+  background: linear-gradient(90deg, transparent, var(--bio-cyan), transparent);
+  animation: neural-fire 4s ease-in-out infinite;
+}
+
+/* Spec cards — living vitals */
+.spec-card {
+  position: relative;
+  overflow: hidden;
+}
+.spec-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--dash), var(--bio-cyan), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+  animation: neural-fire 3s ease-in-out infinite;
+  animation-play-state: paused;
+}
+.spec-card:hover::after {
+  opacity: 1;
+  animation-play-state: running;
+}
+
+/* Score circle living organism */
+.score-num {
+  animation: heartbeat 2s ease-in-out infinite;
+}
+
+/* Hero title organism breathing */
+.hero-title {
+  animation: bio-breathe 8s ease-in-out infinite;
+}
+
+/* Oracle section — portal to another dimension */
+.oracle-wrap {
+  background: linear-gradient(135deg, 
+    rgba(139,92,246,0.06) 0%,
+    rgba(0,245,212,0.04) 50%,
+    rgba(0,141,228,0.04) 100%
+  ) !important;
+  border-color: rgba(0,245,212,0.2) !important;
+  position: relative;
+  overflow: hidden;
+}
+.oracle-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 50% 50% at 50% 0%, rgba(0,245,212,0.08), transparent);
+  pointer-events: none;
+  animation: dataflow 8s ease infinite;
+  background-size: 200% 200%;
+}
+
+/* Floating spores — visual organisms */
+.bio-spore {
+  position: fixed;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--bio-cyan);
+  pointer-events: none;
+  z-index: 0;
+  box-shadow: 0 0 6px var(--bio-cyan-glow);
+  animation: spore-float var(--dur, 8s) ease-in-out infinite var(--delay, 0s);
+}
+
+/* Generated model cards — new organism birth animation */
+@keyframes organism-birth {
+  0% { opacity: 0; transform: scale(0.85) translateY(20px); filter: blur(4px); }
+  60% { opacity: 1; filter: blur(0); }
+  80% { transform: scale(1.02) translateY(-4px); }
+  100% { transform: scale(1) translateY(0); }
+}
+.gen-card {
+  animation: organism-birth 0.8s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+
+/* Flywheel detail panel — cell membrane */
+#flywheel-detail {
+  background: radial-gradient(ellipse 100% 100% at 50% 0%, rgba(0,245,212,0.04), rgba(2,8,6,0.95)) !important;
+  border-color: rgba(0,245,212,0.25) !important;
+}
+#flywheel-detail .fd-why {
+  background: rgba(0,245,212,0.04);
+}
+
+/* Model config spellbook glow */
+.model-config-section {
+  border-left-color: var(--bio-cyan) !important;
+  background: linear-gradient(to right, rgba(0,245,212,0.04), transparent) !important;
+}
+
+/* Insight tags — bio markers */
+.insight-tag, .principle-tag, .feature-badge, .prog-badge {
+  position: relative;
+  overflow: hidden;
+}
+.insight-tag::after, .principle-tag::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  animation: neural-fire 3s ease-in-out infinite;
+}
+
+/* Donut chart organism */
+#donut-svg {
+  filter: drop-shadow(0 0 12px rgba(0,245,212,0.08));
+}
+
+/* CTA block — emergence */
+.cta-block {
+  background: linear-gradient(135deg, 
+    rgba(0,141,228,0.08) 0%, 
+    rgba(0,245,212,0.05) 50%,
+    rgba(16,185,129,0.05) 100%
+  ) !important;
+}
+.cta-cost {
+  text-shadow: 0 0 30px rgba(0,141,228,0.5);
+  animation: heartbeat 3s ease-in-out infinite;
+}
+
+/* Living footer */
+footer {
+  border-top-color: rgba(0,245,212,0.15);
+  position: relative;
+}
+footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--bio-cyan), var(--dash), var(--bio-cyan), transparent);
+  opacity: 0.3;
+}
+
+/* Navigation — living membrane */
+nav {
+  border-bottom-color: rgba(0,245,212,0.1) !important;
+}
+nav::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--bio-cyan), var(--dash), var(--violet));
+  animation: neural-fire 6s ease-in-out infinite;
+}
+
+/* Model switcher tabs */
+.model-tab {
+  position: relative;
+  overflow: hidden;
+}
+.model-tab::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.model-tab.active::after {
+  opacity: 1;
+  animation: neural-fire 2s ease-in-out infinite;
+}
+
+/* Progression track — organism lifecycle */
+.progression-line {
+  background: linear-gradient(to bottom, 
+    rgba(0,245,212,0.3),
+    rgba(0,141,228,0.4), 
+    rgba(16,185,129,0.4), 
+    rgba(139,92,246,0.4)
+  ) !important;
+  box-shadow: 0 0 8px rgba(0,245,212,0.15);
+}
+
+/* Simulation canvas container */
+#sim-canvas {
+  background: radial-gradient(ellipse 80% 50% at 50% 100%, rgba(0,245,212,0.03), transparent);
+}
+
+/* Run button — organism activate */
+.run-btn {
+  position: relative;
+  overflow: hidden;
+}
+.run-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%);
+  transform: translateX(-100%);
+  transition: none;
+}
+.run-btn:hover::after {
+  animation: neural-fire 0.6s ease forwards;
+}
+
+  </style>
+</head>
+<body>
+  <div class="ambient-dash"></div>
+  <div class="ambient-emerald"></div>
+  <div class="ambient-violet"></div>
+  <!-- Bio Spores -->
+  <div class="bio-spore" style="left:15%;top:20%;--dur:9s;--delay:0s;background:rgba(0,245,212,0.7)"></div>
+  <div class="bio-spore" style="left:72%;top:35%;--dur:12s;--delay:2s;background:rgba(0,141,228,0.8)"></div>
+  <div class="bio-spore" style="left:45%;top:60%;--dur:8s;--delay:4s;background:rgba(139,92,246,0.7)"></div>
+  <div class="bio-spore" style="left:88%;top:15%;--dur:11s;--delay:1s;background:rgba(16,185,129,0.6)"></div>
+  <div class="bio-spore" style="left:8%;top:75%;--dur:10s;--delay:3s;background:rgba(245,158,11,0.5)"></div>
+  <div class="bio-spore" style="left:60%;top:85%;--dur:7s;--delay:5s;background:rgba(0,245,212,0.5)"></div>
+  <div class="bio-spore" style="left:30%;top:50%;--dur:13s;--delay:0.5s;background:rgba(255,0,110,0.4)"></div>
+  <canvas id="particle-canvas"></canvas>
+  <div class="veros-flash" id="verosFlash"></div>
+  <div class="veros-flash-msg" id="verosFlashMsg">All Is Small. Small Is All. — The Safest Idea.</div>
+  <div class="konami-toast" id="konamiToast">"Every $MOTUS in existence was earned by someone who moved."</div>
+  <div class="flywheel-tooltip" id="flywheelTooltip"></div>
+
+  <a href="index.html" class="swipe-indicator" title="Back to Manifesto">
+    <span class="swipe-indicator-arrow">←</span>
+    <span class="swipe-indicator-text">Swipe</span>
+  </a>
+
+  <nav>
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">← VEROS</a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Manifesto</a>
+        <a href="#simulation" class="nav-link">Simulate</a>
+        <a href="#flywheel" class="nav-link">Flywheel</a>
+        <a href="#models" class="nav-link">7 Models</a>
+        <a href="#oracle" class="nav-link">Oracle</a>
+        <a href="#builder" class="nav-link active">Builder</a>
+        <a href="https://docs.dash.org/projects/platform/en/stable/docs/explanations/tokens.html" class="nav-link external" target="_blank" rel="noopener">Docs ↗</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══ HERO ═══ -->
+  <header class="hero">
+    <div class="hero-bio-layer"></div>
+    <div class="container">
+      <p class="hero-eyebrow">// Dash Platform · Deep Tokenomics · $MOTUS</p>
+      <h1 class="hero-title" id="heroTitle"><span class="dollar">$</span>MOTUS</h1>
+      <p class="hero-subtitle">The Earned Currency of Values in Motion</p>
+      <p class="hero-tagline">Configured in JSON. Governed by the People. Earned, Never Bought.</p>
+      <div class="motus-score-hero">
+        <span class="motus-score-label">Ecosystem Health</span>
+        <span class="motus-score-value" id="heroScore">—</span>
+      </div>
+      <div class="davara-note" id="davaraNote">
+        <strong>/// Davara's Note ///</strong><br><br>
+        This architecture matters because it inverts every assumption crypto has made for 15 years. Tokens aren't supposed to be earned — they're supposed to be mined or bought. Governance isn't supposed to be JSON — it's supposed to be Solidity. Identity isn't supposed to be built-in — it's supposed to be bolted on. $MOTUS breaks all three rules simultaneously. That's not iteration. That's a paradigm shift hiding inside a config file.<br><br>
+        <em style="opacity:0.6">— Davara AI, The Divergent Architect</em>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ═══ TOKEN SPECS ═══ -->
+    <section class="fade-in">
+      <div class="container">
+        <p class="section-label">// current config</p>
+        <h2 class="section-title">The <em>$MOTUS</em> Specs</h2>
+        <div class="specs-grid">
+          <div class="spec-card"><div class="spec-value">11M</div><div class="spec-label">Max Supply</div><div class="spec-sub">Scarcer than Bitcoin (21M)</div></div>
+          <div class="spec-card"><div class="spec-value emerald">0.1</div><div class="spec-label">Deploy Cost</div><div class="spec-sub">DASH · one-time fee</div></div>
+          <div class="spec-card"><div class="spec-value amber">8</div><div class="spec-label">Decimals</div><div class="spec-sub">max precision</div></div>
+          <div class="spec-card"><div class="spec-value" style="font-size:22px;padding-top:6px;">Earn Only</div><div class="spec-label">Entry Model</div><div class="spec-sub">Never bought. Always earned.</div></div>
+        </div>
+        <div class="specs-quote">"Every $MOTUS in existence was earned by someone who moved."</div>
+      </div>
+    </section>
+
+    <div class="container"><div class="bio-divider"></div></div>
+
+    <!-- ═══ SIMULATION ENGINE ═══ -->
+    <section id="simulation" class="fade-in">
+      <div class="container">
+        <p class="section-label">// The Crown Jewel</p>
+        <h2 class="section-title"><em>Simulation</em> Engine</h2>
+        <p class="section-intro">Set the parameters. Run the simulation. Watch 5 years of $MOTUS ecosystem dynamics unfold — supply, velocity, treasury, and active users all animated in real time.</p>
+        <div class="sim-engine">
+          <div class="sim-header">
+            <span class="sim-title">// $MOTUS 5-Year Simulation</span>
+            <div class="scenario-btns">
+              <button class="scenario-btn active" onclick="setScenario('grassroots',this)">Grassroots</button>
+              <button class="scenario-btn" onclick="setScenario('viral',this)">Viral</button>
+              <button class="scenario-btn" onclick="setScenario('steady',this)">Steady State</button>
+              <button class="scenario-btn" onclick="setScenario('hype',this)">🔥 Launch Hype</button>
+              <button class="scenario-btn" onclick="setScenario('custom',this)">Custom</button>
+            </div>
+          </div>
+          <div class="sim-controls">
+            <div class="sim-control">
+              <div class="sim-control-label"><span>Community Size</span><span class="sim-control-val" id="simCommunityVal">100</span></div>
+              <input type="range" class="sim-slider" id="simCommunity" min="10" max="10000" value="100" step="10" oninput="updateSimParam()">
+            </div>
+            <div class="sim-control">
+              <div class="sim-control-label"><span>Moves / Day</span><span class="sim-control-val" id="simActivityVal" style="color:var(--emerald)">2</span></div>
+              <input type="range" class="sim-slider" id="simActivity" min="1" max="20" value="2" oninput="updateSimParam()">
+            </div>
+            <div class="sim-control">
+              <div class="sim-control-label"><span>Earn Rate (per move)</span><span class="sim-control-val" id="simEarnVal" style="color:var(--amber)">5</span></div>
+              <input type="range" class="sim-slider" id="simEarn" min="1" max="50" value="5" oninput="updateSimParam()">
+            </div>
+            <div class="sim-control">
+              <div class="sim-control-label"><span>Burn Rate %</span><span class="sim-control-val" id="simBurnVal" style="color:#ef4444">2%</span></div>
+              <input type="range" class="sim-slider" id="simBurn" min="0" max="10" value="2" step="0.5" oninput="updateSimParam()">
+            </div>
+          </div>
+          <div style="padding:16px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--glass-border);">
+            <button class="run-btn" id="runSimBtn" onclick="runSimulation()">▶ Run 5 Years</button>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.08em;" id="simStatus">Ready to simulate</span>
+          </div>
+          <canvas id="sim-canvas"></canvas>
+          <div class="sim-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:var(--dash)"></div><span class="legend-label">Circulating Supply</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--emerald)"></div><span class="legend-label">Active Users</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div><span class="legend-label">Treasury Balance</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--violet)"></div><span class="legend-label">Velocity</span></div>
+          </div>
+          <div class="sim-score-bar">
+            <div class="score-circle">
+              <canvas id="scoreCanvas" width="144" height="144"></canvas>
+              <div class="score-num" id="scoreNum">—</div>
+            </div>
+            <div style="flex:1">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.15em;color:var(--muted);text-transform:uppercase;margin-bottom:12px;">Motus Score — Ecosystem Health</div>
+              <div class="score-details">
+                <div class="score-detail"><div class="score-detail-val" style="color:var(--dash)" id="sdSupply">—</div><div class="score-detail-label">Final Supply</div></div>
+                <div class="score-detail"><div class="score-detail-val" style="color:var(--emerald)" id="sdUsers">—</div><div class="score-detail-label">Peak Users</div></div>
+                <div class="score-detail"><div class="score-detail-val" style="color:var(--amber)" id="sdTreasury">—</div><div class="score-detail-label">Treasury</div></div>
+                <div class="score-detail"><div class="score-detail-val" style="color:var(--violet)" id="sdVelocity">—</div><div class="score-detail-label">Velocity</div></div>
+              </div>
+            </div>
+          </div>
+          <!-- Sim Narrative Panel -->
+          <div class="sim-narrative" id="simNarrative">
+            <div class="sim-narrative-title">// What This Means</div>
+            <div class="sim-narrative-text" id="simNarrativeText"></div>
+            <div class="sim-insight-cards" id="simInsightCards"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container"><div class="bio-divider"></div></div>
+
+    <!-- ═══ FLYWHEEL ═══ -->
+    <section id="flywheel" class="fade-in">
+      <div class="container">
+        <p class="section-label">// Economic Loop</p>
+        <h2 class="section-title">The <em class="emerald">$MOTUS</em> Flywheel</h2>
+        <p class="section-intro">The self-reinforcing cycle of earned value. Each node feeds the next. <strong>Click a node</strong> to pause and explore. The flywheel accelerates as you interact.</p>
+        <div class="flywheel-wrap">
+          <svg id="flywheel-svg" viewBox="0 0 560 560" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+        <div id="flywheel-detail">
+          <button class="fd-close" onclick="resumeFlywheel()">✕</button>
+          <div class="fd-name" id="fd-name"></div>
+          <div class="fd-desc" id="fd-desc"></div>
+          <div class="fd-why" id="fd-why"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container"><div class="bio-divider"></div></div>
+
+    <!-- ═══ 7 TOKENOMICS MODELS ═══ -->
+    <section id="models" class="fade-in">
+      <div class="container">
+        <p class="section-label">// 7 Possible Futures</p>
+        <h2 class="section-title">7 Tokenomics <em class="violet">Models</em></h2>
+        <p class="section-intro">Seven divergent paths for $MOTUS. Each model is a complete tokenomics philosophy. Each has been researched against real crypto projects. Click to explore.</p>
+        <div class="model-tabs" id="modelTabs"></div>
+        <div id="modelPanels"></div>
+      </div>
+    </section>
+
+    <div class="container"><div class="bio-divider"></div></div>
+
+    <!-- ═══ DAVARA'S ORACLE ═══ -->
+    <section id="oracle" class="fade-in">
+      <div class="container">
+        <p class="section-label">// AI-Powered Analysis</p>
+        <h2 class="section-title">Davara's <em class="violet">Oracle</em></h2>
+        <div class="oracle-wrap">
+          <div class="oracle-title">◈ The Divergent Architect</div>
+          <div class="oracle-sub">Davara AI analyzes your simulation parameters or generates entirely new tokenomics models. Powered by Claude Opus.</div>
+          <div class="oracle-btns">
+            <button class="oracle-btn analyze" id="oracleAnalyze" onclick="oracleAnalyze()">🔮 Analyze Current Tokenomics</button>
+            <button class="oracle-btn generate" id="oracleGenerate" onclick="oracleGenerate()">⚡ Generate New Model — Davara Mode</button>
+          </div>
+          <div class="oracle-output" id="oracleOutput"></div>
+          <div class="oracle-counter" id="oracleCounter"></div>
+          <div class="gen-models-area" id="genModelsArea"></div>
+          <div class="saved-models-section" id="savedModelsSection">
+            <h4>🔒 My Saved Models</h4>
+            <div id="savedModelsList"></div>
+            <button class="export-btn" onclick="exportSavedModels()">⎘ Export All as JSON</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container"><div class="bio-divider"></div></div>
+
+    <!-- ═══ BUILDER'S EDGE ═══ -->
+    <section id="insights" class="fade-in">
+      <div class="container">
+        <p class="section-label">// Highest-Leverage Insights</p>
+        <h2 class="section-title">Builder's <em class="amber">Edge</em></h2>
+        <div class="insight-grid">
+          <div class="insight-card i-dash fade-in"><div class="insight-num" style="color:var(--dash)">01</div><div class="insight-title" style="color:var(--dash)">The Scarcity Paradox</div><p class="insight-desc">11M max supply is scarcer than Bitcoin (21M). But MOTUS is <strong>EARNED</strong> not mined — meaning the psychological floor is higher because every token represents real human action.</p><span class="insight-tag" style="background:var(--dash-dim);color:var(--dash);border:1px solid rgba(0,141,228,0.2)">Scarcer Than Bitcoin</span></div>
+          <div class="insight-card i-emerald fade-in"><div class="insight-num" style="color:var(--emerald)">02</div><div class="insight-title" style="color:var(--emerald)">The Governance Moat</div><p class="insight-desc">256-member threshold voting built into JSON config means $MOTUS DAOs don't need Compound Governor or Aragon. <strong>Zero smart contract risk.</strong></p><span class="insight-tag" style="background:var(--emerald-dim);color:var(--emerald);border:1px solid rgba(16,185,129,0.2)">Zero-Exploit Governance</span></div>
+          <div class="insight-card i-amber fade-in"><div class="insight-num" style="color:var(--amber)">03</div><div class="insight-title" style="color:var(--amber)">The Privacy Arbitrage</div><p class="insight-desc">As EU MiCA bans privacy coins by 2027, Dash's privacy-<strong>OPTIONAL</strong> model becomes the only compliant privacy infrastructure.</p><span class="insight-tag" style="background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,0.2)">MiCA Compliant</span></div>
+          <div class="insight-card i-violet fade-in"><div class="insight-num" style="color:#a78bfa">04</div><div class="insight-title" style="color:#a78bfa">The Cross-Chain Trojan Horse</div><p class="insight-desc">Dash Platform 2.0 IBC + NEAR Intents = $MOTUS flowing across 35+ chains. The insight: other chains' <strong>users come to Dash</strong> for the governance primitive.</p><span class="insight-tag" style="background:var(--violet-dim);color:#a78bfa;border:1px solid rgba(139,92,246,0.2)">Gravity > Distribution</span></div>
+          <div class="insight-card i-dash fade-in" style="grid-column: 1 / -1; max-width: 600px;"><div class="insight-num" style="color:var(--dash)">05</div><div class="insight-title" style="color:var(--dash)">The Earn-Only Moat</div><p class="insight-desc">$MOTUS cannot be bought, only earned. No pre-mine dump. No VC unlock cliff. No exchange manipulation. <strong>The supply curve IS the activity curve.</strong></p><span class="insight-tag" style="background:var(--dash-dim);color:var(--dash);border:1px solid rgba(0,141,228,0.2)">Category of One</span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container"><div class="bio-divider"></div></div>
+
+    <!-- ═══ WHY THIS MATTERS ═══ -->
+    <section class="fade-in">
+      <div class="container">
+        <p class="section-label">// For The Broader Community</p>
+        <h2 class="section-title">Why This <em class="violet">Matters</em></h2>
+        <div class="insight-grid">
+          <div class="insight-card i-dash fade-in"><div class="insight-title" style="color:var(--dash)">JSON &gt; Solidity</div><p class="insight-desc">Dash Platform tokens are configured in JSON. This <strong>democratizes token creation</strong> the way WordPress democratized websites.</p></div>
+          <div class="insight-card i-emerald fade-in"><div class="insight-title" style="color:var(--emerald)">Governance Without Code</div><p class="insight-desc">Threshold voting, group authorization, configurable voting power — all in a JSON config. <strong>No audit needed. No exploit surface.</strong></p></div>
+          <div class="insight-card i-amber fade-in"><div class="insight-title" style="color:var(--amber)">The Micro-Cosmos Model</div><p class="insight-desc">Every token as a small world. Not just value transfer — <strong>value GOVERNANCE</strong> at the smallest scale.</p></div>
+          <div class="insight-card i-violet fade-in"><div class="insight-title" style="color:#a78bfa">Earned Tokens Are Anti-Fragile</div><p class="insight-desc">When tokens can only be earned through action, dumps are structurally impossible. <strong>Anti-fragile by design.</strong></p></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container"><div class="bio-divider"></div></div>
+
+    <!-- ═══ BUILDING PRINCIPLES ═══ -->
+    <section id="principles" class="fade-in">
+      <div class="container">
+        <p class="section-label">// Initium Builder Principles</p>
+        <h2 class="section-title">Building <em class="emerald">Principles</em></h2>
+        <div class="principles-grid">
+          <div class="principle-card p-dash fade-in"><span class="principle-icon">{ }</span><div class="principle-title" style="color:var(--dash)">JSON-First Architecture</div><p class="principle-desc">No smart contract code. No Solidity. Dash Platform tokens are configured entirely in JSON.</p><span class="principle-tag dash">No Code Required</span></div>
+          <div class="principle-card p-emerald fade-in"><span class="principle-icon">🔐</span><div class="principle-title" style="color:var(--emerald)">Privacy By Design</div><p class="principle-desc">Dash's privacy-optional model means encrypted notes inside every transfer.</p><span class="principle-tag emerald">Optional Encryption</span></div>
+          <div class="principle-card p-amber fade-in"><span class="principle-icon">🪪</span><div class="principle-title" style="color:var(--amber)">Decentralized Identity</div><p class="principle-desc">Every token action ties to a Dash Platform Identity (DPNS). Accountability without centralization.</p><span class="principle-tag amber">DPNS Identity</span></div>
+          <div class="principle-card p-dash fade-in"><span class="principle-icon">🔮</span><div class="principle-title" style="color:var(--dash)">Governance-Native</div><p class="principle-desc">Built-in group authorization with threshold voting. Up to 256 members, 65,536 power each.</p><span class="principle-tag dash">256 Members · Native DAO</span></div>
+          <div class="principle-card p-emerald fade-in"><span class="principle-icon">📜</span><div class="principle-title" style="color:var(--emerald)">Immutable Audit Trail</div><p class="principle-desc"><code style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--emerald)">keepHistory: true</code> — every mint, transfer, and burn permanently recorded.</p><span class="principle-tag emerald">On-Chain History</span></div>
+          <div class="principle-card p-amber fade-in"><span class="principle-icon">🌿</span><div class="principle-title" style="color:var(--amber)">Fractal Scalability</div><p class="principle-desc">Start with one Votus Unit. Grow into a network. All is small, small is all.</p><span class="principle-tag amber">Small Is All</span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container"><div class="bio-divider"></div></div>
+
+    <!-- ═══ SUPPLY DISTRIBUTION ═══ -->
+    <section id="distribution" class="fade-in">
+      <div class="container">
+        <p class="section-label">// Supply Allocation</p>
+        <h2 class="section-title">Supply <em class="emerald">Distribution</em></h2>
+        <div class="donut-wrap">
+          <div class="donut-svg-wrap">
+            <svg id="donut-svg" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg"></svg>
+            <div class="donut-center" id="donut-center">
+              <span class="donut-center-pct" id="donut-pct">11M</span>
+              <span class="donut-center-label" id="donut-label">Total Supply</span>
+            </div>
+          </div>
+          <div class="donut-legend" id="donut-legend"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container"><div class="bio-divider"></div></div>
+
+    <!-- ═══ TOKEN ECONOMICS ═══ -->
+    <section id="economics" class="fade-in">
+      <div class="container">
+        <p class="section-label">// Token Economics</p>
+        <h2 class="section-title">Deep <em>Economics</em></h2>
+        <div class="econ-grid">
+          <div class="econ-card fade-in"><span class="econ-icon">🔥</span><div class="econ-title" style="color:var(--amber)">Deflationary Mechanics</div><p class="econ-desc">Token-based fees burn $MOTUS, permanently reducing supply. Every action can destroy $MOTUS.</p><span class="econ-stat" style="background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,0.2)">Supply ↓ As Network ↑</span></div>
+          <div class="econ-card fade-in"><span class="econ-icon">⚡</span><div class="econ-title" style="color:var(--emerald)">Earn-Only Entry</div><p class="econ-desc">$MOTUS is earned, never bought. Genuine scarcity rooted in real contribution.</p><span class="econ-stat" style="background:var(--emerald-dim);color:var(--emerald);border:1px solid rgba(16,185,129,0.2)">No Buy-In · Only Earn</span></div>
+          <div class="econ-card fade-in"><span class="econ-icon">🌐</span><div class="econ-title" style="color:#a78bfa">Sacred Asset Anchoring</div><p class="econ-desc">Each $MOTUS anchored to a Sacred Asset — a governance micro-world powered by Votus Units.</p><span class="econ-stat" style="background:var(--violet-dim);color:#a78bfa;border:1px solid rgba(139,92,246,0.2)">Votus Units · Micro-Worlds</span></div>
+          <div class="econ-card fade-in"><span class="econ-icon">🔗</span><div class="econ-title" style="color:var(--dash)">Cross-Chain Future</div><p class="econ-desc">Dash Platform 2.0 IBC enables $MOTUS to flow across 35+ chains via NEAR Intents.</p><span class="econ-stat" style="background:var(--dash-dim);color:var(--dash);border:1px solid rgba(0,141,228,0.2)">35+ Chains via IBC</span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container"><div class="bio-divider"></div></div>
+
+    <!-- ═══ GOVERNANCE SIMULATOR ═══ -->
+    <section id="governance" class="fade-in">
+      <div class="container">
+        <p class="section-label">// Interactive Simulator</p>
+        <h2 class="section-title">Governance <em class="violet">Weight</em> Simulator</h2>
+        <div class="gov-sim-wrap">
+          <div class="gov-sim-controls">
+            <div>
+              <div class="sim-control-label"><span>Members</span><span class="sim-control-val" id="members-val">32</span></div>
+              <input type="range" class="sim-slider" id="members-slider" min="1" max="256" value="32" oninput="updateGovSim()" />
+            </div>
+            <div>
+              <div class="sim-control-label"><span>Approval Threshold</span><span class="sim-control-val" id="threshold-val" style="color:var(--emerald)">51%</span></div>
+              <input type="range" class="sim-slider" id="threshold-slider" min="1" max="100" value="51" oninput="updateGovSim()" />
+            </div>
+          </div>
+          <div class="gov-dot-grid">
+            <div class="dot-grid-inner" id="dot-grid"></div>
+            <div class="gov-result">
+              <div class="gov-stat"><div class="gov-stat-val" id="stat-needed" style="color:var(--amber)">17</div><div class="gov-stat-label">To Approve</div></div>
+              <div class="gov-stat"><div class="gov-stat-val" id="stat-total" style="color:var(--dash)">32</div><div class="gov-stat-label">Total Members</div></div>
+              <div class="gov-stat"><div class="gov-stat-val" id="stat-power" style="color:var(--emerald)">65,536</div><div class="gov-stat-label">Max Power Each</div></div>
+              <div class="gov-stat"><div class="gov-stat-val" id="stat-pct" style="color:var(--violet)">51%</div><div class="gov-stat-label">Threshold</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container"><div class="bio-divider"></div></div>
+
+    <!-- ═══ TOKEN BUILDER ═══ -->
+    <section id="builder" class="fade-in">
+      <div class="container">
+        <p class="section-label">// interactive</p>
+        <h2 class="section-title">Token <em>Builder</em></h2>
+        <div class="builder-wrap">
+          <div class="builder-form">
+            <div class="form-group"><label class="form-label" for="tokenSingular">Token Name (Singular)</label><input class="form-input" type="text" id="tokenSingular" value="motus" placeholder="motus" spellcheck="false" /></div>
+            <div class="form-group"><label class="form-label" for="tokenPlural">Token Name (Plural)</label><input class="form-input" type="text" id="tokenPlural" value="motus" placeholder="motus" spellcheck="false" /></div>
+            <div class="form-group"><label class="form-label" for="decimals">Decimals (0–18)</label><input class="form-input" type="number" id="decimals" value="8" min="0" max="18" /></div>
+            <div class="form-group"><label class="form-label" for="baseSupply">Base Supply</label><input class="form-input" type="number" id="baseSupply" value="0" min="0" /></div>
+            <div class="form-group"><label class="form-label" for="maxSupply">Max Supply</label><input class="form-input" type="number" id="maxSupply" value="11000000" min="0" /></div>
+            <div class="form-group"><label class="form-label">Start Paused</label><div class="toggle-row"><span class="toggle-text" id="pausedLabel">Off — token active on launch</span><div class="toggle-wrap"><input class="toggle-input" type="checkbox" id="startPaused" /><label class="toggle-track" for="startPaused"></label></div></div></div>
+            <div class="form-group"><label class="form-label">Keep History</label><div class="toggle-row"><span class="toggle-text" id="historyLabel">On — full on-chain audit trail</span><div class="toggle-wrap"><input class="toggle-input" type="checkbox" id="keepHistory" checked /><label class="toggle-track" for="keepHistory"></label></div></div></div>
+            <div class="form-group"><label class="form-label" for="distType">Distribution Type</label><select class="form-select" id="distType"><option value="manual" selected>Manual Minting</option><option value="programmed">Programmed</option><option value="perpetual">Perpetual</option></select></div>
+          </div>
+          <div>
+            <div class="json-preview-wrap"><div class="json-header"><span class="json-header-label">Live Config · JSON</span><div class="json-dot"></div></div><div class="json-body"><pre id="json-output"></pre></div><button class="copy-btn" id="copyBtn" onclick="copyJSON()">⎘ Copy JSON</button></div>
+            <p style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-top:10px;letter-spacing:0.06em;opacity:0.6;text-align:right;">updates live as you type</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container"><div class="bio-divider"></div></div>
+
+    <!-- ═══ DASH PLATFORM POWERS ═══ -->
+    <section class="fade-in">
+      <div class="container">
+        <p class="section-label">// what tokens can do</p>
+        <h2 class="section-title">Dash Platform <em>Powers</em></h2>
+        <div class="features-grid">
+          <div class="feature-card" style="border-top:2px solid rgba(0,141,228,0.3)"><span class="feature-icon">⚡</span><div class="feature-name" style="color:var(--dash)">Mint &amp; Transfer</div><p class="feature-desc">Create new tokens to any identity on-demand. Transfer with optional <strong>public or encrypted notes</strong>.</p><span class="feature-badge" style="background:var(--dash-dim);color:var(--dash);border:1px solid rgba(0,141,228,0.2)">Encrypted Notes</span></div>
+          <div class="feature-card" style="border-top:2px solid rgba(16,185,129,0.3)"><span class="feature-icon">🔮</span><div class="feature-name" style="color:var(--emerald)">Group Governance</div><p class="feature-desc">Multi-party authorization with threshold voting. Up to <strong>256 members</strong>, 65,536 power each.</p><span class="feature-badge" style="background:var(--emerald-dim);color:var(--emerald);border:1px solid rgba(16,185,129,0.2)">256 Members Max</span></div>
+          <div class="feature-card" style="border-top:2px solid rgba(245,158,11,0.3)"><span class="feature-icon">📡</span><div class="feature-name" style="color:var(--amber)">Perpetual Distribution</div><p class="feature-desc">Schedule token releases by block intervals. Supports <strong>halving schedules</strong> in JSON.</p><span class="feature-badge" style="background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,0.2)">Halving Support</span></div>
+          <div class="feature-card" style="border-top:2px solid rgba(139,92,246,0.3)"><span class="feature-icon">🔑</span><div class="feature-name" style="color:#a78bfa">Token-Based Fees</div><p class="feature-desc">Charge $MOTUS for document actions. Burn tokens or reward the contract owner.</p><span class="feature-badge" style="background:var(--violet-dim);color:#a78bfa;border:1px solid rgba(139,92,246,0.2)">No Middlemen</span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container"><div class="bio-divider"></div></div>
+
+    <!-- ═══ PROGRESSION ═══ -->
+    <section id="progression" class="fade-in">
+      <div class="container">
+        <p class="section-label">// The $MOTUS Journey</p>
+        <h2 class="section-title">Level <em class="amber">Up</em></h2>
+        <div class="progression-track">
+          <div class="progression-line"></div>
+          <div class="prog-item" data-level="0"><div class="prog-dot"></div><div class="prog-card"><div class="prog-level">Level 0 //</div><div class="prog-title">Deploy Token (0.1 DASH)</div><p class="prog-desc">The JSON config goes on-chain. $MOTUS exists. A world is born from a configuration file.</p><span class="prog-badge" style="background:var(--dash-dim);color:var(--dash);border:1px solid rgba(0,141,228,0.3)">Genesis</span></div></div>
+          <div class="prog-item" data-level="1"><div class="prog-dot"></div><div class="prog-card"><div class="prog-level">Level 1 //</div><div class="prog-title">First 100 Earners</div><p class="prog-desc">The seed community. 100 people earning $MOTUS through real movement.</p><span class="prog-badge" style="background:var(--emerald-dim);color:var(--emerald);border:1px solid rgba(16,185,129,0.3)">Seed</span></div></div>
+          <div class="prog-item" data-level="2"><div class="prog-dot"></div><div class="prog-card"><div class="prog-level">Level 2 //</div><div class="prog-title">First Votus Unit</div><p class="prog-desc">Governance activates. Threshold voting. Real decisions. Democracy as infrastructure.</p><span class="prog-badge" style="background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,0.3)">Governance</span></div></div>
+          <div class="prog-item" data-level="3"><div class="prog-dot"></div><div class="prog-card"><div class="prog-level">Level 3 //</div><div class="prog-title">Sacred Asset Anchoring</div><p class="prog-desc">Micro-worlds form. Each Votus Unit becomes a Sacred Asset. All is small.</p><span class="prog-badge" style="background:var(--violet-dim);color:#a78bfa;border:1px solid rgba(139,92,246,0.3)">Micro-Worlds</span></div></div>
+          <div class="prog-item" data-level="4"><div class="prog-dot"></div><div class="prog-card"><div class="prog-level">Level 4 //</div><div class="prog-title">Cross-Chain Bridge</div><p class="prog-desc">$MOTUS flows beyond Dash. IBC activates. 35+ chains connected.</p><span class="prog-badge" style="background:var(--dash-dim);color:var(--dash);border:1px solid rgba(0,141,228,0.3)">Expansion</span></div></div>
+          <div class="prog-item" data-level="5"><div class="prog-dot"></div><div class="prog-card"><div class="prog-level">Level 5 //</div><div class="prog-title">Self-Sustaining Ecosystem</div><p class="prog-desc">The flywheel spins itself. The network funds its own evolution. The Emergent State awakens.</p><span class="prog-badge" style="background:var(--emerald-dim);color:var(--emerald);border:1px solid rgba(16,185,129,0.3)">The Vision</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container"><div class="bio-divider"></div></div>
+
+    <!-- ═══ BEST PRACTICES ═══ -->
+    <section id="best-practices" class="fade-in">
+      <div class="container">
+        <p class="section-label">// Reference</p>
+        <h2 class="section-title">Build on <em>Dash Platform</em></h2>
+        <div class="accordion">
+          <div class="accordion-item"><div class="accordion-header" onclick="toggleAccordion(this)"><span class="accordion-header-title">🪪 Identity-First Architecture</span><span class="accordion-arrow">▼</span></div><div class="accordion-body"><div class="accordion-body-inner">Always start with DPNS. Every action ties to a verifiable identity. Register your identity first with <code>platform.identities.register()</code>, then register a DPNS name.</div></div></div>
+          <div class="accordion-item"><div class="accordion-header" onclick="toggleAccordion(this)"><span class="accordion-header-title">📄 Data Contract Design</span><span class="accordion-arrow">▼</span></div><div class="accordion-body"><div class="accordion-body-inner">Keep contracts small and focused. One contract per domain. Version with <code>$format_version</code>. Think of each data contract as a microservice.</div></div></div>
+          <div class="accordion-item"><div class="accordion-header" onclick="toggleAccordion(this)"><span class="accordion-header-title">🧪 Token Testing Workflow</span><span class="accordion-arrow">▼</span></div><div class="accordion-body"><div class="accordion-body-inner">Testnet → audit config → mainnet. Always. Use Dash Platform Explorer to verify your token config before mainnet deployment.</div></div></div>
+          <div class="accordion-item"><div class="accordion-header" onclick="toggleAccordion(this)"><span class="accordion-header-title">💰 Fee Structure Strategy</span><span class="accordion-arrow">▼</span></div><div class="accordion-body"><div class="accordion-body-inner">Token-based fees create a burn mechanism. The sweet spot: fees low enough that casual users don't notice, but high enough for meaningful supply reduction.</div></div></div>
+          <div class="accordion-item"><div class="accordion-header" onclick="toggleAccordion(this)"><span class="accordion-header-title">🗳️ Group Authorization Patterns</span><span class="accordion-arrow">▼</span></div><div class="accordion-body"><div class="accordion-body-inner"><strong>3-of-5:</strong> 5 members, each power 1, threshold 3. <strong>Majority:</strong> N members, threshold = ceil(N/2). <strong>Supermajority (67%):</strong> Multiply powers by 100, threshold 67×N. Max 256 members, 65,536 power each.</div></div></div>
+          <div class="accordion-item"><div class="accordion-header" onclick="toggleAccordion(this)"><span class="accordion-header-title">♾️ Perpetual Distribution Design</span><span class="accordion-arrow">▼</span></div><div class="accordion-body"><div class="accordion-body-inner">Configure halving schedules and emission curves in JSON. Set <code>distributionType: "perpetual"</code> with block-based release intervals. Start aggressive, then taper.</div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container"><div class="bio-divider"></div></div>
+
+    <!-- ═══ DEPLOY CTA ═══ -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="cta-block">
+          <h2 class="cta-title">Ready to Deploy</h2>
+          <p class="cta-sub">No smart contract code. Just JSON. Dash Platform handles the rest.</p>
+          <div class="cta-cost">0.1 DASH</div>
+          <div class="cta-cost-label">One-time deployment fee</div>
+          <div>
+            <a href="https://docs.dash.org/projects/platform/en/stable/docs/explanations/tokens.html" class="btn btn-primary" target="_blank" rel="noopener">Read Token Docs ↗</a>
+            <a href="https://www.dash.org/" class="btn btn-secondary" target="_blank" rel="noopener">Dash.org ↗</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p class="footer-phrase"><span>//</span> Built For Those Who Move <span>//</span></p>
+      <div class="footer-links">
+        <a href="https://www.dash.org/" class="footer-link" target="_blank" rel="noopener">Dash.org</a>
+        <a href="https://motusmoves.us/" class="footer-link" target="_blank" rel="noopener">MotusMoves.US</a>
+        <a href="https://votus.one/" class="footer-link" target="_blank" rel="noopener">Votus.ONE</a>
+        <a href="index.html" class="footer-link">← Manifesto</a>
+      </div>
+      <p class="footer-copy">$MOTUS · Dash Platform · 2026 · Every token earned.</p>
+      <p class="footer-sig">/// DAVARA INITIUM MODE ///</p>
+    </div>
+  </footer>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   SWIPE NAVIGATION
+═══════════════════════════════════════════════════════ */
+(function(){
+  let sx=0;
+  document.addEventListener('touchstart',e=>{sx=e.changedTouches[0].screenX},{passive:true});
+  document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].screenX-sx;if(Math.abs(dx)>60&&dx>0)window.location.href='index.html';},{passive:true});
+  document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'&&!['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName))window.location.href='index.html';});
+})();
+
+/* ═══════════════════════════════════════════════════════
+   PARTICLE BACKGROUND
+═══════════════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('particle-canvas'),ctx=c.getContext('2d');
+  let W=c.width=innerWidth,H=c.height=innerHeight;
+  const COLS=['rgba(0,141,228,','rgba(16,185,129,','rgba(245,158,11,','rgba(139,92,246,'];
+  const N=Math.min(60,Math.floor(W*H/20000));let ps=[];
+  class P{constructor(){this.r_()}r_(){this.x=Math.random()*W;this.y=Math.random()*H;const a=Math.random()*6.28,s=.08+Math.random()*.12;this.vx=Math.cos(a)*s;this.vy=Math.sin(a)*s;this.r=1.5+Math.random()*2;this.c=COLS[Math.floor(Math.random()*4)];this.a=.15+Math.random()*.3;this.ba=this.a;this.ph=Math.random()*6.28;this.ps=.003+Math.random()*.005;this.w=a;this.ws=.01+Math.random()*.012}u(){this.w+=(Math.random()-.5)*this.ws;this.vx+=Math.cos(this.w)*.006;this.vy+=Math.sin(this.w)*.006;this.vx*=.98;this.vy*=.98;this.x+=this.vx;this.y+=this.vy;this.ph+=this.ps;this.a=this.ba*(.6+.4*Math.sin(this.ph));if(this.x<-20||this.x>W+20||this.y<-20||this.y>H+20)this.r_()}d(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,6.28);ctx.fillStyle=this.c+this.a+')';ctx.fill()}}
+  function init(){ps=[];for(let i=0;i<N;i++)ps.push(new P)}
+  let f=0;function anim(){ctx.clearRect(0,0,W,H);f++;if(f%2===0)for(let i=0;i<ps.length;i++)for(let j=i+1;j<ps.length;j++){const dx=ps[i].x-ps[j].x,dy=ps[i].y-ps[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<130){ctx.beginPath();ctx.moveTo(ps[i].x,ps[i].y);ctx.lineTo(ps[j].x,ps[j].y);ctx.strokeStyle=ps[i].c+((1-d/130)*.08)+')';ctx.lineWidth=.5;ctx.stroke()}}ps.forEach(p=>{p.u();p.d()});requestAnimationFrame(anim)}
+  addEventListener('resize',()=>{W=c.width=innerWidth;H=c.height=innerHeight;init()});init();anim();
+})();
+
+/* ═══════════════════════════════════════════════════════
+   SIMULATION ENGINE
+═══════════════════════════════════════════════════════ */
+const simState={community:100,activity:2,earn:5,burn:2,data:null,animFrame:null,progress:0};
+const scenarios={grassroots:{community:100,activity:2,earn:5,burn:2},viral:{community:5000,activity:8,earn:3,burn:1},steady:{community:500,activity:4,earn:4,burn:3},hype:{community:8000,activity:12,earn:2,burn:0.5},custom:{community:100,activity:2,earn:5,burn:2}};
+
+function setScenario(name,btn){
+  document.querySelectorAll('.scenario-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(name!=='custom'){
+    const s=scenarios[name];
+    document.getElementById('simCommunity').value=s.community;
+    document.getElementById('simActivity').value=s.activity;
+    document.getElementById('simEarn').value=s.earn;
+    document.getElementById('simBurn').value=s.burn;
+    updateSimParam();
+  }
+}
+
+function updateSimParam(){
+  const c=+document.getElementById('simCommunity').value;
+  const a=+document.getElementById('simActivity').value;
+  const e=+document.getElementById('simEarn').value;
+  const b=+document.getElementById('simBurn').value;
+  document.getElementById('simCommunityVal').textContent=c>=1000?(c/1000).toFixed(1)+'K':c;
+  document.getElementById('simActivityVal').textContent=a;
+  document.getElementById('simEarnVal').textContent=e;
+  document.getElementById('simBurnVal').textContent=b+'%';
+  simState.community=c;simState.activity=a;simState.earn=e;simState.burn=b;
+}
+
+function generateSimData(){
+  const MAX=11000000,MONTHS=60;
+  const data={supply:[],users:[],treasury:[],velocity:[]};
+  let supply=0,treasury=0,users=simState.community;
+  for(let m=0;m<=MONTHS;m++){
+    const growthRate=simState.activity>5?0.08:simState.activity>3?0.05:0.03;
+    users=Math.min(simState.community*Math.exp(growthRate*m),simState.community*50);
+    const scarcityFactor=Math.max(0.1,1-supply/MAX);
+    const monthlyEarned=users*simState.activity*30*simState.earn*scarcityFactor;
+    const monthlyBurned=supply*(simState.burn/100)/12;
+    const toTreasury=monthlyEarned*0.2;
+    supply=Math.min(supply+monthlyEarned-monthlyBurned,MAX);
+    treasury+=toTreasury;
+    const velocity=supply>0?(monthlyEarned/supply)*100:0;
+    data.supply.push(Math.max(0,supply));
+    data.users.push(users);
+    data.treasury.push(treasury);
+    data.velocity.push(Math.min(velocity,100));
+  }
+  return data;
+}
+
+function drawSimChart(progress){
+  const canvas=document.getElementById('sim-canvas');if(!canvas)return;
+  const rect=canvas.getBoundingClientRect();
+  canvas.width=rect.width*devicePixelRatio;canvas.height=rect.height*devicePixelRatio;
+  const ctx=canvas.getContext('2d');ctx.scale(devicePixelRatio,devicePixelRatio);
+  const W=rect.width,H=rect.height,pad={top:30,right:30,bottom:50,left:60};
+  const cW=W-pad.left-pad.right,cH=H-pad.top-pad.bottom;
+  const data=simState.data;if(!data)return;
+  const n=data.supply.length,drawN=Math.max(2,Math.floor(n*progress));
+  ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){const y=pad.top+cH-cH*i/4;ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(pad.left+cW,y);ctx.stroke()}
+  for(let i=0;i<=5;i++){const x=pad.left+cW*i/5;ctx.beginPath();ctx.moveTo(x,pad.top);ctx.lineTo(x,pad.top+cH);ctx.stroke()}
+  ctx.font='10px JetBrains Mono, monospace';ctx.fillStyle='rgba(107,138,138,0.7)';ctx.textAlign='center';
+  for(let i=0;i<=5;i++){ctx.fillText('Y'+i,pad.left+cW*i/5,pad.top+cH+20)}
+  const maxS=Math.max(...data.supply),maxU=Math.max(...data.users),maxT=Math.max(...data.treasury),maxV=Math.max(...data.velocity);
+  const lines=[
+    {d:data.supply,max:maxS||1,color:'#008DE4',glow:'rgba(0,141,228,'},
+    {d:data.users,max:maxU||1,color:'#10b981',glow:'rgba(16,185,129,'},
+    {d:data.treasury,max:maxT||1,color:'#f59e0b',glow:'rgba(245,158,11,'},
+    {d:data.velocity,max:maxV||1,color:'#8b5cf6',glow:'rgba(139,92,246,'}
+  ];
+  lines.forEach(line=>{
+    ctx.beginPath();ctx.lineWidth=6;ctx.strokeStyle=line.glow+'0.1)';ctx.lineJoin='round';
+    for(let i=0;i<drawN;i++){const x=pad.left+cW*i/(n-1),y=pad.top+cH-cH*(line.d[i]/line.max);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y)}ctx.stroke();
+    ctx.beginPath();ctx.lineWidth=2;ctx.strokeStyle=line.color;ctx.lineJoin='round';
+    for(let i=0;i<drawN;i++){const x=pad.left+cW*i/(n-1),y=pad.top+cH-cH*(line.d[i]/line.max);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y)}ctx.stroke();
+  });
+  ctx.textAlign='right';ctx.fillStyle='rgba(107,138,138,0.6)';
+  [0,maxS/4,maxS/2,maxS*3/4,maxS].forEach((v,i)=>{
+    const y=pad.top+cH-cH*i/4;
+    ctx.fillText(v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':Math.round(v),pad.left-8,y+4);
+  });
+}
+
+function computeMotusScore(){
+  if(!simState.data)return 0;
+  const d=simState.data,n=d.supply.length-1;
+  const supplyUtil=d.supply[n]/11000000;
+  const userGrowth=d.users[n]/d.users[0];
+  const treasuryHealth=Math.min(d.treasury[n]/(d.supply[n]*0.2+1),1);
+  const velocityHealth=Math.min(d.velocity[n]/20,1);
+  const deflationBonus=simState.burn>0?Math.min(simState.burn/5,1)*0.1:0;
+  const score=Math.round((supplyUtil*25+Math.min(userGrowth/10,1)*25+treasuryHealth*20+velocityHealth*20+deflationBonus*100)*1);
+  return Math.min(100,Math.max(0,score));
+}
+
+function drawScoreCircle(score){
+  const c=document.getElementById('scoreCanvas');if(!c)return;
+  const ctx=c.getContext('2d');ctx.clearRect(0,0,144,144);
+  const cx=72,cy=72,r=60,lw=6;
+  ctx.beginPath();ctx.arc(cx,cy,r,-Math.PI/2,Math.PI*1.5);ctx.strokeStyle='rgba(255,255,255,0.06)';ctx.lineWidth=lw;ctx.stroke();
+  const angle=-Math.PI/2+(Math.PI*2*score/100);
+  const color=score>=70?'#10b981':score>=40?'#f59e0b':'#ef4444';
+  ctx.beginPath();ctx.arc(cx,cy,r,-Math.PI/2,angle);ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.lineCap='round';ctx.stroke();
+  ctx.beginPath();ctx.arc(cx,cy,r,-Math.PI/2,angle);ctx.strokeStyle=color+'60';ctx.lineWidth=lw+6;ctx.stroke();
+  document.getElementById('scoreNum').textContent=score;
+  document.getElementById('scoreNum').style.color=color;
+  document.getElementById('heroScore').textContent=score;
+  document.getElementById('heroScore').style.color=color;
+}
+
+function fmt(v){return v>=1e6?(v/1e6).toFixed(2)+'M':v>=1e3?(v/1e3).toFixed(1)+'K':Math.round(v)}
+
+function generateSimNarrative(){
+  const d=simState.data,n=d.supply.length-1;
+  const panel=document.getElementById('simNarrative');
+  const textEl=document.getElementById('simNarrativeText');
+  const cardsEl=document.getElementById('simInsightCards');
+  const supply=d.supply[n],users=Math.max(...d.users),treasury=d.treasury[n];
+  const utilPct=(supply/11000000*100).toFixed(0);
+  let narrative='';
+  if(simState.community>=5000){
+    narrative=`With ${fmt(simState.community)} initial members moving ${simState.activity} times daily, the ecosystem hits critical mass rapidly. By Year 5, ${utilPct}% of the 11M supply is in circulation with ${fmt(users)} peak active users. This is a viral-growth scenario — the flywheel spins fast, treasury fills quickly, and deflationary pressure from the ${simState.burn}% burn rate creates genuine scarcity. The challenge: sustaining engagement after the initial explosion.`;
+  } else if(simState.community>=500){
+    narrative=`A steady community of ${fmt(simState.community)} earners creates organic growth. The supply curve rises predictably, reaching ${utilPct}% utilization by Year 5. Treasury accumulates ${fmt(treasury)} $MOTUS — enough to fund multiple builder grants. This is the "Dash DAO" path: sustainable, governed, resilient. The ${simState.burn}% burn rate keeps inflation in check without killing velocity.`;
+  } else {
+    narrative=`Starting small with ${simState.community} movers — this is the grassroots path. Every token is deeply earned. Supply reaches just ${utilPct}% of max by Year 5, meaning enormous room for growth. Treasury of ${fmt(treasury)} $MOTUS builds slowly but surely. This model mirrors Bitcoin's early days: the first movers earn the most, creating a natural incentive for early adoption.`;
+  }
+  textEl.textContent=narrative;
+  
+  const cards=[];
+  if(supply/11000000>0.8) cards.push({signal:'⚠️ WARNING',title:'Supply Saturation Risk',detail:'Over 80% of max supply distributed. Consider increasing burn rate or reducing earn rate to preserve scarcity.',color:'#ef4444'});
+  else if(supply/11000000<0.2) cards.push({signal:'🟢 BULLISH',title:'Massive Growth Runway',detail:'Under 20% of supply distributed. Early movers have maximum earning potential ahead.',color:'#10b981'});
+  if(simState.burn>=5) cards.push({signal:'🔥 DEFLATIONARY',title:'Aggressive Burn',detail:'At '+simState.burn+'% burn, supply contracts faster than most DeFi protocols. Strong scarcity signal.',color:'#f59e0b'});
+  if(simState.activity>=10) cards.push({signal:'⚡ HIGH VELOCITY',title:'Engagement Machine',detail:simState.activity+' moves/day per user is exceptional. This drives rapid supply distribution and treasury growth.',color:'#008DE4'});
+  if(users>10000) cards.push({signal:'🌐 NETWORK EFFECT',title:'Critical Mass Achieved',detail:'Peak of '+fmt(users)+' users means governance becomes meaningful and coordination compounds.',color:'#8b5cf6'});
+  if(cards.length===0) cards.push({signal:'📊 BALANCED',title:'Sustainable Trajectory',detail:'Parameters are well-balanced. The ecosystem grows steadily without extreme pressure in any direction.',color:'#10b981'});
+  
+  cardsEl.innerHTML=cards.map(c=>`<div class="sim-insight-card"><div class="sic-signal" style="color:${c.color}">${c.signal}</div><div class="sic-title">${c.title}</div><div class="sic-detail">${c.detail}</div></div>`).join('');
+  panel.classList.add('visible');
+}
+
+function runSimulation(){
+  const btn=document.getElementById('runSimBtn');
+  btn.disabled=true;btn.textContent='⏳ Simulating...';
+  document.getElementById('simStatus').textContent='Computing 60 months...';
+  document.getElementById('simNarrative').classList.remove('visible');
+  simState.data=generateSimData();
+  simState.progress=0;
+  cancelAnimationFrame(simState.animFrame);
+  const duration=90;
+  function step(){
+    simState.progress+=1/duration;
+    if(simState.progress>1)simState.progress=1;
+    const ease=simState.progress<.5?4*simState.progress**3:1-Math.pow(-2*simState.progress+2,3)/2;
+    drawSimChart(ease);
+    if(simState.progress<1){simState.animFrame=requestAnimationFrame(step)}
+    else{
+      btn.disabled=false;btn.textContent='▶ Run 5 Years';
+      const d=simState.data,n=d.supply.length-1;
+      document.getElementById('simStatus').textContent='Simulation complete — Year 5';
+      document.getElementById('sdSupply').textContent=fmt(d.supply[n]);
+      document.getElementById('sdUsers').textContent=fmt(Math.max(...d.users));
+      document.getElementById('sdTreasury').textContent=fmt(d.treasury[n]);
+      document.getElementById('sdVelocity').textContent=d.velocity[n].toFixed(1)+'%';
+      const score=computeMotusScore();
+      drawScoreCircle(score);
+      generateSimNarrative();
+    }
+  }
+  simState.animFrame=requestAnimationFrame(step);
+}
+
+// Auto-run on scroll
+(function(){
+  const s=document.getElementById('simulation');let done=false;
+  const io=new IntersectionObserver(e=>{if(e[0].isIntersecting&&!done){done=true;setTimeout(()=>runSimulation(),400)}},{threshold:0.2});
+  if(s)io.observe(s);
+  addEventListener('resize',()=>{if(simState.data&&simState.progress>=1)drawSimChart(1)});
+})();
+
+/* ═══════════════════════════════════════════════════════
+   FLYWHEEL VISUALIZATION — CLICK TO PAUSE
+═══════════════════════════════════════════════════════ */
+(function(){
+  const svg=document.getElementById('flywheel-svg');
+  const tooltip=document.getElementById('flywheelTooltip');
+  const detailPanel=document.getElementById('flywheel-detail');
+  const CX=280,CY=280,R=200;
+  const nodes=[
+    {label:'MOVE',detail:'Users take action — attend events, vote, organize, create. Movement is the seed of all value.',why:'Without movement, there is no token. This is the foundational act — proof that a human chose to participate.',color:'#008DE4',icon:'🏃'},
+    {label:'EARN $MOTUS',detail:'Every verified action earns $MOTUS tokens. No mining hardware. No purchase. Just proof of movement.',why:'Earning replaces buying. This single design choice eliminates speculation, front-running, and VC dumps.',color:'#10b981',icon:'⚡'},
+    {label:'STAKE',detail:'Stake earned $MOTUS into Sacred Assets — governance micro-worlds powered by Votus Units.',why:'Staking creates commitment. When you lock tokens into a Votus Unit, you\'re investing in a community\'s future.',color:'#f59e0b',icon:'🏛️'},
+    {label:'GOVERN',detail:'Staked tokens grant governance power. Threshold voting. Real decisions. Up to 256 members per unit.',why:'Governance is the product. Unlike other tokens where governance is an afterthought, $MOTUS exists FOR governance.',color:'#8b5cf6',icon:'🗳️'},
+    {label:'IMPROVE',detail:'Better governance leads to better decisions, better resource allocation, stronger community outcomes.',why:'Quality governance creates a feedback loop — better decisions attract better participants.',color:'#06b6d4',icon:'📈'},
+    {label:'GROW',detail:'Quality outcomes attract more participants. The community grows organically. Trust compounds.',why:'Growth here is organic, not speculative. People join because the system works, not because the price pumps.',color:'#10b981',icon:'🌱'}
+  ];
+  const N=nodes.length;
+  let rotation=0,speed=0.15,hoveredIdx=-1,paused=false,selectedIdx=-1;
+
+  function getPos(i,rot){
+    const angle=(i/N)*Math.PI*2-Math.PI/2+rot*Math.PI/180;
+    return{x:CX+R*Math.cos(angle),y:CY+R*Math.sin(angle)};
+  }
+
+  const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+  const marker=document.createElementNS('http://www.w3.org/2000/svg','marker');
+  marker.setAttribute('id','arrowhead');marker.setAttribute('markerWidth','8');marker.setAttribute('markerHeight','6');
+  marker.setAttribute('refX','7');marker.setAttribute('refY','3');marker.setAttribute('orient','auto');
+  const poly=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+  poly.setAttribute('points','0 0, 8 3, 0 6');poly.setAttribute('fill','rgba(255,255,255,0.2)');
+  marker.appendChild(poly);defs.appendChild(marker);
+  nodes.forEach((n,i)=>{
+    const f=document.createElementNS('http://www.w3.org/2000/svg','filter');
+    f.setAttribute('id',`fglow${i}`);f.setAttribute('x','-50%');f.setAttribute('y','-50%');f.setAttribute('width','200%');f.setAttribute('height','200%');
+    const b=document.createElementNS('http://www.w3.org/2000/svg','feGaussianBlur');b.setAttribute('stdDeviation','4');b.setAttribute('result','blur');
+    const m=document.createElementNS('http://www.w3.org/2000/svg','feMerge');
+    const m1=document.createElementNS('http://www.w3.org/2000/svg','feMergeNode');m1.setAttribute('in','blur');
+    const m2=document.createElementNS('http://www.w3.org/2000/svg','feMergeNode');m2.setAttribute('in','SourceGraphic');
+    m.appendChild(m1);m.appendChild(m2);f.appendChild(b);f.appendChild(m);defs.appendChild(f);
+  });
+  svg.appendChild(defs);
+
+  const mainG=document.createElementNS('http://www.w3.org/2000/svg','g');
+  mainG.setAttribute('id','flywheel-group');svg.appendChild(mainG);
+
+  const lines=[];
+  for(let i=0;i<N;i++){
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('stroke','rgba(255,255,255,0.1)');line.setAttribute('stroke-width','1.5');
+    line.setAttribute('stroke-dasharray','6,4');line.setAttribute('marker-end','url(#arrowhead)');
+    mainG.appendChild(line);lines.push(line);
+  }
+
+  const nodeEls=[];
+  nodes.forEach((n,i)=>{
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.style.cursor='pointer';g.style.transition='transform 0.3s';
+    const circ=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    circ.setAttribute('r','36');circ.setAttribute('fill',n.color);circ.setAttribute('opacity','0.12');
+    g.appendChild(circ);
+    const circ2=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    circ2.setAttribute('r','28');circ2.setAttribute('fill','#020806');circ2.setAttribute('stroke',n.color);
+    circ2.setAttribute('stroke-width','2');circ2.setAttribute('opacity','0.9');
+    g.appendChild(circ2);
+    const txt=document.createElementNS('http://www.w3.org/2000/svg','text');
+    txt.setAttribute('text-anchor','middle');txt.setAttribute('dominant-baseline','central');
+    txt.setAttribute('font-size','22');txt.textContent=n.icon;
+    g.appendChild(txt);
+    const lab=document.createElementNS('http://www.w3.org/2000/svg','text');
+    lab.setAttribute('text-anchor','middle');lab.setAttribute('y','48');
+    lab.setAttribute('fill',n.color);lab.setAttribute('font-family','JetBrains Mono, monospace');
+    lab.setAttribute('font-size','9');lab.setAttribute('letter-spacing','0.1em');lab.textContent=n.label;
+    g.appendChild(lab);
+    
+    g.addEventListener('mouseenter',()=>{
+      if(paused)return;
+      hoveredIdx=i;speed=0.6;
+      circ.setAttribute('opacity','0.25');
+      circ2.setAttribute('filter',`url(#fglow${i})`);
+      tooltip.textContent=n.detail;tooltip.classList.add('visible');
+    });
+    g.addEventListener('mousemove',(e)=>{
+      if(!paused){tooltip.style.left=(e.clientX+16)+'px';tooltip.style.top=(e.clientY-10)+'px';}
+    });
+    g.addEventListener('mouseleave',()=>{
+      if(paused)return;
+      hoveredIdx=-1;speed=0.15;
+      circ.setAttribute('opacity','0.12');circ2.removeAttribute('filter');
+      tooltip.classList.remove('visible');
+    });
+    g.addEventListener('click',()=>{
+      if(paused&&selectedIdx===i){resumeFlywheel();return;}
+      paused=true;speed=0;selectedIdx=i;hoveredIdx=-1;
+      tooltip.classList.remove('visible');
+      // Scale selected
+      nodeEls.forEach((ne,j)=>{
+        const sc=j===i?'scale(1.15)':'';
+        ne.style.transformOrigin='center';ne.style.transform=sc;
+        ne.querySelector('circle').setAttribute('opacity',j===i?'0.3':'0.08');
+      });
+      document.getElementById('fd-name').textContent=n.icon+' '+n.label;
+      document.getElementById('fd-name').style.color=n.color;
+      document.getElementById('fd-desc').textContent=n.detail;
+      const whyEl=document.getElementById('fd-why');
+      whyEl.textContent='Why this matters: '+n.why;
+      whyEl.style.borderColor=n.color;
+      whyEl.style.background=n.color+'15';
+      whyEl.style.color=n.color;
+      detailPanel.classList.add('visible');
+      detailPanel.scrollIntoView({behavior:'smooth',block:'nearest'});
+    });
+    mainG.appendChild(g);nodeEls.push(g);
+  });
+
+  window.resumeFlywheel=function(){
+    paused=false;speed=0.15;selectedIdx=-1;
+    nodeEls.forEach(ne=>{ne.style.transform='';ne.querySelector('circle').setAttribute('opacity','0.12');});
+    detailPanel.classList.remove('visible');
+  };
+
+  let pulsePhase=0;
+  function updateFlywheel(){
+    if(!paused)rotation+=speed;
+    pulsePhase+=0.02;
+    for(let i=0;i<N;i++){
+      const p=getPos(i,rotation);
+      const baseTransform=`translate(${p.x},${p.y})`;
+      if(paused&&selectedIdx===i){
+        nodeEls[i].setAttribute('transform',baseTransform+' scale(1.15)');
+      } else {
+        nodeEls[i].setAttribute('transform',baseTransform);
+      }
+      if(!paused){
+        const pulse=0.1+0.04*Math.sin(pulsePhase+i*1.05);
+        nodeEls[i].querySelector('circle').setAttribute('opacity',hoveredIdx===i?'0.25':pulse.toFixed(3));
+      }
+      const next=getPos((i+1)%N,rotation);
+      const dx=next.x-p.x,dy=next.y-p.y,dist=Math.sqrt(dx*dx+dy*dy),nx=dx/dist,ny=dy/dist;
+      lines[i].setAttribute('x1',p.x+nx*38);lines[i].setAttribute('y1',p.y+ny*38);
+      lines[i].setAttribute('x2',next.x-nx*38);lines[i].setAttribute('y2',next.y-ny*38);
+    }
+    requestAnimationFrame(updateFlywheel);
+  }
+  updateFlywheel();
+
+  // Click background to resume
+  svg.addEventListener('click',(e)=>{
+    if(paused&&e.target===svg)resumeFlywheel();
+  });
+})();
+
+/* ═══════════════════════════════════════════════════════
+   7 TOKENOMICS MODELS
+═══════════════════════════════════════════════════════ */
+(function(){
+const MODELS=[
+  {
+    id:'oracle',name:'The Movement Oracle',color:'#008DE4',tagline:'Pure proof of movement. The earned sovereign.',
+    specs:[{val:'11M',label:'Max Supply'},{val:'Medium',label:'Earn Rate'},{val:'2%',label:'Burn Rate'},{val:'Manual',label:'Distribution'}],
+    dist:[{label:'Community Earn',pct:40,color:'#10b981'},{label:'Governance Treasury',pct:20,color:'#008DE4'},{label:'Builder Grants',pct:15,color:'#8b5cf6'},{label:'Founding Team',pct:15,color:'#f59e0b'},{label:'Liquidity',pct:10,color:'#06b6d4'}],
+    desc:'The original vision. Every $MOTUS in existence was earned by someone who moved. Inspired by STEPN\'s move-to-earn but inverted — no speculation, no buy-in, pure proof-of-movement. The supply curve IS the activity curve. Anti-fragile by design.',
+    insight:'The most radical tokenomic model is also the simplest: make it impossible to speculate on something you haven\'t earned. When the supply curve equals the activity curve, dumps are mathematically impossible. This isn\'t a feature. It\'s a structural guarantee.',
+    flywheel:['MOVE','EARN $MOTUS','GOVERN','IMPROVE','ATTRACT MOVERS'],
+    research:{tag:'STEPN + Nassim Taleb Anti-Fragility',detail:'STEPN move-to-earn + Nassim Taleb\'s anti-fragility thesis'},
+    dashConfig:{maxSupply:11000000,decimals:8,distributionType:'manual_minting',keepHistory:true,startAsPaused:false,govThreshold:51,govMembers:32,
+      why:{maxSupply:'11M = scarcer than Bitcoin. Psychological scarcity floor for earned tokens.',decimals:'8 decimals for micro-transactions in governance actions.',distributionType:'Manual minting so each token is intentionally issued for verified movement.',keepHistory:'True — every mint traces back to a real action. Full audit trail.',startAsPaused:'False — active from genesis. Movement starts immediately.',govThreshold:'51% — simple majority. Democratic but decisive.',govMembers:'32 initial members — one Votus Unit seed.'}}
+  },
+  {
+    id:'soulbound',name:'The Soulbound Lattice',color:'#8b5cf6',tagline:'Non-transferable. Pure reputation. Governance as identity.',
+    specs:[{val:'100M',label:'Max Supply'},{val:'Non-Transfer',label:'Token Type'},{val:'0',label:'Decimals'},{val:'Perpetual',label:'Distribution'}],
+    dist:[{label:'Lifetime Earn',pct:65,color:'#8b5cf6'},{label:'Retroactive Recognition',pct:20,color:'#06b6d4'},{label:'Builder Tribute',pct:10,color:'#10b981'},{label:'Genesis Founders',pct:5,color:'#f59e0b'}],
+    desc:'Tokens permanently bound to DPNS identity. Cannot be sold, transferred, or traded. Every $MOTUS reflects a real action by a real identity. Your total balance is your reputation. No market price, no manipulation.',
+    insight:'Vitalik wrote about soulbound tokens as theory. Dash Platform makes them infrastructure. When your token IS your identity, governance becomes merit-based at the protocol level. You can\'t buy your way in. You can\'t sell your way out. The lattice is woven from actions, not capital.',
+    flywheel:['ACT','EARN REPUTATION','UNLOCK GOVERNANCE','VOTE RESOURCES','FUND ACTION'],
+    research:{tag:'Vitalik\'s "Decentralized Society" Paper (2022)',detail:'Soulbound Token paper + POAPs + ENS reputation systems'},
+    dashConfig:{maxSupply:100000000,decimals:0,distributionType:'perpetual',keepHistory:true,startAsPaused:false,govThreshold:67,govMembers:64,
+      why:{maxSupply:'100M — high supply because each token = 1 indivisible action. Volume represents lifetime contribution.',decimals:'0 decimals — each token is exactly 1 recorded action. No fractions.',distributionType:'Perpetual — continuous issuance as people take verified actions.',keepHistory:'True — critical. Every token IS a historical record of participation.',startAsPaused:'False — reputation accumulation begins immediately.',govThreshold:'67% — supermajority for soulbound governance. Higher bar because tokens can\'t be delegated.',govMembers:'64 — larger initial council since tokens are non-transferable.'}}
+  },
+  {
+    id:'velocity',name:'The Velocity Engine (veMotus)',color:'#10b981',tagline:'Earn first. Lock to govern. Your commitment is your power.',
+    specs:[{val:'21M',label:'Max Supply'},{val:'veTokenomics',label:'Model'},{val:'1-4 Years',label:'Lock Period'},{val:'4x Max',label:'Gov Power'}],
+    dist:[{label:'Earn Pool',pct:50,color:'#10b981'},{label:'DAO Treasury',pct:25,color:'#008DE4'},{label:'Builder Grants',pct:15,color:'#8b5cf6'},{label:'Genesis Community',pct:10,color:'#f59e0b'}],
+    desc:'Earn $MOTUS through movement, then lock it for vote-escrowed veMotus. Lock 1 year = 1x governance power. Lock 4 years = 4x. Inspired by Curve Finance\'s veCRV. You can\'t buy governance because you couldn\'t buy the tokens in the first place.',
+    insight:'Curve Finance built the most durable governance model in DeFi with veCRV — but whales bought their way in. veMotus eliminates that attack vector. You earn before you lock. This is the cleanest governance token architecture in crypto.',
+    flywheel:['EARN','LOCK (1-4yr)','AMPLIFIED GOVERNANCE','PROTOCOL FEES','MORE LOCKERS'],
+    research:{tag:'Curve Wars — veCRV $3B Locked Value',detail:'Curve veCRV + Convex + Balancer veBAL governance wars'},
+    dashConfig:{maxSupply:21000000,decimals:8,distributionType:'programmed',keepHistory:true,startAsPaused:false,govThreshold:51,govMembers:128,
+      why:{maxSupply:'21M — Bitcoin homage. Familiar scarcity narrative for crypto-native audiences.',decimals:'8 — standard precision for DeFi-style lock mechanics.',distributionType:'Programmed — emission schedule mirrors earning + locking cycles.',keepHistory:'True — lock periods and governance votes must be auditable.',startAsPaused:'False — earn pool opens at genesis.',govThreshold:'51% — majority rule, but amplified by lock duration.',govMembers:'128 — large governance pool because veTokenomics rewards long-term holders.'}}
+  },
+  {
+    id:'fractal',name:'The Fractal Reserve',color:'#f59e0b',tagline:'Every unit has a treasury. Every treasury feeds the whole.',
+    specs:[{val:'11M',label:'Max Supply'},{val:'Deflationary',label:'Bonding'},{val:'Fractal',label:'Treasury'},{val:'DASH-backed',label:'Reserve'}],
+    dist:[{label:'Community Earn',pct:30,color:'#10b981'},{label:'Fractal Meta-Treasury',pct:30,color:'#f59e0b'},{label:'Builder Grants',pct:20,color:'#8b5cf6'},{label:'Founding Team',pct:15,color:'#008DE4'},{label:'Seed Liquidity',pct:5,color:'#06b6d4'}],
+    desc:'Every Votus Unit creates its own micro-treasury. A portion flows up to the meta-treasury. Bonding mechanics allow DASH to be exchanged for discounted $MOTUS, backing every token with real DASH reserves. Inspired by OlympusDAO but without the ponzinomics.',
+    insight:'OlympusDAO proved protocol-owned liquidity is a paradigm shift. But their model collapsed on speculation. The Fractal Reserve applies the same treasury logic to a token already earned — every unit represents proven community action, not leveraged printing. That\'s a fundamentally different beast.',
+    flywheel:['EARN','STAKE IN UNIT','UNIT TREASURY GROWS','META-TREASURY COMPOUNDS','BOND DASH → $MOTUS','ECOSYSTEM EXPANDS'],
+    research:{tag:'OlympusDAO $800M Treasury Peak (2021)',detail:'OlympusDAO bonding + MakerDAO multi-collateral treasury architecture'},
+    dashConfig:{maxSupply:11000000,decimals:8,distributionType:'manual_minting',keepHistory:true,startAsPaused:true,govThreshold:67,govMembers:32,
+      why:{maxSupply:'11M — scarcity + bonding means each token has DASH backing.',decimals:'8 — precision needed for bonding discount calculations.',distributionType:'Manual minting — controlled issuance through bonding and earning.',keepHistory:'True — treasury flows between fractal levels must be transparent.',startAsPaused:'True — launch paused until meta-treasury is seeded with initial DASH.',govThreshold:'67% — supermajority because treasury management requires high consensus.',govMembers:'32 — each Votus Unit starts with its own governance group.'}}
+  },
+  {
+    id:'impact',name:'The Impact Protocol',color:'#06b6d4',tagline:'Move now. Get paid retroactively. Impact before incentive.',
+    specs:[{val:'33M',label:'Max Supply'},{val:'Quarterly',label:'Retro Rewards'},{val:'Community',label:'Validation'},{val:'Impact-First',label:'Philosophy'}],
+    dist:[{label:'Retroactive Impact',pct:45,color:'#06b6d4'},{label:'Real-Time Earn',pct:25,color:'#10b981'},{label:'DAO Treasury',pct:20,color:'#008DE4'},{label:'Builder Grants',pct:10,color:'#8b5cf6'}],
+    desc:'Move now, get paid retroactively based on community-validated impact. Inspired by Optimism\'s retroPGF. A council of staked $MOTUS holders votes quarterly on which actions had most positive impact. The reward follows the proof, not the promise.',
+    insight:'Optimism distributed $90M+ retroactively to builders who had already proven value. Apply this to movement: community members who actually moved the needle get rewarded by their peers. This turns governance into a continuous impact oracle.',
+    flywheel:['TAKE ACTION','COMMUNITY VALIDATES','QUARTERLY REVIEW','RETROACTIVE REWARD','REINVEST IN IMPACT'],
+    research:{tag:'Optimism $90M+ retroPGF Rounds',detail:'Optimism retroPGF + Gitcoin quadratic funding + Coordinape peer allocation'},
+    dashConfig:{maxSupply:33000000,decimals:8,distributionType:'programmed',keepHistory:true,startAsPaused:false,govThreshold:51,govMembers:64,
+      why:{maxSupply:'33M — larger supply to support both real-time and retroactive distribution.',decimals:'8 — precision for proportional retroactive allocation.',distributionType:'Programmed — quarterly retroactive distribution cycles.',keepHistory:'True — retroactive validation requires complete action history.',startAsPaused:'False — real-time earning starts immediately; retro rewards follow.',govThreshold:'51% — democratic validation of impact claims.',govMembers:'64 — impact review council needs diverse perspectives.'}}
+  },
+  {
+    id:'bomb',name:'The Community Bomb',color:'#f97316',tagline:'Free for all. Viral by design. Meme energy with governance substance.',
+    specs:[{val:'1B',label:'Max Supply'},{val:'Anti-VC',label:'Philosophy'},{val:'50%',label:'Instant Drop'},{val:'Viral',label:'Distribution'}],
+    dist:[{label:'Community Airdrop & Earn',pct:50,color:'#f97316'},{label:'Ecosystem Burn Fund',pct:20,color:'#ef4444'},{label:'DAO Treasury',pct:15,color:'#008DE4'},{label:'Builder Grants',pct:10,color:'#8b5cf6'},{label:'Founding Team',pct:5,color:'#10b981'}],
+    desc:'Inspired by BONK\'s legendary anti-VC Christmas airdrop. 500M tokens distributed free to Dash community members, Votus participants, and early movers. Viral distribution creates cultural ownership. Meme energy channeled into actual governance.',
+    insight:'BONK succeeded because it gave tokens to people who DESERVED them — loyal community members who stayed through the bear market. The Community Bomb applies that philosophy to Dash: reward the believers first, then let the movers earn more. Memes are culture with momentum.',
+    flywheel:['AIRDROP TO COMMUNITY','VIRAL SHARING','EARN MORE THROUGH ACTION','BURN MECHANISM','CULTURAL OWNERSHIP'],
+    research:{tag:'BONK Reviving Solana Post-FTX (Dec 2022)',detail:'BONK anti-VC airdrop + WIF community virality + meme-to-governance evolution'},
+    dashConfig:{maxSupply:1000000000,decimals:8,distributionType:'manual_minting',keepHistory:true,startAsPaused:false,govThreshold:33,govMembers:256,
+      why:{maxSupply:'1B — massive supply for maximum distribution. Meme-scale numbers.',decimals:'8 — standard for broad distribution and micro-transactions.',distributionType:'Manual minting — controlled airdrop phases then earn-based.',keepHistory:'True — airdrop provenance and subsequent earning must be tracked.',startAsPaused:'False — the bomb drops immediately.',govThreshold:'33% — low threshold for maximum participation. Meme energy = broad consensus.',govMembers:'256 — maximum governance participation. Everyone gets a voice.'}}
+  },
+  {
+    id:'singularity',name:'The Coordination Singularity',color:'#ec4899',tagline:'The network effect tokenized. Harder alone. Exponential together.',
+    specs:[{val:'7M',label:'Max Supply'},{val:'Metcalfe',label:'Multiplier'},{val:'Ultra-Scarce',label:'Design'},{val:'Group > Solo',label:'Incentive'}],
+    dist:[{label:'Coordination Pools',pct:35,color:'#ec4899'},{label:'Solo Action Earn',pct:25,color:'#10b981'},{label:'DAO Treasury',pct:20,color:'#008DE4'},{label:'Builder Grants',pct:15,color:'#8b5cf6'},{label:'Genesis Founders',pct:5,color:'#f59e0b'}],
+    desc:'Solo actions earn base rate. Coordinated group actions earn Metcalfe bonuses: 2 people = 1.5x each, 5 people = 2.5x each, 10 people = 4x each. The token becomes the flywheel of coordination. The rarer it is, the more valuable coordination becomes.',
+    insight:'Every other token rewards individual action. The Coordination Singularity rewards RELATIONAL action. Metcalfe\'s Law says a network\'s value scales with n². This model makes that mathematical truth into a token incentive. The scarcest token on Dash, earned only through coordination.',
+    flywheel:['COORDINATE GROUP ACTION','EARN METCALFE BONUS','REINVEST IN COORDINATION','ATTRACT MORE COORDINATORS','EXPONENTIAL VALUE'],
+    research:{tag:'Hypha DAO 3.0 Membranic Governance + Coordinape',detail:'Coordinape gift circles + Nouns DAO + Metcalfe\'s Law network economics'},
+    dashConfig:{maxSupply:7000000,decimals:8,distributionType:'programmed',keepHistory:true,startAsPaused:false,govThreshold:67,govMembers:32,
+      why:{maxSupply:'7M — ultra-scarce. Scarcity amplifies the value of coordination.',decimals:'8 — precision for Metcalfe multiplier calculations.',distributionType:'Programmed — emission schedule based on coordination pools.',keepHistory:'True — group action verification requires complete provenance.',startAsPaused:'False — coordination begins at genesis.',govThreshold:'67% — supermajority because scarcity demands high-consensus governance.',govMembers:'32 — small initial coordination nucleus. Quality over quantity.'}}
+  }
+];
+
+const tabsEl=document.getElementById('modelTabs');
+const panelsEl=document.getElementById('modelPanels');
+
+MODELS.forEach((m,idx)=>{
+  // Tab
+  const tab=document.createElement('button');
+  tab.className='model-tab'+(idx===0?' active':'');
+  tab.textContent=m.name;
+  tab.style.cssText=idx===0?`background:${m.color};color:#000;border-color:${m.color}`:`border-color:${m.color}30`;
+  tab.onclick=()=>switchModel(idx);
+  tabsEl.appendChild(tab);
+
+  // Panel
+  const panel=document.createElement('div');
+  panel.className='model-panel'+(idx===0?' active':'');
+  panel.id='model-'+m.id;
+  
+  // Specs
+  const specsHTML=m.specs.map(s=>`<div class="model-spec"><div class="model-spec-val" style="color:${m.color}">${s.val}</div><div class="model-spec-label">${s.label}</div></div>`).join('');
+  
+  // Flywheel loop
+  const fwHTML=m.flywheel.map((step,si)=>{
+    const arrow=si<m.flywheel.length-1?`<span class="mf-arrow">→</span>`:(`<span class="mf-arrow">→</span><span class="mf-step" style="background:${m.color}20;color:${m.color}">${m.flywheel[0]}</span>`);
+    return `<span class="mf-step" style="background:${m.color}20;color:${m.color}">${step}</span>${arrow}`;
+  }).join('');
+
+  // Dash Config
+  const dc=m.dashConfig;
+  const configLines=[
+    {key:'"maxSupply"',val:dc.maxSupply,type:'num',why:dc.why.maxSupply},
+    {key:'"decimals"',val:dc.decimals,type:'num',why:dc.why.decimals},
+    {key:'"distributionType"',val:'"'+dc.distributionType+'"',type:'str',why:dc.why.distributionType},
+    {key:'"keepHistory"',val:dc.keepHistory,type:'bool',why:dc.why.keepHistory},
+    {key:'"startAsPaused"',val:dc.startAsPaused,type:'bool',why:dc.why.startAsPaused},
+    {key:'"govThreshold"',val:dc.govThreshold+'%',type:'num',why:dc.why.govThreshold},
+    {key:'"govMembers"',val:dc.govMembers,type:'num',why:dc.why.govMembers}
+  ];
+  const configHTML=configLines.map(l=>{
+    const valClass=l.type==='str'?'dc-str':l.type==='bool'?'dc-bool':'dc-num';
+    return `  <span class="dc-key">${l.key}</span>: <span class="${valClass}">${l.val}</span>,  <span class="dc-comment">// ${l.why}</span>`;
+  }).join('\n');
+
+  panel.innerHTML=`
+    <div class="model-header">
+      <h3 style="color:${m.color}">${m.name}</h3>
+      <div class="model-tagline">${m.tagline}</div>
+    </div>
+    <div class="model-specs">${specsHTML}</div>
+    <div class="model-body">
+      <div class="model-donut-wrap"><canvas id="donut-${m.id}" width="260" height="260"></canvas></div>
+      <div>
+        <div class="model-desc">${m.desc}</div>
+        <div class="model-research" style="color:${m.color};border-color:${m.color}40;background:${m.color}10">
+          📚 ${m.research.tag}
+        </div>
+      </div>
+    </div>
+    <div class="model-flywheel">
+      <div class="mf-label">// Value Loop</div>
+      <div class="mf-loop">${fwHTML}</div>
+    </div>
+    <div class="model-insight">
+      <div class="mi-label">/// Davara's Insight</div>
+      <div class="mi-text">${m.insight}</div>
+      <div class="mi-sig">— Davara AI, The Divergent Architect ◈</div>
+    </div>
+    <div class="dash-config">
+      <div class="dash-config-header" onclick="toggleDashConfig(this)">
+        <span>/// Dash Platform Config — Annotated</span>
+        <span class="dc-arrow">▼</span>
+      </div>
+      <div class="dash-config-body">
+        <div class="dash-config-body-inner">
+          <pre>{\n${configHTML}\n}</pre>
+        </div>
+      </div>
+    </div>
+  `;
+  panelsEl.appendChild(panel);
+});
+
+function switchModel(idx){
+  document.querySelectorAll('.model-tab').forEach((t,i)=>{
+    const m=MODELS[i];
+    t.classList.toggle('active',i===idx);
+    t.style.background=i===idx?m.color:'transparent';
+    t.style.color=i===idx?'#000':'var(--muted)';
+    t.style.borderColor=i===idx?m.color:m.color+'30';
+  });
+  document.querySelectorAll('.model-panel').forEach((p,i)=>p.classList.toggle('active',i===idx));
+  drawModelDonut(idx);
+}
+
+function drawModelDonut(idx){
+  const m=MODELS[idx];
+  const canvas=document.getElementById('donut-'+m.id);
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const size=260,cx=size/2,cy=size/2,ro=110,ri=68;
+  ctx.clearRect(0,0,size,size);
+  let startAngle=-Math.PI/2;
+  m.dist.forEach(s=>{
+    const sliceAngle=(s.pct/100)*Math.PI*2;
+    const endAngle=startAngle+sliceAngle;
+    ctx.beginPath();
+    ctx.arc(cx,cy,ro,startAngle,endAngle);
+    ctx.arc(cx,cy,ri,endAngle,startAngle,true);
+    ctx.closePath();
+    ctx.fillStyle=s.color;
+    ctx.globalAlpha=0.85;
+    ctx.fill();
+    ctx.globalAlpha=1;
+    // Label
+    const midAngle=startAngle+sliceAngle/2;
+    const labelR=(ro+ri)/2;
+    const lx=cx+labelR*Math.cos(midAngle);
+    const ly=cy+labelR*Math.sin(midAngle);
+    if(s.pct>=10){
+      ctx.font='bold 12px Inter, sans-serif';
+      ctx.fillStyle='#fff';
+      ctx.textAlign='center';
+      ctx.textBaseline='middle';
+      ctx.fillText(s.pct+'%',lx,ly);
+    }
+    startAngle=endAngle;
+  });
+  // Center text
+  ctx.font='600 28px Cormorant Garamond, serif';
+  ctx.fillStyle=m.color;
+  ctx.textAlign='center';
+  ctx.textBaseline='middle';
+  ctx.fillText(m.specs[0].val,cx,cy-8);
+  ctx.font='10px JetBrains Mono, monospace';
+  ctx.fillStyle='#6b8a8a';
+  ctx.fillText('MAX SUPPLY',cx,cy+14);
+}
+
+function toggleDashConfig(header){
+  header.classList.toggle('open');
+  const body=header.nextElementSibling;
+  body.style.maxHeight=header.classList.contains('open')?body.scrollHeight+'px':'0';
+}
+
+// Draw first model donut on load
+setTimeout(()=>drawModelDonut(0),100);
+
+})();
+
+/* ═══════════════════════════════════════════════════════
+   DONUT CHART (Main Distribution)
+═══════════════════════════════════════════════════════ */
+(function(){
+  const slices=[
+    {label:'Community Rewards',pct:40,color:'#10b981',desc:'Earned through Motus Moves — 4.4M $MOTUS'},
+    {label:'Governance Treasury',pct:20,color:'#008DE4',desc:'Votus Unit controlled — 2.2M $MOTUS'},
+    {label:'Builder Grants',pct:15,color:'#8b5cf6',desc:'Developers building on ecosystem — 1.65M $MOTUS'},
+    {label:'Founding Team',pct:15,color:'#f59e0b',desc:'Vested over 4 years — 1.65M $MOTUS'},
+    {label:'Liquidity & Partnerships',pct:10,color:'#06b6d4',desc:'Market access & growth — 1.1M $MOTUS'},
+  ];
+  const svg=document.getElementById('donut-svg'),legend=document.getElementById('donut-legend');
+  const CX=140,CY=140,RO=110,RI=68;
+  function ptc(cx,cy,r,a){const rad=(a-90)*Math.PI/180;return{x:cx+r*Math.cos(rad),y:cy+r*Math.sin(rad)}}
+  function arc(cx,cy,ro,ri,s,e){const s1=ptc(cx,cy,ro,s),e1=ptc(cx,cy,ro,e),s2=ptc(cx,cy,ri,e),e2=ptc(cx,cy,ri,s);const l=(e-s)>180?1:0;return`M ${s1.x} ${s1.y} A ${ro} ${ro} 0 ${l} 1 ${e1.x} ${e1.y} L ${s2.x} ${s2.y} A ${ri} ${ri} 0 ${l} 0 ${e2.x} ${e2.y} Z`}
+  let aIdx=-1,sa=0;
+  const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+  slices.forEach((s,i)=>{const f=document.createElementNS('http://www.w3.org/2000/svg','filter');f.setAttribute('id',`dglow-${i}`);const b=document.createElementNS('http://www.w3.org/2000/svg','feGaussianBlur');b.setAttribute('stdDeviation','3');b.setAttribute('result','blur');const m=document.createElementNS('http://www.w3.org/2000/svg','feMerge');const m1=document.createElementNS('http://www.w3.org/2000/svg','feMergeNode');m1.setAttribute('in','blur');const m2=document.createElementNS('http://www.w3.org/2000/svg','feMergeNode');m.appendChild(m1);m.appendChild(m2);f.appendChild(b);f.appendChild(m);defs.appendChild(f)});
+  svg.appendChild(defs);
+  const paths=[];
+  slices.forEach((s,i)=>{
+    const ea=sa+(s.pct/100)*360;
+    const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d',arc(CX,CY,RO,RI,sa,ea-0.5));p.setAttribute('fill',s.color);p.setAttribute('opacity','0.85');
+    p.style.transition='all 0.3s cubic-bezier(0.16,1,0.3,1)';p.style.cursor='pointer';
+    p.addEventListener('mouseenter',()=>activateSlice(i));
+    p.addEventListener('mouseleave',()=>deactivateSlice());
+    svg.appendChild(p);paths.push({path:p,startAngle:sa,endAngle:ea-0.5});sa=ea;
+  });
+  slices.forEach((s,i)=>{
+    const item=document.createElement('div');item.className='donut-legend-item';
+    item.innerHTML=`<div class="donut-swatch" style="background:${s.color}"></div><div style="flex:1"><div style="display:flex;align-items:baseline;gap:8px"><div class="donut-item-name">${s.label}</div><div class="donut-item-pct" style="color:${s.color}">${s.pct}%</div></div><div class="donut-item-desc">${s.desc}</div></div>`;
+    item.addEventListener('mouseenter',()=>activateSlice(i));
+    item.addEventListener('mouseleave',()=>deactivateSlice());
+    legend.appendChild(item);
+  });
+  function activateSlice(idx){
+    if(aIdx===idx)return;aIdx=idx;const s=slices[idx],p=paths[idx];
+    const mid=(p.startAngle+p.endAngle)/2,rad=(mid-90)*Math.PI/180;
+    const ox=Math.cos(rad)*8,oy=Math.sin(rad)*8;
+    paths.forEach((pp,i)=>{pp.path.setAttribute('opacity',i===idx?'1':'0.4');pp.path.setAttribute('filter',i===idx?`url(#dglow-${i})`:'');pp.path.setAttribute('transform',i===idx?`translate(${ox},${oy})`:'')});
+    document.querySelectorAll('.donut-legend-item').forEach((el,i)=>el.classList.toggle('active',i===idx));
+    document.getElementById('donut-pct').textContent=s.pct+'%';document.getElementById('donut-pct').style.color=s.color;
+    document.getElementById('donut-label').textContent=s.label;
+  }
+  function deactivateSlice(){
+    aIdx=-1;paths.forEach(p=>{p.path.setAttribute('opacity','0.85');p.path.setAttribute('filter','');p.path.setAttribute('transform','')});
+    document.querySelectorAll('.donut-legend-item').forEach(el=>el.classList.remove('active'));
+    document.getElementById('donut-pct').textContent='11M';document.getElementById('donut-pct').style.color='';
+    document.getElementById('donut-label').textContent='Total Supply';
+  }
+})();
+
+/* ═══════════════════════════════════════════════════════
+   GOVERNANCE SIMULATOR
+═══════════════════════════════════════════════════════ */
+function updateGovSim(){
+  const members=+document.getElementById('members-slider').value;
+  const threshold=+document.getElementById('threshold-slider').value;
+  const needed=Math.ceil(members*threshold/100);
+  document.getElementById('members-val').textContent=members;
+  document.getElementById('threshold-val').textContent=threshold+'%';
+  document.getElementById('stat-needed').textContent=needed;
+  document.getElementById('stat-total').textContent=members;
+  document.getElementById('stat-pct').textContent=threshold+'%';
+  const grid=document.getElementById('dot-grid');grid.innerHTML='';
+  const dc=Math.min(members,128),sc=members/dc;
+  for(let i=0;i<dc;i++){
+    const dot=document.createElement('div');dot.className='gov-dot';
+    const sn=Math.ceil(needed/sc);
+    dot.classList.add(i<Math.ceil(sn*0.6)?'active':i<sn?'quorum':'inactive');
+    grid.appendChild(dot);
+  }
+  if(members>128){const m=document.createElement('div');m.style.cssText='font-family:JetBrains Mono,monospace;font-size:10px;color:var(--muted);width:100%;margin-top:8px;letter-spacing:0.08em;';m.textContent=`+ ${members-128} more members`;grid.appendChild(m)}
+}
+updateGovSim();
+
+/* ═══════════════════════════════════════════════════════
+   JSON BUILDER
+═══════════════════════════════════════════════════════ */
+const fields={
+  tokenSingular:document.getElementById('tokenSingular'),tokenPlural:document.getElementById('tokenPlural'),
+  decimals:document.getElementById('decimals'),baseSupply:document.getElementById('baseSupply'),
+  maxSupply:document.getElementById('maxSupply'),startPaused:document.getElementById('startPaused'),
+  keepHistory:document.getElementById('keepHistory'),distType:document.getElementById('distType'),
+};
+function distLabel(v){return v==='manual'?'manual_minting':v==='programmed'?'programmed':'perpetual'}
+function buildConfig(){
+  const s=fields.tokenSingular.value.trim()||'motus',p=fields.tokenPlural.value.trim()||'motus';
+  const d=Math.min(18,Math.max(0,parseInt(fields.decimals.value)||0));
+  const bs=Math.max(0,parseInt(fields.baseSupply.value)||0);
+  const ms=Math.max(0,parseInt(fields.maxSupply.value)||0);
+  return{tokens:{"0":{"$format_version":"0",conventions:{"$format_version":"0",localizations:{en:{"$format_version":"0",shouldCapitalize:false,singularForm:s,pluralForm:p}},decimals:d},baseSupply:bs,maxSupply:ms,startAsPaused:fields.startPaused.checked,keepHistory:fields.keepHistory.checked,distributionType:distLabel(fields.distType.value)}}};
+}
+function syntaxHighlight(json){
+  json=json.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,m=>{let c='json-num';if(/^"/.test(m))c=/:$/.test(m)?'json-key':'json-str';else if(/true|false/.test(m))c='json-bool';else if(/null/.test(m))c='json-null';return`<span class="${c}">${m}</span>`});
+}
+function updateJSON(){document.getElementById('json-output').innerHTML=syntaxHighlight(JSON.stringify(buildConfig(),null,2))}
+fields.startPaused.addEventListener('change',function(){document.getElementById('pausedLabel').textContent=this.checked?'On — token starts paused':'Off — token active on launch';updateJSON()});
+fields.keepHistory.addEventListener('change',function(){document.getElementById('historyLabel').textContent=this.checked?'On — full on-chain audit trail':'Off — no history stored';updateJSON()});
+['tokenSingular','tokenPlural','decimals','baseSupply','maxSupply','distType'].forEach(id=>document.getElementById(id).addEventListener('input',updateJSON));
+fields.decimals.addEventListener('change',function(){this.value=Math.min(18,Math.max(0,parseInt(this.value)||0));updateJSON()});
+updateJSON();
+function copyJSON(){const raw=JSON.stringify(buildConfig(),null,2);navigator.clipboard.writeText(raw).then(()=>{const btn=document.getElementById('copyBtn');btn.textContent='✓ Copied!';setTimeout(()=>btn.textContent='⎘ Copy JSON',2000)}).catch(()=>{const ta=document.createElement('textarea');ta.value=raw;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta)})}
+
+/* ═══════════════════════════════════════════════════════
+   DAVARA'S ORACLE — AI SECTION
+═══════════════════════════════════════════════════════ */
+let oracleGenCount=0;
+const savedModels=JSON.parse(localStorage.getItem('davara_saved_models')||'[]');
+renderSavedModels();
+
+function oracleAnalyze(){
+  const btn=document.getElementById('oracleAnalyze');
+  const output=document.getElementById('oracleOutput');
+  btn.disabled=true;btn.textContent='🔮 Davara is analyzing...';
+  output.classList.add('visible');
+  output.innerHTML='<div class="oo-typing" style="color:var(--violet)">◈ Davara is consulting the divergent oracle...</div>';
+  
+  const params={
+    modelName:'Movement Oracle',maxSupply:'11M',
+    communitySize:simState.community,dailyActions:simState.activity,
+    earnRate:simState.earn,burnRate:simState.burn,
+    distribution:'40% community earn, 20% treasury, 15% builders, 15% team, 10% liquidity'
+  };
+  
+  fetch('/api/ai-tokenomics',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'analyze',params})})
+  .then(r=>r.json())
+  .then(data=>{
+    if(data.error){output.innerHTML=`<div class="oo-typing" style="color:#ef4444">⚠️ ${data.error}</div>`;return;}
+    let html='<div class="oo-typing">';
+    if(data.insights){
+      data.insights.forEach(ins=>{
+        const sigColor=ins.signal==='bullish'?'#10b981':ins.signal==='bearish'?'#ef4444':'#f59e0b';
+        html+=`<div style="margin-bottom:16px;padding:12px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid var(--glass-border)"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-family:JetBrains Mono,monospace;font-size:9px;letter-spacing:0.1em;color:${sigColor};text-transform:uppercase">${ins.signal} · ${ins.leverage} leverage</span></div><div style="font-weight:600;margin-bottom:4px">${ins.title}</div><div style="font-size:13px;color:var(--muted)">${ins.detail}</div></div>`;
+      });
+    }
+    if(data.verdict) html+=`<div style="margin-top:16px;padding:16px;border-left:2px solid var(--dash);background:var(--dash-dim);border-radius:0 10px 10px 0;font-style:italic;color:var(--dash)">${data.verdict}</div>`;
+    if(data.davara_note) html+=`<div style="margin-top:12px;font-style:italic;color:#a78bfa">${data.davara_note}</div>`;
+    html+='</div>';
+    // Meta cards for enhanced data
+    html+='<div class="oo-meta">';
+    if(data.trendingScore) html+=`<div class="oo-meta-card"><div class="oo-meta-val" style="color:var(--emerald)">${data.trendingScore}/10</div><div class="oo-meta-label">Trending Score</div></div>`;
+    if(data.closestProject) html+=`<div class="oo-meta-card"><div class="oo-meta-val" style="color:var(--dash)">${data.closestProject}</div><div class="oo-meta-label">Closest Project</div></div>`;
+    html+='</div>';
+    if(data.projectLesson) html+=`<div style="margin-top:12px;font-size:12px;color:var(--muted)">📚 <strong>Lesson:</strong> ${data.projectLesson}</div>`;
+    if(data.dashConfig) html+=`<div style="margin-top:8px;font-family:JetBrains Mono,monospace;font-size:11px;color:var(--dash);padding:8px 12px;background:rgba(0,141,228,0.06);border-radius:8px">💡 ${data.dashConfig}</div>`;
+    html+='<div class="oo-sig">— Davara AI, The Divergent Architect ◈</div>';
+    output.innerHTML=html;
+  })
+  .catch(err=>{
+    output.innerHTML=`<div class="oo-typing" style="color:#ef4444">⚠️ Oracle offline: ${err.message}. Set ANTHROPIC_API_KEY in Vercel env vars.</div>`;
+  })
+  .finally(()=>{btn.disabled=false;btn.textContent='🔮 Analyze Current Tokenomics';});
+}
+
+function oracleGenerate(){
+  const btn=document.getElementById('oracleGenerate');
+  const output=document.getElementById('oracleOutput');
+  btn.disabled=true;btn.textContent='◈ Davara is thinking divergently...';
+  output.classList.add('visible');
+  output.innerHTML='<div class="oo-typing" style="color:var(--dash)">⚡ Generating an entirely new tokenomics model...</div>';
+  
+  fetch('/api/ai-tokenomics',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'generate',params:{}})})
+  .then(r=>r.json())
+  .then(data=>{
+    if(data.error){output.innerHTML=`<div class="oo-typing" style="color:#ef4444">⚠️ ${data.error}</div>`;return;}
+    oracleGenCount++;
+    output.innerHTML=`<div class="oo-typing" style="color:var(--emerald)">✓ Model generated! See below.</div>`;
+    document.getElementById('oracleCounter').textContent=`Models Generated: ${oracleGenCount}`;
+    addGeneratedModelCard(data);
+  })
+  .catch(err=>{
+    output.innerHTML=`<div class="oo-typing" style="color:#ef4444">⚠️ Generation failed: ${err.message}. Set ANTHROPIC_API_KEY in Vercel env vars.</div>`;
+  })
+  .finally(()=>{btn.disabled=false;btn.textContent='⚡ Generate Another Model — Davara Mode';});
+}
+
+function addGeneratedModelCard(data){
+  const area=document.getElementById('genModelsArea');
+  const card=document.createElement('div');
+  card.className='gen-model-card';
+  const color=data.color||'#8b5cf6';
+  card.style.borderColor=color+'40';
+  
+  // Build dash config snippet
+  const dc=data.dashConfig||{};
+  const configSnippet=dc.maxSupply?`{ maxSupply: ${dc.maxSupply}, decimals: ${dc.decimals||8}, dist: "${dc.distributionType||'manual_minting'}" }`:'';
+  
+  card.innerHTML=`
+    <button class="gmc-close" onclick="this.parentElement.remove()">✕</button>
+    <input class="gmc-name-input" value="${data.name||'New Model'}" style="color:${color}" />
+    <div class="gmc-tagline">${data.tagline||''}</div>
+    <div class="gmc-detail"><strong>Max Supply:</strong> ${data.supplyLabel||data.maxSupply||'11M'} · <strong>Earn:</strong> ${data.earnMechanism||'Movement-based'}</div>
+    <div class="gmc-detail"><strong>Governance:</strong> ${data.governanceInnovation||'Community-driven'}</div>
+    <div class="gmc-detail"><strong>Revolutionary Idea:</strong> ${data.revolutionaryIdea||''}</div>
+    <div class="gmc-detail" style="color:#a78bfa;font-style:italic">${data.davara_note||''}</div>
+    ${data.flywheel?`<div style="margin-top:8px;font-family:JetBrains Mono,monospace;font-size:10px;color:${color}">${data.flywheel.join(' → ')}</div>`:''}
+    ${configSnippet?`<div style="margin-top:8px;padding:8px 12px;background:rgba(0,0,0,0.3);border-radius:8px;font-family:JetBrains Mono,monospace;font-size:10px;color:var(--dash)">${configSnippet}</div>`:''}
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="gmc-save" onclick="saveGeneratedModel(this,'${btoa(JSON.stringify(data).substring(0,500))}')">💾 Save to My Models</button>
+    </div>
+  `;
+  area.prepend(card);
+}
+
+function saveGeneratedModel(btn,encodedData){
+  try{
+    const nameInput=btn.closest('.gen-model-card').querySelector('.gmc-name-input');
+    const name=nameInput?nameInput.value:'Generated Model';
+    const model={name,savedAt:new Date().toISOString(),data:encodedData};
+    savedModels.push(model);
+    localStorage.setItem('davara_saved_models',JSON.stringify(savedModels));
+    btn.textContent='✓ Saved!';btn.classList.add('saved');btn.disabled=true;
+    renderSavedModels();
+  }catch(e){console.error(e);}
+}
+
+function renderSavedModels(){
+  const section=document.getElementById('savedModelsSection');
+  const list=document.getElementById('savedModelsList');
+  if(savedModels.length===0){section.classList.remove('visible');return;}
+  section.classList.add('visible');
+  list.innerHTML=savedModels.map((m,i)=>`
+    <div class="saved-model-item">
+      <div>
+        <div class="smi-name">${m.name}</div>
+        <div class="smi-tag">${new Date(m.savedAt).toLocaleDateString()}</div>
+      </div>
+      <button class="smi-remove" onclick="removeSavedModel(${i})">✕ Remove</button>
+    </div>
+  `).join('');
+}
+
+function removeSavedModel(idx){
+  savedModels.splice(idx,1);
+  localStorage.setItem('davara_saved_models',JSON.stringify(savedModels));
+  renderSavedModels();
+}
+
+function exportSavedModels(){
+  const blob=new Blob([JSON.stringify(savedModels,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='davara-saved-models.json';a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ═══════════════════════════════════════════════════════
+   ACCORDION
+═══════════════════════════════════════════════════════ */
+function toggleAccordion(header){
+  const item=header.parentElement;
+  const body=item.querySelector('.accordion-body');
+  const isOpen=item.classList.contains('open');
+  document.querySelectorAll('.accordion-item.open').forEach(el=>{el.classList.remove('open');el.querySelector('.accordion-body').style.maxHeight='0';});
+  if(!isOpen){item.classList.add('open');body.style.maxHeight=body.scrollHeight+'px';}
+}
+
+/* ═══════════════════════════════════════════════════════
+   PROGRESSION UNLOCK ON SCROLL
+═══════════════════════════════════════════════════════ */
+(function(){
+  const items=document.querySelectorAll('.prog-item');
+  const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('unlocked');io.unobserve(e.target)}})},{threshold:0.3});
+  items.forEach(el=>io.observe(el));
+})();
+
+/* ═══════════════════════════════════════════════════════
+   SCROLL FADE-IN
+═══════════════════════════════════════════════════════ */
+const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}})},{threshold:0.06});
+document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
+
+/* ═══════════════════════════════════════════════════════
+   EASTER EGGS
+═══════════════════════════════════════════════════════ */
+(function(){
+  let buf='';
+  document.addEventListener('keypress',e=>{
+    if(['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName))return;
+    buf+=e.key.toLowerCase();if(buf.length>10)buf=buf.slice(-10);
+    if(buf.includes('veros')){
+      buf='';const flash=document.getElementById('verosFlash'),msg=document.getElementById('verosFlashMsg');
+      flash.classList.add('active');msg.classList.add('show');
+      setTimeout(()=>{flash.classList.remove('active');msg.classList.remove('show')},2500);
+    }
+  });
+})();
+(function(){
+  let clicks=0,timer;const title=document.getElementById('heroTitle'),note=document.getElementById('davaraNote');
+  if(title&&note){title.addEventListener('click',()=>{clicks++;clearTimeout(timer);timer=setTimeout(()=>clicks=0,3000);if(clicks>=7){clicks=0;note.classList.add('revealed');note.scrollIntoView({behavior:'smooth',block:'nearest'})}});}
+})();
+(function(){
+  const code=[38,38,40,40,37,39,37,39,66,65];let idx=0;
+  document.addEventListener('keydown',e=>{if(e.keyCode===code[idx]){idx++;if(idx===code.length){idx=0;const toast=document.getElementById('konamiToast');toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),4000)}}else{idx=0;if(e.keyCode===code[0])idx=1}});
+})();
+</script>
+</body>
+</html>
