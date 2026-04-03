@@ -1805,11 +1805,16 @@ function drawModelDonut(idx){
   ctx.fillText('MAX SUPPLY',cx,cy+14);
 }
 
-function toggleDashConfig(header){
+window.toggleDashConfig=function toggleDashConfig(header){
   header.classList.toggle('open');
   const body=header.nextElementSibling;
-  body.style.maxHeight=header.classList.contains('open')?body.scrollHeight+'px':'0';
-}
+  if(!body)return;
+  if(header.classList.contains('open')){
+    body.style.maxHeight=body.scrollHeight+200+'px';
+  }else{
+    body.style.maxHeight='0';
+  }
+};
 
 // Draw first model donut on load
 setTimeout(()=>drawModelDonut(0),100);
@@ -2001,6 +2006,8 @@ function addGeneratedModelCard(data){
   card.className='gen-model-card';
   const color=data.color||'#8b5cf6';
   card.style.borderColor=color+'40';
+  // Store full model data safely on the card element (no btoa/Latin1 issues)
+  card.dataset.modelData=JSON.stringify(data);
   
   // Build dash config snippet
   const dc=data.dashConfig||{};
@@ -2017,22 +2024,25 @@ function addGeneratedModelCard(data){
     ${data.flywheel?`<div style="margin-top:8px;font-family:JetBrains Mono,monospace;font-size:10px;color:${color}">${data.flywheel.join(' → ')}</div>`:''}
     ${configSnippet?`<div style="margin-top:8px;padding:8px 12px;background:rgba(0,0,0,0.3);border-radius:8px;font-family:JetBrains Mono,monospace;font-size:10px;color:var(--dash)">${configSnippet}</div>`:''}
     <div style="display:flex;gap:8px;margin-top:12px">
-      <button class="gmc-save" onclick="saveGeneratedModel(this,'${btoa(JSON.stringify(data).substring(0,500))}')">💾 Save to My Models</button>
+      <button class="gmc-save" onclick="saveGeneratedModel(this)" data-model-json="">💾 Save to My Models</button>
     </div>
   `;
   area.prepend(card);
 }
 
-function saveGeneratedModel(btn,encodedData){
+function saveGeneratedModel(btn){
   try{
-    const nameInput=btn.closest('.gen-model-card').querySelector('.gmc-name-input');
+    const card=btn.closest('.gen-model-card');
+    const nameInput=card.querySelector('.gmc-name-input');
     const name=nameInput?nameInput.value:'Generated Model';
-    const model={name,savedAt:new Date().toISOString(),data:encodedData};
+    // Retrieve stored model data from card dataset
+    const rawData=card.dataset.modelData?JSON.parse(card.dataset.modelData):{};
+    const model={name,savedAt:new Date().toISOString(),data:rawData};
     savedModels.push(model);
     localStorage.setItem('davara_saved_models',JSON.stringify(savedModels));
     btn.textContent='✓ Saved!';btn.classList.add('saved');btn.disabled=true;
     renderSavedModels();
-  }catch(e){console.error(e);}
+  }catch(e){console.error('Save failed:',e);}
 }
 
 function renderSavedModels(){

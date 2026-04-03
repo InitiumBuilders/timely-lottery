@@ -1,0 +1,18 @@
+{
+  "identityId": "7jXLKaKELJzzHuX8HTfLqkSC5WHnYWaUxtW4DM6NrPnN",
+  "dpnsName": "avara",
+  "dpnsFullName": "avara.dash",
+  "dpnsStatus": "contested_vote_pending",
+  "dpnsContestInfo": {
+    "contractId": "GWRSAVFMjXx8HpQFaNJMqBV7MBgMK4br5UESsB4S31Ec",
+    "documentType": "domain",
+    "indexName": "parentNameAndLabel",
+    "indexValues": ["dash", "avara"],
+    "note": "Identity is contestant in masternode vote poll. Masternodes vote to assign the name. Voting period ~2 weeks on mainnet."
+  },
+  "network": "mainnet",
+  "dapiNode": "158.160.14.115:1443",
+  "submittedAt": "2026-03-08T23:05:00.000Z",
+  "creditsBalance": "25,458,865,330",
+  "explorerUrl": "https://platform-explorer.dash.org/identity/7jXLKaKELJzzHuX8HTfLqkSC5WHnYWaUxtW4DM6NrPnN"
+}

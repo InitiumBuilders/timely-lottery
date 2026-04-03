@@ -1,0 +1,34 @@
+{
+  "updatedAt": "2026-02-21",
+  "environment": "mainnet",
+
+  "dash": {
+    "network": "mainnet",
+    "address": "XdVgwFryyG5QzgKpz1TPmN7FfkLR6Bo9Am",
+    "username": "August.dash",
+    "balance": 0,
+    "status": "wallet_valid_needs_funding",
+    "identityRegistered": "August.dash exists on mainnet Evolution",
+    "explorer": "https://insight.dash.org/address/XdVgwFryyG5QzgKpz1TPmN7FfkLR6Bo9Am",
+    "sdkVersion": "6.0.1",
+    "dapiStatus": "connected"
+  },
+
+  "intuition": {
+    "network": "mainnet",
+    "chainId": 1155,
+    "address": "0x5bFf50E43F3b526B28e3C06023A482f876319021",
+    "balance": 0,
+    "status": "wallet_valid_needs_funding",
+    "atomCreated": false,
+    "rpc": "https://rpc.intuition.systems",
+    "portal": "https://portal.intuition.systems",
+    "explorer": "https://explorer.intuition.systems/address/0x5bFf50E43F3b526B28e3C06023A482f876319021"
+  },
+
+  "security": {
+    "mnemonicsStoredIn": "dev-setup/.wallets (chmod 600) + dev-setup/.env (chmod 600)",
+    "publicAddressesIn": "dev-setup/wallet-addresses.json (safe to share)",
+    "gitignored": true
+  }
+}

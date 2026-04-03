@@ -1,0 +1,33 @@
+# AVARI DEV WALLETS — GENERATED 2026-02-21
+# ⚠️  HIGHLY SENSITIVE — Never share, never commit, never paste anywhere
+# File permissions: 600 (owner read/write only)
+# These are the PRODUCTION developer wallets for building on both protocols
+
+# ══════════════════════════════════════════
+# DASH MAINNET DEVELOPER WALLET
+# ══════════════════════════════════════════
+DASH_MNEMONIC="circle close abandon sense dignity material brisk sponsor notice march crack clog"
+DASH_ADDRESS="XdVgwFryyG5QzgKpz1TPmN7FfkLR6Bo9Am"
+DASH_DERIVATION="m/44'/5'/0'/0/0"
+DASH_NETWORK=mainnet
+DASH_USERNAME=August
+
+# ══════════════════════════════════════════
+# INTUITION / EVM MAINNET DEVELOPER WALLET
+# ══════════════════════════════════════════
+ETH_MNEMONIC="fetch east lens slow vacant lock dismiss achieve grunt fiscal mandate brass"
+ETH_ADDRESS="0x5bFf50E43F3b526B28e3C06023A482f876319021"
+ETH_DERIVATION="m/44'/60'/0'/0/0"
+ETH_NETWORK=mainnet
+INTUITION_CHAIN_ID=1155
+INTUITION_RPC=https://rpc.intuition.systems
+
+# ══════════════════════════════════════════
+# NOTES
+# ══════════════════════════════════════════
+# These wallets are EMPTY — fund them to start building
+# DASH wallet: send DASH to XdVgwFryyG5QzgKpz1TPmN7FfkLR6Bo9Am
+# Intuition wallet: send $TRUST or bridge ETH from Base to 0x5bFf50E43F3b526B28e3C06023A482f876319021
+# 
+# Backup: August should write down both mnemonics and store offline
+# DO NOT store these in any cloud service or messaging app

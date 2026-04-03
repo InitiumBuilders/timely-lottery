@@ -1,0 +1,1865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veros — All Is Small. Small Is All.</title>
+<meta name="description" content="A manifesto on systems thinking, micro-worlds, and the evolution of value. By August James Domanchuk.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ===== RESET & BASE ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --void: #020806;
+    --emerald: #10b981;
+    --emerald-dim: rgba(16,185,129,0.15);
+    --emerald-glow: rgba(16,185,129,0.4);
+    --teal: #06b6d4;
+    --teal-dim: rgba(6,182,212,0.12);
+    --amber: #f59e0b;
+    --amber-dim: rgba(245,158,11,0.15);
+    --violet: #8b5cf6;
+    --violet-dim: rgba(139,92,246,0.15);
+    --text-primary: rgba(236,253,245,0.92);
+    --text-muted: rgba(167,243,208,0.55);
+    --text-faint: rgba(167,243,208,0.3);
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --mono: 'JetBrains Mono', 'Courier New', monospace;
+    --sans: 'Inter', system-ui, sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
+  body {
+    background: var(--void);
+    color: var(--text-primary);
+    font-family: var(--serif);
+    font-size: clamp(1.19rem, 1.6vw, 1.35rem);
+    line-height: 1.9;
+    overflow-x: hidden;
+    min-height: 100vh;
+    cursor: none;
+  }
+
+  /* ===== CURSOR GLOW ===== */
+  #cursor-glow {
+    position: fixed;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center,
+      rgba(16,185,129,0.08) 0%,
+      rgba(6,182,212,0.04) 40%,
+      transparent 70%);
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s;
+  }
+
+  #cursor-dot {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--emerald);
+    pointer-events: none;
+    z-index: 10000;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px var(--emerald-glow), 0 0 20px rgba(16,185,129,0.2);
+    transition: transform 0.1s;
+  }
+
+  /* ===== CANVAS ===== */
+  #mycelium-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ===== GRADIENT MESH LAYERS ===== */
+  .mesh-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .mesh-bg::before {
+    content: '';
+    position: absolute;
+    width: 120%;
+    height: 120%;
+    top: -10%;
+    left: -10%;
+    background: radial-gradient(ellipse 60% 50% at 30% 40%, rgba(16,185,129,0.04) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 60% at 70% 60%, rgba(139,92,246,0.03) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 40% at 50% 80%, rgba(6,182,212,0.03) 0%, transparent 60%);
+    animation: meshShift 20s ease-in-out infinite alternate;
+  }
+
+  @keyframes meshShift {
+    0%   { transform: translate(0, 0) scale(1); }
+    33%  { transform: translate(2%, -2%) scale(1.02); }
+    66%  { transform: translate(-2%, 2%) scale(0.98); }
+    100% { transform: translate(1%, -1%) scale(1.01); }
+  }
+
+  /* Mycelium-like branching lines overlay */
+  .mycelium-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.04;
+    background-image:
+      repeating-linear-gradient(
+        17deg,
+        transparent,
+        transparent 120px,
+        rgba(16,185,129,0.5) 120px,
+        rgba(16,185,129,0.5) 121px
+      ),
+      repeating-linear-gradient(
+        -13deg,
+        transparent,
+        transparent 180px,
+        rgba(6,182,212,0.4) 180px,
+        rgba(6,182,212,0.4) 181px
+      ),
+      repeating-linear-gradient(
+        47deg,
+        transparent,
+        transparent 260px,
+        rgba(139,92,246,0.3) 260px,
+        rgba(139,92,246,0.3) 261px
+      );
+    animation: myceliumGrow 30s ease-in-out infinite alternate;
+  }
+
+  @keyframes myceliumGrow {
+    0%   { opacity: 0.03; transform: scale(1); }
+    50%  { opacity: 0.06; transform: scale(1.01) rotate(0.5deg); }
+    100% { opacity: 0.03; transform: scale(1); }
+  }
+
+  /* ===== LAYOUT ===== */
+  .site-wrap {
+    position: relative;
+    z-index: 1;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 clamp(1rem, 5vw, 3rem);
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: clamp(4rem, 10vh, 8rem) clamp(1rem, 5vw, 3rem);
+    position: relative;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: clamp(0.7rem, 1.2vw, 0.8rem);
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--emerald);
+    opacity: 0.7;
+    margin-bottom: 2rem;
+    animation: fadeIn 2s ease both;
+  }
+
+  .hero-title {
+    font-family: var(--serif);
+    font-size: clamp(3.5rem, 12vw, 9rem);
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    animation: riseUp 1.8s ease both 0.3s;
+  }
+
+  .hero-title span {
+    display: block;
+    background: linear-gradient(135deg, #10b981, #06b6d4, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-family: var(--serif);
+    font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+    font-style: italic;
+    color: var(--text-muted);
+    max-width: 520px;
+    animation: fadeIn 2s ease both 0.8s;
+    margin-bottom: 3rem;
+  }
+
+  .hero-scroll {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    animation: float 3s ease-in-out infinite, fadeIn 2s ease both 1.5s;
+    cursor: default;
+  }
+
+  .hero-scroll::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--emerald), transparent);
+    margin: 1rem auto 0;
+    animation: pulse-line 2s ease-in-out infinite;
+  }
+
+  /* ===== NAVIGATION ===== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.25rem clamp(1rem, 5vw, 3rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(to bottom, rgba(2,8,6,0.92), transparent);
+    backdrop-filter: blur(4px);
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.3em;
+    color: var(--emerald);
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: text-shadow 0.3s, color 0.3s;
+  }
+
+  .nav-logo:hover {
+    text-shadow: 0 0 20px var(--emerald-glow);
+    color: #34d399;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    flex-wrap: wrap;
+  }
+
+  .nav-links a {
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.3s, text-shadow 0.3s;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-links a:hover {
+    color: var(--emerald);
+    text-shadow: 0 0 12px var(--emerald-glow);
+  }
+
+  @media (max-width: 700px) {
+    .nav-links { display: none; }
+  }
+
+  /* ===== MANIFESTO BODY ===== */
+  .manifesto {
+    padding: clamp(4rem, 8vh, 8rem) 0;
+    position: relative;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.4em;
+    color: var(--emerald);
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 3rem;
+    display: block;
+  }
+
+  .manifesto p {
+    font-family: var(--serif);
+    font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+    font-weight: 300;
+    line-height: 2.0;
+    color: var(--text-primary);
+    margin-bottom: 2.25rem;
+    max-width: 800px;
+    width: 100%;
+  }
+
+  .manifesto .intro-name {
+    font-size: clamp(1.2rem, 2.2vw, 1.5rem);
+    font-style: italic;
+  }
+
+  /* ===== SPECIAL TEXT TREATMENTS ===== */
+  .glow-emerald {
+    color: var(--emerald);
+    text-shadow: 0 0 20px var(--emerald-glow), 0 0 40px rgba(16,185,129,0.2);
+    font-family: var(--mono);
+    font-size: 0.95em;
+    animation: emeraldPulse 4s ease-in-out infinite;
+  }
+
+  @keyframes emeraldPulse {
+    0%, 100% { text-shadow: 0 0 20px var(--emerald-glow), 0 0 40px rgba(16,185,129,0.2); }
+    50%       { text-shadow: 0 0 35px rgba(16,185,129,0.7), 0 0 70px rgba(16,185,129,0.3); }
+  }
+
+  .gold-gradient {
+    background: linear-gradient(90deg, var(--amber), #fbbf24, var(--amber));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 400;
+  }
+
+  .breathe-large {
+    font-family: var(--serif);
+    font-size: clamp(3rem, 10vw, 6rem);
+    font-weight: 300;
+    text-align: center;
+    color: var(--text-primary);
+    animation: breathe 4s ease-in-out infinite;
+    display: block;
+    margin: 3rem 0;
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 60px rgba(16,185,129,0.15);
+  }
+
+  .all-is-small {
+    font-family: var(--serif);
+    font-size: clamp(3rem, 10vw, 6rem);
+    font-weight: 300;
+    text-align: center;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    display: block;
+    margin: 3rem 0;
+    text-shadow: 0 0 80px rgba(6,182,212,0.1);
+  }
+
+  .all-is-small em {
+    font-style: normal;
+    color: var(--teal);
+    text-shadow: 0 0 30px rgba(6,182,212,0.4);
+  }
+
+  .veros-moment {
+    font-family: var(--mono);
+    font-size: clamp(2.5rem, 8vw, 5.5rem);
+    text-align: center;
+    color: var(--violet);
+    text-shadow: 0 0 40px rgba(139,92,246,0.6), 0 0 80px rgba(139,92,246,0.25), 0 0 120px rgba(139,92,246,0.1);
+    display: block;
+    margin: 5rem 0;
+    letter-spacing: 0.1em;
+    animation: violetPulse 3.5s ease-in-out infinite;
+  }
+
+  .revolution {
+    color: var(--emerald);
+    font-weight: 500;
+    text-shadow: 0 0 15px var(--emerald-glow);
+    font-size: 1.1em;
+    animation: emeraldPulse 3s ease-in-out infinite;
+  }
+
+  /* ===== PULL QUOTES ===== */
+  .pull-quote {
+    border-left: 2px solid var(--emerald);
+    padding: 1.75rem 0 1.75rem 2.25rem;
+    margin: 3.5rem 0;
+    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+    font-style: italic;
+    color: var(--text-muted);
+    position: relative;
+    line-height: 1.8;
+  }
+
+  .pull-quote::before {
+    content: '';
+    position: absolute;
+    left: -2px; top: 0;
+    width: 2px; height: 100%;
+    background: linear-gradient(to bottom, var(--emerald), var(--teal));
+    opacity: 0.7;
+    animation: pulseBar 3s ease-in-out infinite;
+  }
+
+  @keyframes pulseBar {
+    0%, 100% { opacity: 0.5; }
+    50%       { opacity: 1; box-shadow: 0 0 12px var(--emerald-glow); }
+  }
+
+  /* ===== MOTUS BLOCK ===== */
+  .motus-block {
+    text-align: center;
+    padding: clamp(3rem, 6vh, 5rem) clamp(1rem, 4vw, 3rem);
+    margin: 3rem 0;
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    transition: box-shadow 0.5s, border-color 0.5s;
+  }
+
+  .motus-block::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--amber-dim);
+    border-radius: 6px;
+    background: radial-gradient(ellipse at center, rgba(245,158,11,0.05), transparent 70%);
+    transition: background 0.5s;
+  }
+
+  .motus-block:hover::before {
+    background: radial-gradient(ellipse at center, rgba(245,158,11,0.09), transparent 70%);
+  }
+
+  .motus-block:hover {
+    box-shadow: 0 0 60px rgba(245,158,11,0.06), 0 0 120px rgba(245,158,11,0.03);
+  }
+
+  .motus-tagline {
+    font-family: var(--mono);
+    font-size: clamp(0.95rem, 1.8vw, 1.2rem);
+    line-height: 2;
+    display: block;
+    margin-bottom: 1.5rem;
+  }
+
+  .motus-desc {
+    font-family: var(--serif);
+    font-size: clamp(1.2rem, 2vw, 1.6rem);
+    font-style: italic;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 0.75rem;
+    line-height: 1.9;
+  }
+
+  /* ===== DIVIDERS ===== */
+  .organic-divider {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin: 4.5rem 0;
+    opacity: 0.35;
+  }
+
+  .organic-divider::before,
+  .organic-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--emerald), transparent);
+  }
+
+  .organic-divider span {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.4em;
+    color: var(--emerald);
+    text-transform: uppercase;
+  }
+
+  /* ===== THE 14 PRACTICES ===== */
+  .practices-section {
+    padding: clamp(4rem, 8vh, 8rem) 0;
+    position: relative;
+  }
+
+  .practices-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .practices-header h2 {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 300;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+  }
+
+  .practices-header p {
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    color: var(--text-faint);
+    letter-spacing: 0.1em;
+  }
+
+  .practices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+    gap: 1.25rem;
+  }
+
+  .practice-card {
+    background: rgba(16,185,129,0.03);
+    border: 1px solid rgba(16,185,129,0.12);
+    border-radius: 6px;
+    padding: 1.75rem;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+    animation: breathe-card 6s ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * 0.4s);
+    min-height: 44px;
+  }
+
+  .practice-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.1), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+
+  .practice-card:hover::before,
+  .practice-card.active::before {
+    opacity: 1;
+  }
+
+  .practice-card:hover,
+  .practice-card.active {
+    border-color: rgba(16,185,129,0.4);
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 16px 50px rgba(16,185,129,0.1), 0 0 0 1px rgba(16,185,129,0.1);
+  }
+
+  .practice-num {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--emerald);
+    opacity: 0.5;
+    letter-spacing: 0.2em;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .practice-title {
+    font-family: var(--serif);
+    font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 0;
+    transition: color 0.3s;
+  }
+
+  .practice-card:hover .practice-title,
+  .practice-card.active .practice-title {
+    color: var(--emerald);
+    text-shadow: 0 0 20px rgba(16,185,129,0.3);
+  }
+
+  .practice-expand {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s;
+    opacity: 0;
+    margin-top: 0;
+  }
+
+  .practice-card:hover .practice-expand,
+  .practice-card.active .practice-expand {
+    max-height: 300px;
+    opacity: 1;
+    margin-top: 1rem;
+  }
+
+  .practice-expand p {
+    font-family: var(--serif);
+    font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+    font-style: italic;
+    color: var(--text-muted);
+    line-height: 1.85;
+  }
+
+  .practice-expand cite {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--emerald);
+    opacity: 0.5;
+    letter-spacing: 0.2em;
+    margin-top: 0.75rem;
+    font-style: normal;
+  }
+
+  /* ===== GLOSSARY ===== */
+  .glossary-section {
+    padding: clamp(4rem, 8vh, 8rem) 0;
+    position: relative;
+  }
+
+  .glossary-header {
+    margin-bottom: 3rem;
+  }
+
+  .glossary-header h2 {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    font-weight: 300;
+    margin-bottom: 0.5rem;
+  }
+
+  .glossary-header p {
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    color: var(--text-faint);
+    letter-spacing: 0.1em;
+  }
+
+  .glossary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
+    gap: 1rem;
+  }
+
+  .glossary-item {
+    padding: 1.5rem 1.75rem;
+    border: 1px solid rgba(139,92,246,0.1);
+    border-radius: 6px;
+    background: rgba(139,92,246,0.02);
+    transition: border-color 0.3s, background 0.3s, transform 0.3s, box-shadow 0.3s;
+  }
+
+  .glossary-item:hover {
+    border-color: rgba(139,92,246,0.3);
+    background: rgba(139,92,246,0.06);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(139,92,246,0.06);
+  }
+
+  .glossary-term {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--violet);
+    letter-spacing: 0.15em;
+    display: block;
+    margin-bottom: 0.6rem;
+  }
+
+  .glossary-def {
+    font-family: var(--serif);
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    color: var(--text-muted);
+    line-height: 1.75;
+  }
+
+  /* ===== THE BRIEF SECTION ===== */
+  .brief-section {
+    padding: clamp(4rem, 8vh, 8rem) 0;
+    position: relative;
+  }
+
+  .brief-card {
+    background: rgba(16,185,129,0.03);
+    border: 1px solid rgba(16,185,129,0.25);
+    border-radius: 12px;
+    padding: clamp(2.5rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4rem);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    box-shadow:
+      0 0 60px rgba(16,185,129,0.04),
+      0 0 120px rgba(16,185,129,0.02),
+      inset 0 1px 0 rgba(16,185,129,0.1);
+    transition: box-shadow 0.5s, border-color 0.5s;
+  }
+
+  .brief-card:hover {
+    border-color: rgba(16,185,129,0.4);
+    box-shadow:
+      0 0 80px rgba(16,185,129,0.08),
+      0 0 160px rgba(16,185,129,0.04),
+      inset 0 1px 0 rgba(16,185,129,0.15);
+  }
+
+  .brief-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(16,185,129,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 50% 100%, rgba(16,185,129,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .brief-section-label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.45em;
+    color: var(--emerald);
+    text-transform: uppercase;
+    opacity: 0.7;
+    display: block;
+    margin-bottom: 2rem;
+  }
+
+  .brief-title {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 300;
+    color: var(--text-primary);
+    margin-bottom: 2.5rem;
+    text-shadow: 0 0 40px rgba(16,185,129,0.1);
+  }
+
+  .brief-lead {
+    font-family: var(--serif);
+    font-size: clamp(1.2rem, 2.5vw, 1.65rem);
+    font-style: italic;
+    color: var(--text-muted);
+    line-height: 2.0;
+    margin-bottom: 2.5rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .brief-body {
+    font-family: var(--serif);
+    font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+    color: var(--text-primary);
+    line-height: 2.1;
+    max-width: 680px;
+    margin: 0 auto 1.5rem;
+    text-align: left;
+  }
+
+  .brief-body.centered {
+    text-align: center;
+  }
+
+  .brief-highlight {
+    color: var(--emerald);
+    font-weight: 500;
+  }
+
+  .brief-sub {
+    font-family: var(--mono);
+    font-size: clamp(0.85rem, 1.5vw, 1rem);
+    color: var(--emerald);
+    letter-spacing: 0.12em;
+    display: block;
+    margin: 2rem 0 1rem;
+    opacity: 0.8;
+  }
+
+  /* ===== ABOUT AUGUST ===== */
+  .about-section {
+    padding: clamp(5rem, 10vh, 10rem) 0;
+    text-align: center;
+    position: relative;
+  }
+
+  .about-photo-wrap {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 2.5rem;
+  }
+
+  .about-photo-wrap::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    background: linear-gradient(135deg, var(--emerald), var(--teal), var(--violet)) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    animation: rotateBorder 12s linear infinite;
+  }
+
+  .about-photo {
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    filter: grayscale(15%) brightness(0.9) contrast(1.1);
+    display: block;
+    position: relative;
+    z-index: 1;
+    transition: filter 0.4s;
+  }
+
+  .about-photo:hover {
+    filter: grayscale(0%) brightness(1) contrast(1.05);
+  }
+
+  .about-glow {
+    position: absolute;
+    inset: -20px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(16,185,129,0.18), transparent 70%);
+    animation: breathe 4s ease-in-out infinite;
+    z-index: 0;
+  }
+
+  .about-name {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    font-weight: 300;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .about-title {
+    font-family: var(--sans);
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
+  }
+
+  .about-mantra {
+    font-family: var(--serif);
+    font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 2.5rem;
+    line-height: 1.8;
+  }
+
+  .about-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+    margin-bottom: 0;
+  }
+
+  .about-link {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--emerald);
+    text-decoration: none;
+    padding: 0.65rem 1.1rem;
+    border: 1px solid rgba(16,185,129,0.2);
+    border-radius: 4px;
+    transition: all 0.3s;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  .about-link:hover {
+    background: rgba(16,185,129,0.1);
+    border-color: rgba(16,185,129,0.5);
+    box-shadow: 0 0 20px rgba(16,185,129,0.12);
+    transform: translateY(-2px) scale(1.03);
+    color: #34d399;
+  }
+
+  .about-link.dash-link {
+    color: #008DE4;
+    border-color: rgba(0,141,228,0.25);
+  }
+
+  .about-link.dash-link:hover {
+    background: rgba(0,141,228,0.1);
+    border-color: rgba(0,141,228,0.5);
+    box-shadow: 0 0 20px rgba(0,141,228,0.15);
+    color: #29b6ff;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    text-align: center;
+    padding: 4rem clamp(1rem, 5vw, 3rem);
+    border-top: 1px solid rgba(16,185,129,0.07);
+  }
+
+  .footer-veros {
+    font-family: var(--mono);
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    color: var(--violet);
+    opacity: 0.15;
+    letter-spacing: 0.3em;
+    display: block;
+    margin-bottom: 1.5rem;
+  }
+
+  .footer-latin {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
+    color: var(--text-faint);
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-epu {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+
+  .footer-tagline {
+    margin-top: 2rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    color: var(--emerald);
+    opacity: 0.55;
+    text-transform: uppercase;
+  }
+
+  /* ===== SCROLL REVEAL ===== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(36px);
+    transition: opacity 1s ease-out, transform 1s ease-out;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes riseUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  @keyframes breathe {
+    0%, 100% { opacity: 0.85; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.015); }
+  }
+
+  @keyframes breathe-card {
+    0%, 100% { box-shadow: 0 0 0 0 transparent; }
+    50% { box-shadow: 0 0 15px rgba(16,185,129,0.05); }
+  }
+
+  @keyframes violetPulse {
+    0%, 100% {
+      text-shadow: 0 0 40px rgba(139,92,246,0.6), 0 0 80px rgba(139,92,246,0.25), 0 0 120px rgba(139,92,246,0.1);
+      opacity: 0.88;
+    }
+    50% {
+      text-shadow: 0 0 70px rgba(139,92,246,0.85), 0 0 140px rgba(139,92,246,0.4), 0 0 200px rgba(139,92,246,0.15);
+      opacity: 1;
+      letter-spacing: 0.12em;
+    }
+  }
+
+  @keyframes pulse-line {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.9; }
+  }
+
+  @keyframes rotateBorder {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* ===== LINK STYLES ===== */
+  a.inline-link {
+    color: var(--teal);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(6,182,212,0.3);
+    transition: border-color 0.3s, color 0.3s;
+  }
+
+  a.inline-link:hover {
+    border-color: var(--teal);
+    color: #67e8f9;
+  }
+
+  /* ===== POWER BLOCK ===== */
+  .power-block {
+    text-align: center;
+    padding: 3rem 0;
+    font-family: var(--mono);
+    font-size: clamp(0.9rem, 1.6vw, 1.1rem);
+    color: var(--emerald);
+    letter-spacing: 0.1em;
+    opacity: 0.75;
+  }
+
+  .power-block .latin {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(1rem, 1.6vw, 1.2rem);
+    color: var(--text-muted);
+    display: block;
+    margin-top: 0.5rem;
+    opacity: 0.75;
+  }
+
+  /* ===== SAFE WORD ===== */
+  .safe-word {
+    background: rgba(16,185,129,0.03);
+    border: 1px solid rgba(16,185,129,0.1);
+    border-radius: 6px;
+    padding: 2.5rem;
+    margin: 3rem 0;
+    text-align: center;
+    transition: border-color 0.4s, box-shadow 0.4s;
+  }
+
+  .safe-word:hover {
+    border-color: rgba(16,185,129,0.22);
+    box-shadow: 0 0 30px rgba(16,185,129,0.04);
+  }
+
+  .safe-word p {
+    font-family: var(--serif);
+    font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+    font-style: italic;
+    color: var(--text-muted);
+    margin: 0;
+    line-height: 2.0;
+  }
+
+  .safe-word .veros-word {
+    font-family: var(--mono);
+    font-size: 1.1em;
+    color: var(--emerald);
+    font-style: normal;
+  }
+
+  /* ===== EPU BLOCK ===== */
+  .epu-block {
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.35em;
+    color: var(--amber);
+    opacity: 0.65;
+    padding: 1rem 0;
+    text-transform: uppercase;
+  }
+
+  /* ===== SWIPE INDICATOR ===== */
+  .swipe-indicator {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 6px 12px 10px;
+    background: rgba(2, 8, 6, 0.7);
+    border: 1px solid rgba(16,185,129,0.15);
+    border-right: none;
+    border-radius: var(--serif, 10px);
+    border-radius: 10px 0 0 10px;
+    backdrop-filter: blur(12px);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+  .swipe-indicator:hover {
+    background: rgba(2, 8, 6, 0.9);
+    border-color: rgba(16,185,129,0.35);
+    padding-left: 14px;
+  }
+  .swipe-indicator-text {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: rgba(167,243,208,0.45);
+    text-transform: uppercase;
+    writing-mode: vertical-lr;
+  }
+  .swipe-indicator-arrow {
+    font-size: 14px;
+    color: var(--emerald);
+    animation: swipe-pulse-right 2s ease-in-out infinite;
+  }
+  @keyframes swipe-pulse-right {
+    0%, 100% { transform: translateX(0); opacity: 0.6; }
+    50% { transform: translateX(3px); opacity: 1; }
+  }
+
+  /* ===== MOBILE OPTIMIZATION ===== */
+  @media (max-width: 600px) {
+    body { font-size: 19px; }
+
+    .container { padding: 0 1rem; }
+
+    .manifesto p { font-size: 1.25rem; line-height: 2.0; }
+
+    .breathe-large { font-size: clamp(2.2rem, 12vw, 3.5rem); }
+    .all-is-small  { font-size: clamp(2.2rem, 12vw, 3.5rem); }
+    .veros-moment  { font-size: clamp(1.8rem, 10vw, 3rem); }
+
+    .hero-title { font-size: clamp(3rem, 15vw, 6rem); }
+
+    .pull-quote { padding-left: 1.25rem; }
+
+    .about-links { gap: 0.5rem; }
+    .about-link  { font-size: 0.68rem; padding: 0.6rem 0.9rem; }
+
+    .practices-grid, .glossary-grid { grid-template-columns: 1fr; }
+
+    footer { padding: 3rem 1rem; }
+
+    .brief-card { padding: 2rem 1.25rem; }
+  }
+
+  /* No horizontal scroll ever */
+  section, .container, .site-wrap { max-width: 100vw; overflow-x: hidden; }
+</style>
+</head>
+<body>
+
+<!-- Swipe Navigation Indicator -->
+<a href="tokenomics.html" class="swipe-indicator" title="Tokenomics →">
+  <span class="swipe-indicator-text">Swipe</span>
+  <span class="swipe-indicator-arrow">→</span>
+</a>
+
+<!-- Cursor elements -->
+<div id="cursor-glow"></div>
+<div id="cursor-dot"></div>
+
+<!-- Mycelium Canvas -->
+<canvas id="mycelium-canvas"></canvas>
+
+<!-- Navigation -->
+<nav>
+  <a href="#" class="nav-logo">// veros //</a>
+  <ul class="nav-links">
+    <li><a href="#manifesto">Manifesto</a></li>
+    <li><a href="#the-dance">The Dance</a></li>
+    <li><a href="#glossary">Lexicon</a></li>
+    <li><a href="#the-brief">The Brief</a></li>
+    <li><a href="tokenomics.html">Tokenomics</a></li>
+    <li><a href="#august">August</a></li>
+  </ul>
+</nav>
+
+<div class="site-wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="mesh-bg"></div>
+    <div class="mycelium-overlay"></div>
+    <p class="hero-eyebrow">A manifesto on systems thinking &amp; the evolution of value</p>
+    <h1 class="hero-title"><span>Veros</span></h1>
+    <p class="hero-sub">All Is Small. Small Is All.</p>
+    <span class="hero-scroll">Begin</span>
+  </section>
+
+  <!-- MANIFESTO -->
+  <section class="manifesto" id="manifesto">
+    <div class="mesh-bg"></div>
+    <div class="container">
+
+      <span class="section-label">The Manifesto</span>
+
+      <p class="intro-name reveal">
+        Hello, my name is August James Domanchuk and I am a systems thinker, a Dash DAO governance researcher, and I am an axiologist who has recently had a major breakthrough and development. <em style="color:var(--text-muted); font-size:0.88em;">(An axiologist investigates what makes things good, bad, desirable, or beautiful, encompassing both ethics (moral value) and aesthetics (value of art and beauty or value itself))</em>
+      </p>
+
+      <div class="organic-divider reveal"><span>Begin</span></div>
+
+      <p class="reveal" style="font-size: clamp(1.4rem, 2.8vw, 2rem); font-style: italic; color: var(--text-muted);">Let Me Begin,</p>
+
+      <p class="reveal">
+        You see them around you. Systems. You see them everywhere. Take a step back, zoom in, zoom out, you see them everywhere. Systems. They make up our lives. Sometimes for better, sometimes for worse. Most people don't see them. Some never will. But if you pay attention close enough you see them emerge.
+      </p>
+
+      <div class="pull-quote reveal">
+        <span class="glow-emerald">// And what you pay attention to grows. //</span>
+      </div>
+
+      <p class="reveal">
+        If you pay attention close enough, you can begin to understand them, intervene in them, apply solutions or improvements, apply key leverage points, and when you understand a system well enough, you can dance. <a href="https://donellameadows.org/archives/dancing-with-systems/" target="_blank" class="inline-link">donellameadows.org — Dancing With Systems</a>
+      </p>
+
+      <div class="organic-divider reveal"><span>↓</span></div>
+
+      <p class="reveal">
+        Systems within system. Worlds within worlds. But what if we as a society could invent a new form of technology, that mirrors the same concept and structure of a CPU component or a GPU, but applied to human consensus, human decision making, imagine building a small world computer chip, but some of those components are human. Communities, groups, teams, imagine applying large scale coordination sourced from the idea of small scale construction.
+      </p>
+
+      <p class="reveal">
+        For example, let's say you own 1 $DASH, what if we could build or grow like mycelium or think like the forest that is alive in the movie Avatar. Miniature worlds within that one Dash that you own. Call these microcosms, attached to value. <strong style="color:var(--emerald);">The Micro-Cosmos.</strong> Imagine; A small world of governance, co-creation, imagination, and actualization attached to that one $Dash. Let's call these <strong style="color:var(--amber);">Sacred Assets</strong>, and they hold small worlds, worlds within worlds, systems within systems, teams within teams. Teams anchored to assets like a builder who holds an NFT. Like a <em>Sacred Artifact.</em> Imagine the construction of a human network that forms a collective intelligence that moves with conviction in alignment with your values and what you share and discuss. A microcosm that moves on your principles, your mantra, your values, your ideas to intervene in a system. This is <strong style="color:var(--emerald); font-size:1.1em;">MOTUS</strong> And This is a microcosm for values in motion.
+      </p>
+
+      <p class="reveal" style="font-family:var(--serif); font-size: clamp(1.4rem, 2.5vw, 2rem); font-style:italic; color:var(--text-muted); text-align:center;">Imagine,</p>
+
+      <!-- MOTUS BLOCK -->
+      <div class="motus-block reveal">
+        <span class="motus-tagline gold-gradient">$Motus // Money That Moves You /// Money That Moves With You</span>
+        <span class="breathe-large">Value That Comes Alive</span>
+        <span class="motus-desc">Motus Is Values In Motion</span>
+        <span class="motus-desc">Motus Is The Energy That Deeply Moves</span>
+        <span class="motus-desc">Values, Value, And Teams That Grow With You</span>
+      </div>
+
+      <p class="reveal">
+        Imagine if your money had a consciousness or an ecosystem within it. If you can see far enough, you see the potential and the true value of blockchain technology. You see the progression. What is small today, may not be so small in the future. So what if we harnessed this idea. Let's say we're still super super early… Like really early…
+      </p>
+
+      <div class="all-is-small reveal">
+        And <em>All Is Small.</em><br>Small Is All.
+      </div>
+
+      <p class="reveal">
+        What if we built coordination networks like dynamic networked computer chips. So for this idea of Sacred Assets, let's say that 1 $DASH that you own has an ai agent and a micro human network and a hive mind. Maybe even a hive of Artificial Intelligence, or AI Agents that work and think together, combined with human decision making and human intervention. Combined with human agents and groups of decision makers. <strong style="color:var(--teal);">Votus Units.</strong> What if you could build a collective consciousness for a sacred asset you own. This idea is called building community. But let's revolutionize how we build community. Imagine Motus as Money that is alive and money that moves with you. Motus could become the energy of the big and the small worlds. An idea and construct that could unify both worlds.
+      </p>
+
+      <div class="pull-quote reveal" style="border-color:var(--amber); font-size: clamp(1.3rem, 2.5vw, 2rem);">
+        Motus is energy in motion.<br>
+        <span style="color:var(--text-faint); font-size:0.85em;">Built For The Big. And Built For The Small.</span>
+      </div>
+
+      <p class="reveal" style="text-align:center; font-size: clamp(1.2rem, 2.2vw, 1.6rem); font-style:italic; color:var(--text-muted);">Let's call this construct, this microcosm</p>
+
+      <div class="safe-word reveal">
+        <p>
+          "<span class="veros-word">Veros</span>" Because All Is Small, Might Just Be The Most Important Idea The World Has Ever Adopted Or Shared.<br><br>
+          It might just be… Our Strongest Truth. The Safest Idea For Humanity To Hear. To Learn. To Share. To Adopt.
+        </p>
+      </div>
+
+      <p class="reveal">
+        For any sacred asset or Dash that you own you could create a Votus Unit, for your sacred asset, or a team or community of decision makers, and contributors could claim or buy shares in that one $Dash or that one sacred asset. Like in increments of say like .01 or .0001 $Dash per chair this could be the construct of a Votus unit, a team that is both large, but more often, <span class="glow-emerald">// small //</span>.
+      </p>
+
+      <div class="pull-quote reveal" style="font-size: clamp(1.2rem, 2vw, 1.6rem);">
+        Teams within teams, Communities Within Communities, Systems Within Systems, An Orchestration Of Values Centered Coordination, but visualized, understood, and embodied as small scale. As Small.
+      </div>
+
+      <p class="reveal" style="text-align:center; font-family:var(--mono); font-size:clamp(2.5rem,6vw,4.5rem); color:var(--teal); opacity:0.55; letter-spacing:0.1em;">Micros</p>
+
+      <p class="reveal" style="text-align:center; font-style:italic; color:var(--text-muted); font-size:clamp(1.1rem,2vw,1.4rem);">Like the artist that keeps zooming in.<br>Or an artist that can keep zooming out.</p>
+
+      <p class="reveal">
+        But as you zoom in you begin to see the miniature communities that self organize, that actualize, the micro-movements. In a world as hyper connected as we are today, maybe small is what we need the most. This mindset. Maybe micro-movements are one of the strongest ideas we can implement together. This mindset of small. And I'll say it again, and again, and again. We are still learning. We Are All Small. Like an organism living within another organism. But applied at a technical level, and a technological interface such as Blockchain, and with the option of privacy built in. This idea of all is small, could be the evolution of humanity as we know it. And potentially the safest and the strongest idea we've ever created as a society to date.
+      </p>
+
+      <!-- VEROS MOMENT -->
+      <span class="veros-moment reveal">//veros//</span>
+
+      <p class="reveal">
+        I'm really just talking about the entire blockchain community, but all in small mode, or all with the embodied shared mindset that we are all small. This could solve, and prevent a lot of problems down the line.
+      </p>
+
+      <p class="reveal" style="font-style:italic; color:var(--text-muted); font-size:clamp(1.1rem,2vw,1.4rem);">Did Microsoft do this first with Github?</p>
+
+      <p class="reveal" style="font-style:italic; color:var(--text-muted); font-size:clamp(1.1rem,2vw,1.4rem);">Is OpenClaw.AI Building The Foundation For This r-Evolution To Become A Reality?</p>
+
+      <div class="pull-quote reveal" style="border-color:var(--violet); font-size: clamp(1.2rem, 2vw, 1.6rem);">
+        !THIS is my idea for Motus. A Measure Of Energy. A Measure Of Movement. A Measure Of Momentum. A Measure Of Coordination At The Large AND The small Scale.
+      </div>
+
+      <p class="reveal" style="text-align:center; font-size:clamp(1.3rem, 2.2vw, 1.8rem); font-style:italic; color:var(--text-muted);">
+        The idea to unify the two worlds of large and small will be humanity's strongest vision to date.
+      </p>
+
+      <p class="reveal" style="text-align:center; font-size:clamp(1.2rem,2vw,1.5rem);">
+        You Heard It Here. But you will see it out there. And Within.
+      </p>
+
+      <p class="reveal">
+        We are giving humanity or rather communities and teams the super power to be small or to become large together. A modular and adaptive decision making building block that can grow or shrink intelligently. This is <strong style="color:var(--teal);">Votus.</strong>
+      </p>
+
+      <div class="veros-moment reveal" style="font-size:clamp(2rem, 5vw, 4rem);">This is //Veros//</div>
+
+      <p class="reveal" style="text-align:center; font-style:italic; color:var(--text-muted); font-size:clamp(1.1rem,2vw,1.4rem);">Small worlds within small worlds. Maybe one day we can rise.</p>
+
+      <div class="organic-divider reveal"><span>↓</span></div>
+
+      <p class="reveal" style="text-align:center; font-size:clamp(1.2rem, 2vw, 1.5rem);">
+        Start Your First Votus Unit Today And Anchor It To Your Favorite Sacred Asset.<br>
+        <strong style="color:var(--amber);">I Choose $DASH.</strong>
+      </p>
+
+      <p class="reveal" style="text-align:center; font-size:clamp(1.5rem, 3vw, 2.5rem);">
+        <span class="revolution">The r-Evolution Has Just Begun.</span>
+      </p>
+
+      <div class="power-block reveal">
+        <span class="glow-emerald">// Power To The People //</span>
+        <span class="latin">/// Haec sententia audiatur. Crescat. ///</span>
+        <span style="display:block; margin-top:1rem; font-family:var(--serif); font-style:italic; font-size:clamp(1rem,1.6vw,1.2rem); color:var(--text-muted);">Let this idea be heard. Let It Grow…</span>
+      </div>
+
+      <div class="safe-word reveal">
+        <p>Don't Get Overwhelmed. <span class="veros-word">Veros</span> Is A Safe Word.<br><br>Take your time in this world. There is no rush.</p>
+      </div>
+
+      <div class="epu-block reveal">/// E Pluribus Unum ///</div>
+
+    </div>
+  </section>
+
+  <!-- THE DANCE — 14 PRACTICES -->
+  <section class="practices-section" id="the-dance">
+    <div class="mesh-bg"></div>
+    <div class="container">
+      <div class="practices-header reveal">
+        <span class="section-label">Donella Meadows</span>
+        <h2>The Dance</h2>
+        <p>Hover or tap each practice to reveal its deeper wisdom</p>
+      </div>
+
+      <div class="practices-grid">
+
+        <div class="practice-card reveal" style="--i:0" tabindex="0">
+          <span class="practice-num">01 //</span>
+          <span class="practice-title">Get the beat.</span>
+          <div class="practice-expand">
+            <p>Before you disturb the system in any way, watch how it behaves. If it's a piece of music or a dance, a social system or an ecosystem, learn its beat, its natural rhythms and repetitions, its structure, its history. Starting with the beat — watching and listening — is the place to begin.</p>
+            <cite>— Donella Meadows, Dancing With Systems</cite>
+          </div>
+        </div>
+
+        <div class="practice-card reveal" style="--i:1" tabindex="0">
+          <span class="practice-num">02 //</span>
+          <span class="practice-title">Listen to the wisdom of the system.</span>
+          <div class="practice-expand">
+            <p>Aid and encourage the forces and structures that help the system run itself. Notice how many of those structures are themselves embedded in larger systems with their own dynamics. Pay attention to what the system tells you, and try to maximize the capacity of the system to signal its own needs.</p>
+            <cite>— Donella Meadows, Dancing With Systems</cite>
+          </div>
+        </div>
+
+        <div class="practice-card reveal" style="--i:2" tabindex="0">
+          <span class="practice-num">03 //</span>
+          <span class="practice-title">Expose your mental models to the open air.</span>
+          <div class="practice-expand">
+            <p>Remember, always, that everything you know, and everything everyone knows, is only a model. Get your model out there where it can be shot at. Invite others to challenge your assumptions and add their own. The key to navigate any complex system is to keep questioning what you believe you know.</p>
+            <cite>— Donella Meadows, Dancing With Systems</cite>
+          </div>
+        </div>
+
+        <div class="practice-card reveal" style="--i:3" tabindex="0">
+          <span class="practice-num">04 //</span>
+          <span class="practice-title">Stay humble. Stay a learner.</span>
+          <div class="practice-expand">
+            <p>Systems surprises us because we think we know more than we do. We know what we see; we don't see what we don't see. A truly humble scientist or a truly great athlete knows that perfection is approached, never reached — that there is always more to learn, always a way to be better next time.</p>
+            <cite>— Donella Meadows, Dancing With Systems</cite>
+          </div>
+        </div>
+
+        <div class="practice-card reveal" style="--i:4" tabindex="0">
+          <span class="practice-num">05 //</span>
+          <span class="practice-title">Honor and protect information.</span>
+          <div class="practice-expand">
+            <p>A system can't function well if its information streams are corrupted. Pretending information is better or worse than it is misleads everyone into making poor decisions. The best gift you can give a system is accurate information — at the right time, in the right place, in the right form.</p>
+            <cite>— Donella Meadows, Dancing With Systems</cite>
+          </div>
+        </div>
+
+        <div class="practice-card reveal" style="--i:5" tabindex="0">
+          <span class="practice-num">06 //</span>
+          <span class="practice-title">Locate responsibility in the system.</span>
+          <div class="practice-expand">
+            <p>Look for the system's own feedback mechanisms that could restore the system's behavior if it goes off track. Don't look for who's to blame; find the feedback loop that drives the problematic behavior and see if you can redirect it. Responsibility means response-ability — the capacity to respond.</p>
+            <cite>— Donella Meadows, Dancing With Systems</cite>
+          </div>
+        </div>
+
+        <div class="practice-card reveal" style="--i:6" tabindex="0">
+          <span class="practice-num">07 //</span>
+          <span class="practice-title">Make feedback policies for feedback systems.</span>
+          <div class="practice-expand">
+            <p>Design learning into the management process. Create policies that change depending on the state of the system. Design monitoring into the policy, along with triggers for change. Take into account not just the current state of the system but the trend of the system's behavior over time.</p>
+            <cite>— Donella Meadows, Dancing With Systems</cite>
+          </div>
+        </div>
+
+        <div class="practice-card reveal" style="--i:7" tabindex="0">
+          <span class="practice-num">08 //</span>
+          <span class="practice-title">Pay attention to what is important, not just what is quantifiable.</span>
+          <div class="practice-expand">
+            <p>Our culture, obsessed with numbers, has given us the idea that what we can measure is more real than what we cannot measure. But think about what has been important in your own life — family, love, beauty, honor, joy. Most of what really matters is beyond quantification.</p>
+            <cite>— Donella Meadows, Dancing With Systems</cite>
+          </div>
+        </div>
+
+        <div class="practice-card reveal" style="--i:8" tabindex="0">
+          <span class="practice-num">09 //</span>
+          <span class="practice-title">Go for the good of the whole.</span>
+          <div class="practice-expand">
+            <p>Remember that hierarchies exist to serve the lower levels. Don't optimize parts of systems or subsystems while ignoring the whole. Don't be distracted by the pull of short-term thinking. Aim always toward a better whole system — one that produces more of what it's supposed to produce.</p>
+            <cite>— Donella Meadows, Dancing With Systems</cite>
+          </div>
+        </div>
+
+        <div class="practice-card reveal" style="--i:9" tabindex="0">
+          <span class="practice-num">10 //</span>
+          <span class="practice-title">Expand time horizons.</span>
+          <div class="practice-expand">
+            <p>In system after system, the delayed effects are ignored or given too little weight. The time horizon of governments rarely extends beyond the next election, of corporations beyond the next quarterly report. Yet the world is full of long-term consequences that show up decades or generations later.</p>
+            <cite>— Donella Meadows, Dancing With Systems</cite>
+          </div>
+        </div>
+
+        <div class="practice-card reveal" style="--i:10" tabindex="0">
+          <span class="practice-num">11 //</span>
+          <span class="practice-title">Expand thought horizons.</span>
+          <div class="practice-expand">
+            <p>Expand the boundary of caring. Include in your mental model not just what you can see and quantify but also the things you care about, even if they are hard to measure. Invite into the conversation people who represent different viewpoints and can contribute different ideas.</p>
+            <cite>— Donella Meadows, Dancing With Systems</cite>
+          </div>
+        </div>
+
+        <div class="practice-card reveal" style="--i:11" tabindex="0">
+          <span class="practice-num">12 //</span>
+          <span class="practice-title">Expand the boundary of caring.</span>
+          <div class="practice-expand">
+            <p>Living successfully in a world of systems requires more of us than our ability to calculate. It requires our full humanity — the rationality of our minds, the intuition of our spirits, the compassion of our hearts. Cultivate a caring that reaches through space, time, and species.</p>
+            <cite>— Donella Meadows, Dancing With Systems</cite>
+          </div>
+        </div>
+
+        <div class="practice-card reveal" style="--i:12" tabindex="0">
+          <span class="practice-num">13 //</span>
+          <span class="practice-title">Celebrate complexity.</span>
+          <div class="practice-expand">
+            <p>Systems are marvelous at producing complex behavior from simple rules. They produce structure without design, order without planning. Watch how the system runs itself. Marvel at it. Be grateful for complexity. Modern science has shown that the world is far more interesting and surprising than we imagine.</p>
+            <cite>— Donella Meadows, Dancing With Systems</cite>
+          </div>
+        </div>
+
+        <div class="practice-card reveal" style="--i:13" tabindex="0">
+          <span class="practice-num">14 //</span>
+          <span class="practice-title">Hold fast to the goal of goodness.</span>
+          <div class="practice-expand">
+            <p>It is not enough to understand the world. The point is to make it better. If we truly and deeply believe in the goal of goodness — if we are truly intent on making the world better — then we will not be tempted into sophisticated justifications for cynicism and selfishness. Dance with grace and integrity.</p>
+            <cite>— Donella Meadows, Dancing With Systems</cite>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- GLOSSARY -->
+  <section class="glossary-section" id="glossary">
+    <div class="mesh-bg"></div>
+    <div class="container">
+      <div class="glossary-header reveal">
+        <span class="section-label">The Lexicon</span>
+        <h2>Language of the System</h2>
+        <p>Words that hold worlds within them</p>
+      </div>
+
+      <div class="glossary-grid">
+        <div class="glossary-item reveal">
+          <span class="glossary-term">Axiologist</span>
+          <span class="glossary-def">One who studies value — what makes things good, desirable, or beautiful. Encompasses ethics (moral value) and aesthetics (value of art, beauty, and value itself).</span>
+        </div>
+        <div class="glossary-item reveal">
+          <span class="glossary-term">Sacred Asset</span>
+          <span class="glossary-def">A digital asset that holds micro-worlds of governance and co-creation within it. Value made alive. A container for collective consciousness.</span>
+        </div>
+        <div class="glossary-item reveal">
+          <span class="glossary-term">Micro-Cosmos</span>
+          <span class="glossary-def">The small world of governance, imagination, and actualization attached to a sacred asset. A universe in a grain of sand.</span>
+        </div>
+        <div class="glossary-item reveal">
+          <span class="glossary-term">Motus</span>
+          <span class="glossary-def">Latin for movement. Energy in motion. Values in motion. The currency of the movement. Money that moves you — and moves with you.</span>
+        </div>
+        <div class="glossary-item reveal">
+          <span class="glossary-term">Votus</span>
+          <span class="glossary-def">Latin for vow. Sacred commitment. The governance layer. The promise we make to one another when we coordinate with intention.</span>
+        </div>
+        <div class="glossary-item reveal">
+          <span class="glossary-term">Veros</span>
+          <span class="glossary-def">Latin for truth. The verification and integrity layer. All Is Small. The safe word for humanity's next great idea.</span>
+        </div>
+        <div class="glossary-item reveal">
+          <span class="glossary-term">Votus Unit</span>
+          <span class="glossary-def">A team-based governance building block anchored to a sacred asset. Modular, adaptive, small by design — capable of growing or shrinking intelligently.</span>
+        </div>
+        <div class="glossary-item reveal">
+          <span class="glossary-term">Motus Move</span>
+          <span class="glossary-def">A high leverage move in a system. A systemic intervention. The right action, in the right place, at the right time.</span>
+        </div>
+        <div class="glossary-item reveal">
+          <span class="glossary-term">Sacred Artifact</span>
+          <span class="glossary-def">An NFT or digital artifact that represents ownership and participation in a micro-cosmos. A builder's anchor. A team's covenant object.</span>
+        </div>
+        <div class="glossary-item reveal">
+          <span class="glossary-term">The Dance</span>
+          <span class="glossary-def">Donella Meadows' 14 practices for living successfully in a world of systems. A philosophy of humble, joyful engagement with complexity.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE BRIEF -->
+  <section class="brief-section" id="the-brief">
+    <div class="mesh-bg"></div>
+    <div class="container">
+      <div class="brief-card reveal">
+        <span class="brief-section-label">// The Brief //</span>
+        <h2 class="brief-title">Humanity Does Not Just Need Bigger Systems.</h2>
+
+        <p class="brief-lead">
+          It needs better small-scale coordination, values-centered by design, capable of growing without losing the human core.
+        </p>
+
+        <div class="organic-divider" style="opacity:0.2; margin: 2rem 0;"><span>↓</span></div>
+
+        <p class="brief-body">
+          We live inside systems.<br>
+          <span style="color:var(--text-muted);">Some nourish life. Some distort it. Most people move through them without seeing them. But if you learn to see systems, you begin to see leverage. You begin to see rhythm. And when you understand a system deeply enough, you can learn to dance with it.</span>
+        </p>
+
+        <span class="brief-sub">// Motus Begins Here //</span>
+
+        <p class="brief-body">
+          Motus is <span class="brief-highlight">values in motion</span>. It is the idea that money, governance, and coordination should not be static. They should move with people, with principles, and with purpose.
+        </p>
+
+        <p class="brief-body">
+          A <span class="brief-highlight">Votus Unit</span> is a small decision-making body anchored to an asset, a mission, or a community. <em style="color:var(--text-muted);">Small enough to stay human. Modular enough to scale. Strong enough to coordinate.</em>
+        </p>
+
+        <div class="organic-divider" style="opacity:0.2; margin: 2rem 0;"><span>↓</span></div>
+
+        <p class="brief-body centered" style="color:var(--text-muted); font-style:italic;">
+          This is the heart of Veros: that all meaningful systems must remember the power of the small. Small teams. Small signals. Small circles of trust. Small worlds within larger worlds.
+        </p>
+
+        <div class="organic-divider" style="opacity:0.2; margin: 2rem 0;"><span>↓</span></div>
+
+        <p class="brief-body centered" style="font-size:clamp(1.3rem,2.5vw,1.9rem); font-weight:300; color:var(--text-primary); line-height:2.1;">
+          We do not need less ambition.<br>
+          <span style="color:var(--emerald);">We need more human-scale coordination.</span><br>
+          More wisdom in the loop.<br>
+          <span style="color:var(--teal);">More values embedded in motion.</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT AUGUST -->
+  <section class="about-section" id="august">
+    <div class="container">
+      <span class="section-label" style="text-align:center; display:block; margin-bottom:3rem;">The Author</span>
+
+      <div class="about-photo-wrap reveal">
+        <div class="about-glow"></div>
+        <img src="august-james.jpg" alt="August James Domanchuk" class="about-photo" loading="lazy">
+      </div>
+
+      <h2 class="about-name reveal">August James Domanchuk</h2>
+      <p class="about-title reveal">Axiologist &middot; Systems Thinker &middot; Dash DAO Governance Researcher &middot; Musician</p>
+      <p class="about-mantra reveal">"I am small. I am strong. And I am always still learning."</p>
+
+      <div class="about-links reveal">
+        <a href="https://augustjames.live" target="_blank" class="about-link">AugustJames.Live</a>
+        <a href="https://x.com/BuiltByAugust" target="_blank" class="about-link">@BuiltByAugust</a>
+        <a href="https://instagram.com/augustjamesd" target="_blank" class="about-link">@AugustJamesD</a>
+        <a href="https://github.com/InitiumBuilders" target="_blank" class="about-link">github/InitiumBuilders</a>
+        <a href="https://motusmoves.us" target="_blank" class="about-link">MotusMoves.US</a>
+        <a href="https://votus.one" target="_blank" class="about-link">Votus.ONE</a>
+        <a href="https://dash.org" target="_blank" class="about-link dash-link">⚡ Dash.org</a>
+        <a href="mailto:InitiumBuilders@gmail.com" class="about-link">InitiumBuilders@gmail.com</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-veros">//veros//</span>
+    <p class="footer-latin">Haec sententia audiatur. Crescat.</p>
+    <p class="footer-epu">/// E Pluribus Unum ///</p>
+    <p class="footer-tagline">
+      //Built For Those Who Move//
+    </p>
+    <p style="margin-top:1.5rem; font-family:var(--sans); font-size:0.65rem; color:rgba(0,141,228,0.35); letter-spacing:0.1em;">
+      Built on <a href="https://dash.org" target="_blank" style="color:rgba(0,141,228,0.5); text-decoration:none;">Dash Platform</a> · All Is Small
+    </p>
+  </footer>
+
+</div><!-- /site-wrap -->
+
+<script>
+// ===== CURSOR GLOW =====
+(function() {
+  const glow = document.getElementById('cursor-glow');
+  const dot  = document.getElementById('cursor-dot');
+  let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+  let gx = mx, gy = my;
+
+  document.addEventListener('mousemove', (e) => {
+    mx = e.clientX;
+    my = e.clientY;
+    dot.style.left = mx + 'px';
+    dot.style.top  = my + 'px';
+  });
+
+  // Glow lags behind for organic feel
+  function animateCursor() {
+    gx += (mx - gx) * 0.08;
+    gy += (my - gy) * 0.08;
+    glow.style.left = gx + 'px';
+    glow.style.top  = gy + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  // Scale dot on hover of interactive elements
+  document.querySelectorAll('a, button, .practice-card, .glossary-item, .about-link').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      dot.style.transform = 'translate(-50%, -50%) scale(2.5)';
+      dot.style.background = 'var(--teal)';
+    });
+    el.addEventListener('mouseleave', () => {
+      dot.style.transform = 'translate(-50%, -50%) scale(1)';
+      dot.style.background = 'var(--emerald)';
+    });
+  });
+
+  // Hide on mobile
+  if ('ontouchstart' in window) {
+    glow.style.display = 'none';
+    dot.style.display  = 'none';
+    document.body.style.cursor = 'auto';
+  }
+})();
+
+// ===== MYCELIUM CANVAS =====
+(function() {
+  const canvas = document.getElementById('mycelium-canvas');
+  const ctx = canvas.getContext('2d');
+
+  let W = canvas.width = window.innerWidth;
+  let H = canvas.height = window.innerHeight;
+  let particles = [];
+
+  const COLORS = [
+    'rgba(16,185,129,',
+    'rgba(6,182,212,',
+    'rgba(245,158,11,',
+    'rgba(139,92,246,',
+  ];
+
+  const COUNT = Math.min(110, Math.floor(W * H / 11000));
+  const MAX_DIST = 170;
+
+  class Particle {
+    constructor() { this.reset(true); }
+    reset(init) {
+      this.x = Math.random() * W;
+      this.y = Math.random() * H;
+      if (!init) {
+        const edge = Math.floor(Math.random() * 4);
+        if (edge === 0) { this.x = -15; this.y = Math.random() * H; }
+        else if (edge === 1) { this.x = W + 15; this.y = Math.random() * H; }
+        else if (edge === 2) { this.y = -15; this.x = Math.random() * W; }
+        else { this.y = H + 15; this.x = Math.random() * W; }
+      }
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 0.1 + Math.random() * 0.18;
+      this.vx = Math.cos(angle) * speed;
+      this.vy = Math.sin(angle) * speed;
+      // Larger radius: 2–5px
+      this.r = 2 + Math.random() * 3;
+      this.baseR = this.r;
+      this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+      this.alpha = 0.2 + Math.random() * 0.45;
+      this.baseAlpha = this.alpha;
+      this.phase = Math.random() * Math.PI * 2;
+      this.phaseSpeed = 0.004 + Math.random() * 0.008;
+      this.wanderAngle = angle;
+      this.wanderSpeed = 0.012 + Math.random() * 0.018;
+    }
+    update() {
+      this.wanderAngle += (Math.random() - 0.5) * this.wanderSpeed;
+      this.vx += Math.cos(this.wanderAngle) * 0.01;
+      this.vy += Math.sin(this.wanderAngle) * 0.01;
+      this.vx *= 0.98;
+      this.vy *= 0.98;
+      this.x += this.vx;
+      this.y += this.vy;
+      this.phase += this.phaseSpeed;
+      this.alpha = this.baseAlpha * (0.65 + 0.35 * Math.sin(this.phase));
+      this.r = this.baseR * (0.88 + 0.12 * Math.sin(this.phase + 1));
+      const pad = 35;
+      if (this.x < -pad || this.x > W + pad || this.y < -pad || this.y > H + pad) {
+        this.reset(false);
+      }
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = this.color + this.alpha + ')';
+      ctx.fill();
+
+      // Glow halo
+      const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r * 3.5);
+      g.addColorStop(0, this.color + (this.alpha * 0.35) + ')');
+      g.addColorStop(1, this.color + '0)');
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r * 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = g;
+      ctx.fill();
+    }
+  }
+
+  function init() {
+    particles = [];
+    for (let i = 0; i < COUNT; i++) particles.push(new Particle());
+  }
+
+  function drawConnections() {
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < MAX_DIST) {
+          const opacity = (1 - dist / MAX_DIST) * 0.14;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          const mx = (particles[i].x + particles[j].x) / 2 + (Math.random() - 0.5) * 6;
+          const my = (particles[i].y + particles[j].y) / 2 + (Math.random() - 0.5) * 6;
+          ctx.quadraticCurveTo(mx, my, particles[j].x, particles[j].y);
+          ctx.strokeStyle = particles[i].color + opacity + ')';
+          ctx.lineWidth = 0.6;
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  let frameCount = 0;
+  function animate() {
+    ctx.clearRect(0, 0, W, H);
+    frameCount++;
+    if (frameCount % 2 === 0) drawConnections();
+    for (const p of particles) { p.update(); p.draw(); }
+    requestAnimationFrame(animate);
+  }
+
+  window.addEventListener('resize', () => {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    init();
+  });
+
+  init();
+  animate();
+})();
+
+// ===== SCROLL REVEAL =====
+(function() {
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), 80);
+      }
+    });
+  }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
+  els.forEach(el => io.observe(el));
+})();
+
+// ===== SWIPE NAVIGATION =====
+(function() {
+  let touchStartX = 0, touchStartY = 0;
+  document.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  }, { passive: true });
+  document.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].screenX - touchStartX;
+    const dy = e.changedTouches[0].screenY - touchStartY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 60) {
+      if (dx < 0) window.location.href = 'tokenomics.html'; // swipe left → tokenomics
+    }
+  }, { passive: true });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') window.location.href = 'tokenomics.html';
+  });
+})();
+
+// ===== PRACTICE CARDS — TAP TOGGLE =====
+(function() {
+  const cards = document.querySelectorAll('.practice-card');
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      const isActive = card.classList.contains('active');
+      cards.forEach(c => c.classList.remove('active'));
+      if (!isActive) card.classList.add('active');
+    });
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+    });
+  });
+})();
+
+// ===== STAGGER REVEAL for grids =====
+(function() {
+  document.querySelectorAll('.glossary-item.reveal, .practice-card.reveal').forEach((item, i) => {
+    item.style.transitionDelay = (i % 5) * 0.09 + 's';
+  });
+})();
+</script>
+</body>
+</html>
