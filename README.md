@@ -322,6 +322,8 @@ See [SECURITY.md](./SECURITY.md) for full disclosure policy.
 
 MIT — Use it, fork it, build on it. Just give it a good home.
 
+See [LICENSE](LICENSE). Copyright (c) 2026 August James Domanchuk. Developers and partners can reach us at InitiumBuilders@gmail.com.
+
 ---
 
 ## Built By
